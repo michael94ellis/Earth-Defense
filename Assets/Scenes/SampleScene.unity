@@ -203,6 +203,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: City
       objectReference: {fileID: 0}
+    - target: {fileID: 7067179817423186426, guid: 623bac7c1597048a6b4469fa66c6588d,
+        type: 3}
+      propertyPath: m_TagString
+      value: CityFoundation
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 623bac7c1597048a6b4469fa66c6588d, type: 3}
 --- !u!1 &705507993

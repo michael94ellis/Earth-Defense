@@ -5,16 +5,16 @@ using UnityEngine;
 public class AlienShip : MonoBehaviour
 {
     public Vector3 axis = Vector3.up;
-    public float radius = 2.0f;
-    public float radiusSpeed = 0.5f;
     public float rotationSpeed = 80.0f;
     bool isFiringLaser = false; 
     GameObject city = null;
     List<GameObject> cityBuildings = new List<GameObject>();
-    LineRenderer laser = null;
-    private float hitLast = 0;
-    private float hitDelay = 5;
-
+    LineRenderer laser;
+    /// Laser recharge time
+    private bool isLaserCharged = true;
+    private int laserRechargeTime = 4;
+    private float fireDuration = 0.5f;
+    private Vector3 currentLaserTarget;
     private GameObject earth;
 
     // Start is called before the first frame update
@@ -22,6 +22,18 @@ public class AlienShip : MonoBehaviour
     {
         earth = GameObject.Find("Earth");
         transform.LookAt(earth.transform.position);
+        laser = gameObject.AddComponent(typeof(LineRenderer)) as LineRenderer;
+        // Alien ship scans city to find all buildings to destroy
+        GetCityInfo();
+    }
+
+    private void GetCityInfo()
+    {
+        city = GameObject.Find("City");
+        foreach (Transform child in city.transform)
+        {
+            cityBuildings.Add(child.gameObject);
+        }
     }
 
     // Update is called once per frame
@@ -32,41 +44,54 @@ public class AlienShip : MonoBehaviour
 
         if (distanceToEarth < 10)
         {
+            // Orbit the earth
             transform.RotateAround(earth.transform.position, axis, rotationSpeed * Time.deltaTime);
-            // Alien ship scans city to find all buildings to destroy
-
-            if (city == null)
-            {
-                GetCityInfo();
-            }
+            // Animation for the laser
             if (isFiringLaser)
             {
+                FireLaserAt(currentLaserTarget);
                 return;
             }
-            foreach (GameObject building in cityBuildings)
+            // There should be a recharge period for the laser
+            if (isLaserCharged)
             {
-                RaycastHit hit;
-                Vector3 cityDirection = building.transform.position - transform.position;
-                if (Physics.Raycast(transform.position, cityDirection, out hit))
+                // Search for a target to fire laser at
+                foreach (GameObject building in cityBuildings)
                 {
-                    Debug.Log("Did Hit" + hit.transform.gameObject);
-                    if (hit.transform.IsChildOf(city.transform))
+                    if (building.tag == "CityFoundation")
                     {
-                        FireLaserAtCity(building.transform.position);
-                        GameObject destroyedBuilding = building;
-                        cityBuildings.Remove(building);
-                        Destroy(destroyedBuilding);
-                        break;
+                        // Dont Destroy the Foundations of Cities
+                        // aliens will land and build their own alien invasion city eventually
+                        continue; 
+                    }
+                    // Determine if there is line of sight to the building
+                    RaycastHit hit;
+                    Vector3 cityDirection = building.transform.position - transform.position;
+                    if (Physics.Raycast(transform.position, cityDirection, out hit))
+                    {
+                        Debug.Log("Can See Object " + hit.transform.gameObject);
+                        if (hit.transform.IsChildOf(city.transform))
+                        {
+                            // Begin animating laser
+                            FireLaserAt(building.transform.position);
+                            // Destroy the building, move this later
+                            GameObject destroyedBuilding = building;
+                            cityBuildings.Remove(building);
+                            Destroy(destroyedBuilding);
+                            break;
+                        }
+                        else
+                        {
+                            // Something is in the way
+                            Debug.Log("Building Not In Sight");
+                            laser.enabled = false;
+                        }
                     }
                     else
                     {
-                        Debug.Log("Building Not In Sight");
-                        laser.enabled = false;
+                        // Cannot see this building
+                        Debug.Log("Did not Hit");
                     }
-                }
-                else
-                {
-                    Debug.Log("Did not Hit");
                 }
             }
         }
@@ -76,36 +101,47 @@ public class AlienShip : MonoBehaviour
         }
     }
 
-    private void GetCityInfo()
-    {
-        city = GameObject.Find("City");
-        laser = gameObject.AddComponent(typeof(LineRenderer)) as LineRenderer;
-        foreach (Transform child in city.transform)
-        {
-            cityBuildings.Add(child.gameObject);
-        }
-    }
-
-    private void FireLaserAtCity(Vector3 target)
+    private void FireLaserAt(Vector3 target)
     {
         Debug.Log("City In Sight");
-        laser.enabled = true;
-        laser.material.color = Color.yellow;
-        laser.SetPosition(0, transform.position);
-        laser.SetPosition(1, target);
+        currentLaserTarget = target;
         if (!isFiringLaser)
         {
-            StartCoroutine(FireLaserAt());
+            Debug.Log("Firing Laser");
+            StartCoroutine(FireLaser());
+            laser.startWidth = 0.5f;
+            laser.endWidth = 0.1f;
+            laser.enabled = true;
+            laser.material.color = Color.yellow;
+            laser.SetPosition(0, transform.position);
+            laser.SetPosition(1, target);
+        }
+        else
+        {
+            laser.material.color = Color.yellow;
+            laser.startWidth = 0.5f;
+            laser.endWidth = 0.1f;
+            laser.material.color = Color.yellow;
+            laser.SetPosition(0, transform.position);
+            laser.SetPosition(1, target);
         }
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
-    IEnumerator FireLaserAt()
+    IEnumerator FireLaser()
     {
         isFiringLaser = true;
-        //yield on a new YieldInstruction to wait
-        yield return new WaitForSeconds(2);
+        isLaserCharged = false;
+        yield return new WaitForSeconds(fireDuration);
+        laser.enabled = false;
         isFiringLaser = false;
-        hitLast = Time.time;
+        StartCoroutine(RechargeLaser());
+    }
+
+    /// Must be called like so: StartCoroutine(LaserWasFired());
+    IEnumerator RechargeLaser()
+    {
+        yield return new WaitForSeconds(laserRechargeTime);
+        isLaserCharged = true;
     }
 }
