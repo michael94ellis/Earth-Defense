@@ -11,7 +11,6 @@ public class AlienShip : MonoBehaviour
     bool isFiringLaser = false; 
     GameObject city = null;
     List<GameObject> cityBuildings = new List<GameObject>();
-    int targetIndex = 0;
     LineRenderer laser = null;
     private float hitLast = 0;
     private float hitDelay = 5;
@@ -40,20 +39,28 @@ public class AlienShip : MonoBehaviour
             {
                 GetCityInfo();
             }
-            if (targetIndex < cityBuildings.Count && cityBuildings[targetIndex] != null)
+            if (isFiringLaser)
+            {
+                return;
+            }
+            foreach (GameObject building in cityBuildings)
             {
                 RaycastHit hit;
-                Vector3 cityDirection = cityBuildings[targetIndex].transform.position - transform.position;
+                Vector3 cityDirection = building.transform.position - transform.position;
                 if (Physics.Raycast(transform.position, cityDirection, out hit))
                 {
                     Debug.Log("Did Hit" + hit.transform.gameObject);
                     if (hit.transform.IsChildOf(city.transform))
                     {
-                        FireLaserAtCity(hit, cityBuildings[targetIndex].transform.position);
+                        FireLaserAtCity(building.transform.position);
+                        GameObject destroyedBuilding = building;
+                        cityBuildings.Remove(building);
+                        Destroy(destroyedBuilding);
+                        break;
                     }
                     else
                     {
-                        Debug.Log("No City In Sight");
+                        Debug.Log("Building Not In Sight");
                         laser.enabled = false;
                     }
                 }
@@ -79,7 +86,7 @@ public class AlienShip : MonoBehaviour
         }
     }
 
-    private void FireLaserAtCity(RaycastHit building, Vector3 target)
+    private void FireLaserAtCity(Vector3 target)
     {
         Debug.Log("City In Sight");
         laser.enabled = true;
@@ -88,17 +95,16 @@ public class AlienShip : MonoBehaviour
         laser.SetPosition(1, target);
         if (!isFiringLaser)
         {
-            StartCoroutine(FireLaserAt(building));
+            StartCoroutine(FireLaserAt());
         }
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
-    IEnumerator FireLaserAt(RaycastHit building)
+    IEnumerator FireLaserAt()
     {
         isFiringLaser = true;
         //yield on a new YieldInstruction to wait
-        yield return new WaitForSeconds(4);
-        Destroy(building.transform.gameObject);
+        yield return new WaitForSeconds(2);
         isFiringLaser = false;
         hitLast = Time.time;
     }
