@@ -1,20 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class City : MonoBehaviour
 {
     public Vector3 axis = Vector3.up;
     public float rotationSpeed = 80.0f;
     bool isFiringLaser = false;
-    List<GameObject> cityBuildings = new List<GameObject>();
+    List<GameObject> Buildings = new List<GameObject>();
     /// Draws the laser
     LineRenderer laser;
     /// Laser recharge time
     private bool isLaserCharged = true;
     private int laserRechargeTime = 3;
     private float fireDuration = 0.5f;
-    public List<GameObject> aliens;
+    private List<GameObject> Aliens;
     GameObject laserTurret;
     GameObject laserPivot;
 
@@ -27,24 +28,53 @@ public class City : MonoBehaviour
         laserPivot = laserTurret.transform.Find("BarrelPivot").gameObject;
         // Add the ability to draw laser beams
         laser = gameObject.AddComponent(typeof(LineRenderer)) as LineRenderer;
+        UpdateAliensList();
+        UpdateBuildingsList();
+    }
+    void UpdateAliensList()
+    {
+        Aliens = new List<GameObject>();
         // Find a target alien ship
         foreach (GameObject alien in GameObject.FindGameObjectsWithTag("Alien"))
         {
-            aliens.Add(alien);
+            Aliens.Add(alien);
         }
+    }
+    void UpdateBuildingsList()
+    {
+        Buildings = new List<GameObject>();
         // Add the city's buildings to the list
         foreach (Transform child in transform)
         {
-            cityBuildings.Add(child.gameObject);
+            if (child.tag != "CityFoundation")
+            {
+                Buildings.Add(child.gameObject);
+            }
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Find how far the ship is
-        foreach (GameObject alienShip in aliens)
+        // Remove nulls
+        Buildings.RemoveAll(item => item == null);
+        Aliens.RemoveAll(item => item == null);
+        if (Buildings.Count == 1)
         {
+            Debug.Log("City Destroyed!");
+            SceneManager.LoadScene("MainMenu");
+        }
+
+        // Find how far the ship is
+        foreach (GameObject alienShip in Aliens)
+        {
+            // Make sure this isn't a dead ship
+            if (alienShip == null)
+            {
+                // Update our list if we found a dead ship and try again
+                UpdateAliensList();
+                return;
+            }
             float distanceToAlienShip = Vector3.Distance(alienShip.transform.position, transform.position);
             // If within firing range then prepare to fire the laser
             if (distanceToAlienShip < 15)
@@ -76,7 +106,7 @@ public class City : MonoBehaviour
                             //GameObject destroyedBuilding = building;
                             //cityBuildings.Remove(building);
                             //Destroy(destroyedBuilding);
-                            break;
+                            return;
                         }
                         else
                         {
