@@ -7,7 +7,6 @@ public class City : MonoBehaviour
     public Vector3 axis = Vector3.up;
     public float rotationSpeed = 80.0f;
     bool isFiringLaser = false;
-    GameObject city = null;
     List<GameObject> cityBuildings = new List<GameObject>();
     /// Draws the laser
     LineRenderer laser;
@@ -17,7 +16,7 @@ public class City : MonoBehaviour
     private float fireDuration = 0.5f;
     public List<GameObject> aliens;
     GameObject laserTurret;
-    Transform laserPivot;
+    GameObject laserPivot;
 
     // Start is called before the first frame update
     void Start()
@@ -25,13 +24,18 @@ public class City : MonoBehaviour
         // Add the turret reference
         laserTurret = transform.Find("Turret").gameObject;
         // Add the pivot reference for aiming the turret
-        laserPivot = laserTurret.transform.Find("BarrelPivot");
+        laserPivot = laserTurret.transform.Find("BarrelPivot").gameObject;
         // Add the ability to draw laser beams
         laser = gameObject.AddComponent(typeof(LineRenderer)) as LineRenderer;
         // Find a target alien ship
-        foreach(GameObject alien in GameObject.FindGameObjectsWithTag("Alien"))
+        foreach (GameObject alien in GameObject.FindGameObjectsWithTag("Alien"))
         {
             aliens.Add(alien);
+        }
+        // Add the city's buildings to the list
+        foreach (Transform child in transform)
+        {
+            cityBuildings.Add(child.gameObject);
         }
     }
 
@@ -45,6 +49,8 @@ public class City : MonoBehaviour
             // If within firing range then prepare to fire the laser
             if (distanceToAlienShip < 15)
             {
+                // Always be aiming
+                laserPivot.transform.LookAt(alienShip.transform);
                 // Animation for the laser while its bein fired
                 if (isFiringLaser)
                 {
@@ -92,32 +98,22 @@ public class City : MonoBehaviour
         }
     }
 
+    /// This animates the laser firing
     private void FireLaserAt(GameObject alienShip)
     {
         Debug.Log("Alien Ship In Sight");
+        // This begins the laser, the FireLaser() method disables when its done firing
         if (!isFiringLaser)
         {
             Debug.Log("Firing Laser");
             StartCoroutine(FireLaser());
-            // This points the laser cannon
-            laserPivot.LookAt(alienShip.transform);
-            laser.startWidth = 0.5f;
-            laser.endWidth = 0.1f;
             laser.enabled = true;
-            laser.material.color = Color.green;
-            laser.SetPosition(0, transform.position);
-            laser.SetPosition(1, alienShip.transform.position);
         }
-        else
-        {
-            laserPivot.LookAt(alienShip.transform);
-            laser.material.color = Color.yellow;
-            laser.startWidth = 0.1f;
-            laser.endWidth = 0.1f;
-            laser.material.color = Color.yellow;
-            laser.SetPosition(0, transform.position);
-            laser.SetPosition(1, alienShip.transform.position);
-        }
+        laser.startWidth = 0.1f;
+        laser.endWidth = 0.1f;
+        laser.material.color = Color.yellow;
+        laser.SetPosition(0, transform.position);
+        laser.SetPosition(1, alienShip.transform.position);
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());

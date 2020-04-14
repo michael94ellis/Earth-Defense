@@ -16,6 +16,7 @@ public class AlienShip : MonoBehaviour
     private float fireDuration = 0.5f;
     private Vector3 currentLaserTarget;
     private GameObject earth;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +56,8 @@ public class AlienShip : MonoBehaviour
             // There should be a recharge period for the laser
             if (isLaserCharged)
             {
+                if (cityBuildings.Count == 1)
+                    return;
                 // Search for a target to fire laser at
                 foreach (GameObject building in cityBuildings)
                 {
