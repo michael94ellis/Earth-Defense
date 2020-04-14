@@ -27,11 +27,7 @@ public class Earth : MonoBehaviour
 
     void OnMouseUp()
     {
-        if (isPaused)
-        {
-            ContinueGame();
-        }
-        else
+        if (!isPaused)
         {
             PauseGame();
         }
@@ -41,6 +37,32 @@ public class Earth : MonoBehaviour
         if (Physics.Raycast(ray))
         {
         }
+    }
+
+    void OnGUI()
+    {
+        if (isPaused)
+        {
+            GUI.Window(0, new Rect((Screen.width / 2) - 150, (Screen.height / 2) - 75, 300, 250), ShowGUI, "Title Example");
+
+        }
+    }
+
+    void ShowGUI(int windowID)
+    {
+        // You may put a label to show a message to the player
+
+        GUI.Label(new Rect(65, 40, 200, 30), "PUT YOUR MESSAGE HERE");
+
+        // You may put a button to close the pop up too
+
+        if (GUI.Button(new Rect(50, 150, 75, 30), "OK"))
+        {
+            isPaused = false;
+            ContinueGame();
+            // you may put other code to run according to your game too
+        }
+
     }
 
 

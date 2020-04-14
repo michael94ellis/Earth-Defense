@@ -98,7 +98,7 @@ public class AlienShip : MonoBehaviour
                 }
             }
         }
-        else
+        else if (Time.timeScale > 0)
         {
             this.transform.position = Vector3.MoveTowards(transform.position, earth.transform.position, 0.1f);
         }
