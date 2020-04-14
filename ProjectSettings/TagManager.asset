@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - CityFoundation
+  - Alien
+  - City
   layers:
   - Default
   - TransparentFX

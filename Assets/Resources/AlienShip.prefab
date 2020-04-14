@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 3546220926287413955}
   m_Layer: 0
   m_Name: AlienShip
-  m_TagString: Untagged
+  m_TagString: Alien
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -140,6 +140,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45357a31508f148e6801b73c3681efe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  axis: {x: 0, y: 1, z: 0}
+  rotationSpeed: 80
 --- !u!135 &3546220926287413955
 SphereCollider:
   m_ObjectHideFlags: 0
