@@ -61,7 +61,7 @@ public class AlienShip : MonoBehaviour
                 // Search for a target to fire laser at
                 foreach (GameObject building in cityBuildings)
                 {
-                    if (building.tag == "CityFoundation")
+                    if (building == null || building.tag == "CityFoundation")
                     {
                         // Dont Destroy the Foundations of Cities
                         // aliens will land and build their own alien invasion city eventually
