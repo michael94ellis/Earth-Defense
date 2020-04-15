@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LaserTurret : MonoBehaviour
 {
-    public LineRenderer Laser;
+    private LineRenderer Laser;
     public bool isFiring;
     public bool isCharged;
     public int laserRechargeTime = 3;
@@ -13,6 +13,7 @@ public class LaserTurret : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Laser Turret Coming Online");
         Laser = gameObject.GetComponent<LineRenderer>();
         isFiring = false;
         isCharged = true;
@@ -112,6 +113,7 @@ public class LaserTurret : MonoBehaviour
     IEnumerator FireLaser()
     {
         yield return new WaitForSeconds(fireDuration);
+        Laser.enabled = false;
         isFiring = false;
         StartCoroutine(RechargeLaser());
     }

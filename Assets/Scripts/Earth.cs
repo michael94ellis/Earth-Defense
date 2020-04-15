@@ -8,7 +8,6 @@ public class Earth : MonoBehaviour
     public List<GameObject> Cities = new List<GameObject>();
     public Object cityRef;
     public Vector3 origin = new Vector3(0, 0, 0);
-    public int GlobalCurrency = 0;
     public bool isPaused = false;
     GameObject Sun;
     public Vector3 axis = new Vector3(0, 0, 0);
@@ -33,6 +32,7 @@ public class Earth : MonoBehaviour
         // Add the city's buildings to the list
         foreach (Transform child in transform)
         {
+            Debug.Log(child.tag + " !!!!!");
             if (child.tag == "City")
             {
                 Cities.Add(child.gameObject);
@@ -52,7 +52,11 @@ public class Earth : MonoBehaviour
     {
         if (isPaused)
         {
-            GUI.Window(0, new Rect((Screen.width / 2) - 150, (Screen.height / 2) - 75, 300, 250), ShowGUI, "Title Example");
+            int width = 500;
+            int height = 350;
+            int x = (Screen.width / 2) - (width / 2);
+            int y = (Screen.height / 2) - (height / 2);
+            GUI.Window(0, new Rect(x, y, width, height), ShowGUI, "Earth Defense Shop");
 
         }
     }
@@ -60,9 +64,32 @@ public class Earth : MonoBehaviour
     void ShowGUI(int windowID)
     {
         // You may put a label to show a message to the player
+        UpdateCitiesList();
+        Debug.Log(Cities.Count);
+        for (int index = 0; index < Cities.Count; index++)
+        {
+            List<GameObject> LaserTurrets = new List<GameObject>();
+            List<GameObject> Buildings = new List<GameObject>();
+            foreach (Transform child in Cities[index].transform)
+            {
+                switch (child.tag)
+                {
+                    case "Turret":
+                        LaserTurrets.Add(child.gameObject);
+                        break;
+                    case "Building":
+                        Buildings.Add(child.gameObject);
+                        break;
+                }
+            }
+            GUI.Label(new Rect(65, 40, 150, 30), "City " + index + "");
+            GUI.Label(new Rect(65, 80, 75, 30), "  Turrets" + index + ": " + LaserTurrets.Count);
+            if (GUI.Button(new Rect(275, 80, 100, 30), "Add Turret"))
+            {
 
-        GUI.Label(new Rect(65, 40, 200, 30), "PUT YOUR MESSAGE HERE");
+            }
 
+        }
         // You may put a button to close the pop up too
 
         if (GUI.Button(new Rect(50, 150, 75, 30), "OK"))

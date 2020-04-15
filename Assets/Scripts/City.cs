@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class City : MonoBehaviour
 {
@@ -14,6 +13,7 @@ public class City : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("City Coming Online");
         UpdateBuildingsList();
     }
 
@@ -49,7 +49,6 @@ public class City : MonoBehaviour
         if (Buildings.Count == 0 && LaserTurrets.Count == 0)
         {
             Debug.Log("City Destroyed!");
-            //SceneManager.LoadScene("MainMenu");
             return;
         }
     }

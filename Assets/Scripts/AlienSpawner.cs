@@ -7,13 +7,13 @@ public class AlienSpawner : MonoBehaviour
 {
     public List<GameObject> Aliens { get; private set; }
     public Object shipRef;
-    private int activeAliens = 5;
+    private int activeAliens = 12;
     private GameObject earth;
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Game Manager Started");
+        Debug.Log("Alien Spawner Started");
         earth = GameObject.Find("Earth");
         shipRef = Resources.Load("AlienShip");
         Aliens = new List<GameObject>();
