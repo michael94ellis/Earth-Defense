@@ -9,6 +9,7 @@ TagManager:
   - City
   - Turret
   - Building
+  - Earth
   layers:
   - Default
   - TransparentFX
