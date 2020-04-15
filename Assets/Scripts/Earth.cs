@@ -92,17 +92,26 @@ public class Earth : MonoBehaviour
             }
             y += 30 + 10;
             GUI.Label(new Rect(x, y, x + 10, 30), "  Turrets: " + LaserTurrets.Count);
-            foreach(GameObject turret in LaserTurrets)
+            //y += 30 + 1
+            foreach (Transform child in Cities[index].transform)
             {
-                y += 30 + 10;
-                GUI.Label(new Rect(65, y, 300, 30), "  Turret: " + turret.transform.localPosition);
+                switch (child.tag)
+                {
+                    case "Turret":
+                        LaserTurrets.Add(child.gameObject);
+                        GUI.Button(new Rect(65 + child.transform.localPosition.x * 30 + 20, y + child.transform.localPosition.z * 30 + 10, 30, 30), "T");
+                        break;
+                    case "Building":
+                        Buildings.Add(child.gameObject);
+                        GUI.Button(new Rect(65 + child.transform.localPosition.x * 30 + 20, y + child.transform.localPosition.z * 30 + 10, 30, 30), "B");
+                        break;
+                }
             }
-
         }
         // You may put a button to close the pop up too
 
-        y += 30 + 10;
-        if (GUI.Button(new Rect(x, y, 75, 30), "OK"))
+        y += 350;
+        if (GUI.Button(new Rect(x, y, 75, 30), "Done"))
         {
             isPaused = false;
             ContinueGame();
