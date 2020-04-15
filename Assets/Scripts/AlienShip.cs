@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class AlienShip : MonoBehaviour
 {
-    public Vector3 axis = Vector3.up;
+    public Vector3 axis = new Vector3(0,0,0);
     public float rotationSpeed = 80.0f;
+    public float moveSpeed = 0.1f;
     bool isFiringLaser = false; 
     GameObject city = null;
     List<GameObject> cityBuildings = new List<GameObject>();
@@ -59,48 +60,52 @@ public class AlienShip : MonoBehaviour
                 if (cityBuildings.Count == 1)
                     return;
                 // Search for a target to fire laser at
-                foreach (GameObject building in cityBuildings)
-                {
-                    if (building == null || building.tag == "CityFoundation")
-                    {
-                        // Dont Destroy the Foundations of Cities
-                        // aliens will land and build their own alien invasion city eventually
-                        continue; 
-                    }
-                    // Determine if there is line of sight to the building
-                    RaycastHit hit;
-                    Vector3 cityDirection = building.transform.position - transform.position;
-                    if (Physics.Raycast(transform.position, cityDirection, out hit))
-                    {
-                        Debug.Log("Can See Object " + hit.transform.gameObject);
-                        if (hit.transform.IsChildOf(city.transform))
-                        {
-                            // Begin animating laser
-                            FireLaserAt(building.transform.position);
-                            // Destroy the building, move this later
-                            GameObject destroyedBuilding = building;
-                            cityBuildings.Remove(building);
-                            Destroy(destroyedBuilding);
-                            break;
-                        }
-                        else
-                        {
-                            // Something is in the way
-                            Debug.Log("Building Not In Sight");
-                            laser.enabled = false;
-                        }
-                    }
-                    else
-                    {
-                        // Cannot see this building
-                        Debug.Log("Did not Hit");
-                    }
-                }
+                SearchForTarget();
+                
             }
         }
         else if (Time.timeScale > 0)
         {
-            this.transform.position = Vector3.MoveTowards(transform.position, earth.transform.position, 0.1f);
+            this.transform.position = Vector3.MoveTowards(transform.position, earth.transform.position, moveSpeed);
+        }
+    }
+
+    private void SearchForTarget()
+    {
+        foreach (GameObject building in cityBuildings)
+        {
+            if (building == null || building.tag == "CityFoundation")
+            {
+                // Dont Destroy the Foundations of Cities
+                // aliens will land and build their own alien invasion city eventually
+                continue;
+            }
+            // Determine if there is line of sight to the building
+            RaycastHit hit;
+            Vector3 cityDirection = building.transform.position - transform.position;
+            if (Physics.Raycast(transform.position, cityDirection, out hit))
+            {
+                Debug.Log("Can See Object " + hit.transform.gameObject);
+                if (hit.transform.IsChildOf(city.transform))
+                {
+                    // Begin animating laser
+                    FireLaserAt(building.transform.position);
+                    // Destroy the building, move this later
+                    GameObject destroyedBuilding = building;
+                    cityBuildings.Remove(building);
+                    Destroy(destroyedBuilding);
+                    break;
+                }
+                else // Something is in the way
+                {
+                    Debug.Log("Building Not In Sight");
+                    laser.enabled = false;
+                }
+            }
+            else // Cannot see this building
+            {
+                Debug.Log("Did not Hit");
+            }
         }
     }
 

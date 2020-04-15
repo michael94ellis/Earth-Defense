@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class Earth : MonoBehaviour
 {
-    public List<GameObject> cities = new List<GameObject>();
+    public List<GameObject> Cities = new List<GameObject>();
     public Object cityRef;
     public Vector3 origin = new Vector3(0, 0, 0);
-    public int count = 0;
+    public int GlobalCurrency = 0;
     public bool isPaused = false;
 
     void Awake()
@@ -25,17 +25,24 @@ public class Earth : MonoBehaviour
 
     }
 
+    void UpdateCitiesList()
+    {
+        Cities = new List<GameObject>();
+        // Add the city's buildings to the list
+        foreach (Transform child in transform)
+        {
+            if (child.tag == "City")
+            {
+                Cities.Add(child.gameObject);
+            }
+        }
+    }
+
     void OnMouseUp()
     {
         if (!isPaused)
         {
             PauseGame();
-        }
-        // If your mouse hovers over the GameObject with the script attached, output this message
-        Vector3 clickedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray))
-        {
         }
     }
 
