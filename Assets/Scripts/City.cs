@@ -26,7 +26,7 @@ public class City : MonoBehaviour
     {
         LaserTurret NewLaser = new LaserTurret();
         NewLaser.Turret = turretObject.gameObject;
-        NewLaser.Laser = NewLaser.Turret.AddComponent(typeof(LineRenderer)) as LineRenderer;
+        NewLaser.Laser = NewLaser.Turret.GetComponent<LineRenderer>();
         NewLaser.isFiring = false;
         NewLaser.isCharged = true;
         return NewLaser;
@@ -72,7 +72,7 @@ public class City : MonoBehaviour
             //SceneManager.LoadScene("MainMenu");
             return;
         }
-        foreach (LaserTurret     turret in LaserTurrets)
+        foreach (LaserTurret turret in LaserTurrets)
         {
             Debug.Log("Laser Turret Activating");
             FireLaserFrom(turret);
@@ -160,10 +160,10 @@ public class City : MonoBehaviour
             turret.Laser.enabled = true;
             StartCoroutine(FireLaser(turret, turret.fireDuration));
         }
-        turret.Laser.material.color = Color.yellow;
+        turret.Laser.receiveShadows = false;
+        turret.Laser.material.color = Color.green;
         turret.Laser.startWidth = 0.1f;
         turret.Laser.endWidth = 0.1f;
-        turret.Laser.material.color = Color.yellow;
         turret.Laser.SetPosition(0, transform.position);
         turret.Laser.SetPosition(1, alienShip.transform.position);
     }
@@ -172,7 +172,6 @@ public class City : MonoBehaviour
     IEnumerator FireLaser(LaserTurret turret, float fireDuration)
     {
         yield return new WaitForSeconds(fireDuration);
-        turret.Laser.enabled = false;
         turret.isFiring = false;
         StartCoroutine(RechargeLaser(turret));
     }

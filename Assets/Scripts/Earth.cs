@@ -10,6 +10,9 @@ public class Earth : MonoBehaviour
     public Vector3 origin = new Vector3(0, 0, 0);
     public int GlobalCurrency = 0;
     public bool isPaused = false;
+    GameObject Sun;
+    public Vector3 axis = new Vector3(0, 0, 0);
+    public float rotationSpeed = 80.0f;
 
     void Awake()
     {
@@ -22,7 +25,6 @@ public class Earth : MonoBehaviour
 
     void Update()
     {
-
     }
 
     void UpdateCitiesList()

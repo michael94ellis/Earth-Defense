@@ -117,29 +117,21 @@ public class AlienShip : MonoBehaviour
         {
             Debug.Log("Firing Laser");
             StartCoroutine(FireLaser());
-            laser.startWidth = 0.5f;
-            laser.endWidth = 0.1f;
             laser.enabled = true;
-            laser.material.color = Color.yellow;
-            laser.SetPosition(0, transform.position);
-            laser.SetPosition(1, target);
+            isFiringLaser = true;
+            isLaserCharged = false;
         }
-        else
-        {
-            laser.material.color = Color.yellow;
-            laser.startWidth = 0.5f;
-            laser.endWidth = 0.1f;
-            laser.material.color = Color.yellow;
-            laser.SetPosition(0, transform.position);
-            laser.SetPosition(1, target);
-        }
+        laser.receiveShadows = false;
+        laser.material.color = Color.red;
+        laser.startWidth = 0.5f;
+        laser.endWidth = 0.1f;
+        laser.SetPosition(0, transform.position);
+        laser.SetPosition(1, target);
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
     IEnumerator FireLaser()
     {
-        isFiringLaser = true;
-        isLaserCharged = false;
         yield return new WaitForSeconds(fireDuration);
         laser.enabled = false;
         isFiringLaser = false;
