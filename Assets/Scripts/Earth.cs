@@ -20,10 +20,12 @@ public class Earth : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        UpdateCitiesList();
     }
 
     void Update()
     {
+        Cities.RemoveAll(item => item == null);
     }
 
     void UpdateCitiesList()
@@ -53,7 +55,7 @@ public class Earth : MonoBehaviour
         if (isPaused)
         {
             int width = 500;
-            int height = 350;
+            int height = 500;
             int x = (Screen.width / 2) - (width / 2);
             int y = (Screen.height / 2) - (height / 2);
             GUI.Window(0, new Rect(x, y, width, height), ShowGUI, "Earth Defense Shop");
@@ -66,6 +68,7 @@ public class Earth : MonoBehaviour
         // You may put a label to show a message to the player
         UpdateCitiesList();
         Debug.Log(Cities.Count);
+        int x = 65, y = 40;
         for (int index = 0; index < Cities.Count; index++)
         {
             List<GameObject> LaserTurrets = new List<GameObject>();
@@ -82,17 +85,24 @@ public class Earth : MonoBehaviour
                         break;
                 }
             }
-            GUI.Label(new Rect(65, 40, 150, 30), "City " + index + "");
-            GUI.Label(new Rect(65, 80, 75, 30), "  Turrets" + index + ": " + LaserTurrets.Count);
-            if (GUI.Button(new Rect(275, 80, 100, 30), "Add Turret"))
+            GUI.Label(new Rect(x, y, 150, 30), "City " + (index + 1) + "");
+            if (GUI.Button(new Rect(x + 175, y, 100, 30), "Add Turret"))
             {
 
+            }
+            y += 30 + 10;
+            GUI.Label(new Rect(x, y, x + 10, 30), "  Turrets: " + LaserTurrets.Count);
+            foreach(GameObject turret in LaserTurrets)
+            {
+                y += 30 + 10;
+                GUI.Label(new Rect(65, y, 300, 30), "  Turret: " + turret.transform.localPosition);
             }
 
         }
         // You may put a button to close the pop up too
 
-        if (GUI.Button(new Rect(50, 150, 75, 30), "OK"))
+        y += 30 + 10;
+        if (GUI.Button(new Rect(x, y, 75, 30), "OK"))
         {
             isPaused = false;
             ContinueGame();

@@ -49,6 +49,7 @@ public class City : MonoBehaviour
         if (Buildings.Count == 0 && LaserTurrets.Count == 0)
         {
             Debug.Log("City Destroyed!");
+            CityFoundation.SetActive(false);
             return;
         }
     }
