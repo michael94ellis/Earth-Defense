@@ -5,7 +5,7 @@ using UnityEngine;
 public class Sun : MonoBehaviour
 {
 
-    public float orbitSpeed = 60;
+    public float orbitSpeed = 9991f;
     [SerializeField] private Vector3 orbitAngle = new Vector3(0,1,0.001f);
     // Start is called before the first frame update
     void Start()

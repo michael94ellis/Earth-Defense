@@ -236,11 +236,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53d1a258af08e4facb20b7b9ddb4e1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Laser: {fileID: 0}
+  firingRange: 15
+  fireDuration: 0.5
+  rechargeTime: 3
   isFiring: 0
   isCharged: 1
-  laserRechargeTime: 3
-  fireDuration: 0.5
 --- !u!1 &7494674253487242188
 GameObject:
   m_ObjectHideFlags: 0
