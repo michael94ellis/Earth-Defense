@@ -13,8 +13,6 @@ public class City : MonoBehaviour
 
     void Start()
     {
-        Debug.Log("City Coming Online");
-        UpdateBuildingsList();
         // Give access to the buildings of the city to the earth
         Earth.GetCities += GetCityInfo;
     }
@@ -41,6 +39,7 @@ public class City : MonoBehaviour
 
     void UpdateBuildingsList()
     {
+        // Reset the lists
         Buildings = new List<GameObject>();
         LaserTurrets = new List<GameObject>();
         // Add the city's objects to the lists  
@@ -59,7 +58,5 @@ public class City : MonoBehaviour
                     break;
             }
         }
-        Debug.Log(LaserTurrets.Count + " Laser Turrets");
-        Debug.Log(Buildings.Count + " Buildings");
     }
 }
