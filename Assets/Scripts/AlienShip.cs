@@ -17,7 +17,6 @@ public class AlienShip : MonoBehaviour
     private float fireDuration = 0.5f;
     private Vector3 currentLaserTarget;
     private GameObject earth;
-    
 
     // Start is called before the first frame update
     void Start()

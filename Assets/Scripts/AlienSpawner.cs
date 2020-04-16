@@ -13,19 +13,18 @@ public class AlienSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Alien Spawner Started");
         earth = GameObject.Find("Earth");
         shipRef = Resources.Load("AlienShip");
         Aliens = new List<GameObject>();
+        for (int i = 0; i < 7; i++)
+        {
+            Aliens.Add(NewAlienShip());
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Aliens.Count < activeAliens)
-        {
-            Aliens.Add(NewAlienShip());
-        }
     }
 
     GameObject NewAlienShip()

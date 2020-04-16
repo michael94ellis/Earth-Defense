@@ -14,7 +14,7 @@ public class City : MonoBehaviour
     void Start()
     {
         // Give access to the buildings of the city to the earth
-        Earth.GetCities += GetCityInfo;
+        Earth.AddCity(GetCityInfo());
     }
 
     void Update()
