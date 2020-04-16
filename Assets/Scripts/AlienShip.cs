@@ -28,6 +28,11 @@ public class AlienShip : MonoBehaviour
         GetCityInfo();
     }
 
+    void OnDestroy()
+    {
+        AlienSpawner.RemovAlien(this.gameObject);
+    }
+
     private void GetCityInfo()
     {
         city = GameObject.Find("City");

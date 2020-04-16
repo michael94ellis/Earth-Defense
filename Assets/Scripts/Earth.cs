@@ -14,18 +14,19 @@ public class Earth : MonoBehaviour
     int windowOriginX = (Screen.width) / 2 - (900 / 2);
     int windowOriginY = (Screen.height) / 2 - (750 / 2);
 
-    private IDictionary<Vector2, GameObject> ExistingCityGrid = new Dictionary<Vector2, GameObject>();
-
+    private IDictionary<Vector2, GameObject> CityGrid = new Dictionary<Vector2, GameObject>();
     private static IDictionary<string, List<GameObject>> Cities = new Dictionary<string, List<GameObject>>();
-
     public static void AddCity(string name, List<GameObject> cityBuildings)
     {
         Earth.Cities[name] = cityBuildings;
     }
-
     public static void RemoveCity(string name)
     {
         Earth.Cities.Remove(name);
+        if (Cities.Count == 0)
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
     }
 
     void Start()
@@ -61,7 +62,7 @@ public class Earth : MonoBehaviour
             foreach (GameObject building in Cities[key])
             {
                 Vector2 coord = new Vector2(building.transform.localPosition.x, building.transform.localPosition.z);
-                ExistingCityGrid[coord] = building;
+                CityGrid[coord] = building;
             }
         }
     }
@@ -98,9 +99,9 @@ public class Earth : MonoBehaviour
                     for (int yAxis = cityMinCoord; yAxis <= cityMaxCoord; yAxis++)
                     {
                         string buttonText = "";
-                        if (ExistingCityGrid.ContainsKey(new Vector2(xAxis, yAxis)))
+                        if (CityGrid.ContainsKey(new Vector2(xAxis, yAxis)))
                         {
-                            switch (ExistingCityGrid[new Vector2(xAxis, yAxis)].tag)
+                            switch (CityGrid[new Vector2(xAxis, yAxis)].tag)
                             {
                                 case "Turret":
                                     buttonText = "T";
@@ -109,7 +110,7 @@ public class Earth : MonoBehaviour
                                     buttonText = "B";
                                     break;
                                 default:
-                                    Debug.Log("Unkwonw tag: " + ExistingCityGrid[new Vector2(xAxis, yAxis)].tag);
+                                    Debug.Log("Unkwonw tag: " + CityGrid[new Vector2(xAxis, yAxis)].tag);
                                     break;
                             }
                         }
@@ -120,7 +121,7 @@ public class Earth : MonoBehaviour
             y += 350;
             if (GUI.Button(new Rect(x, windowHeight - 60, labelWidth, 30), "Save And Continue"))
             {
-                ExistingCityGrid = new Dictionary<Vector2, GameObject>();
+                CityGrid = new Dictionary<Vector2, GameObject>();
                 isPaused = false;
                 ContinueGame();
             }

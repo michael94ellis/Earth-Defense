@@ -14,14 +14,19 @@ public class City : MonoBehaviour
     void Start()
     {
         // Give access to the buildings of the city to the earth
-        Earth.AddCity(GetCityInfo());
+        Earth.AddCity(CityName, GetAllBuildings());
     }
 
     void Update()
     {
     }
 
-    (string, List<GameObject>) GetCityInfo()
+    private void OnDestroy()
+    {
+        Earth.RemoveCity(CityName);
+    }
+
+    List<GameObject> GetAllBuildings()
     {
         UpdateBuildingsList();
         List<GameObject> AllBuildings = new List<GameObject>();
@@ -33,8 +38,7 @@ public class City : MonoBehaviour
         {
             AllBuildings.Add(turret);
         }
-        (string, List<GameObject>) ThisCity = (CityName, AllBuildings);
-        return ThisCity;
+        return AllBuildings;
     }
 
     void UpdateBuildingsList()
