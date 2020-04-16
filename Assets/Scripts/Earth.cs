@@ -5,47 +5,25 @@ using UnityEngine.SceneManagement;
 
 public class Earth : MonoBehaviour
 {
-    public List<GameObject> Cities = new List<GameObject>();
-    public Object cityRef;
-    public Vector3 origin = new Vector3(0, 0, 0);
     public bool isPaused = false;
-    GameObject Sun;
-    public Vector3 axis = new Vector3(0, 0, 0);
-    public float rotationSpeed = 80.0f;
+    private bool editMode = false;
 
-    void Awake()
-    {
-        cityRef = Resources.Load("City");
-    }
-    // Start is called before the first frame update
+    public delegate (string name, List<GameObject> buildings) GetCitiesDelegate();
+    public static event GetCitiesDelegate GetCities;
+
     void Start()
     {
-        UpdateCitiesList();
     }
 
     void Update()
     {
-        Cities.RemoveAll(item => item == null);
-    }
-
-    void UpdateCitiesList()
-    {
-        Cities = new List<GameObject>();
-        // Add the city's buildings to the list
-        foreach (Transform child in transform)
-        {
-            Debug.Log(child.tag + " !!!!!");
-            if (child.tag == "City")
-            {
-                Cities.Add(child.gameObject);
-            }
-        }
     }
 
     void OnMouseUp()
     {
         if (!isPaused)
         {
+
             PauseGame();
         }
     }
@@ -54,70 +32,72 @@ public class Earth : MonoBehaviour
     {
         if (isPaused)
         {
-            int width = 500;
-            int height = 500;
-            int x = (Screen.width / 2) - (width / 2);
-            int y = (Screen.height / 2) - (height / 2);
-            GUI.Window(0, new Rect(x, y, width, height), ShowGUI, "Earth Defense Shop");
-
+            int windowWidth = 900;
+            int windowHeight = 750;
+            int windowOriginX = (Screen.width) / 2 - (windowWidth / 2);
+            int windowOriginY = (Screen.height) / 2 - (windowHeight / 2);
+            GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), EditCityGUI, "Earth Defense Shop");
         }
     }
 
-    void ShowGUI(int windowID)
+    void EditCityGUI(int windowID)
     {
         // You may put a label to show a message to the player
-        UpdateCitiesList();
-        Debug.Log(Cities.Count);
+        (string name, List<GameObject> buildings) City = GetCities();
         int x = 65, y = 40;
-        for (int index = 0; index < Cities.Count; index++)
+        if (editMode)
         {
-            List<GameObject> LaserTurrets = new List<GameObject>();
-            List<GameObject> Buildings = new List<GameObject>();
-            foreach (Transform child in Cities[index].transform)
-            {
-                switch (child.tag)
-                {
-                    case "Turret":
-                        LaserTurrets.Add(child.gameObject);
-                        break;
-                    case "Building":
-                        Buildings.Add(child.gameObject);
-                        break;
-                }
-            }
-            GUI.Label(new Rect(x, y, 150, 30), "City " + (index + 1) + "");
-            if (GUI.Button(new Rect(x + 175, y, 100, 30), "Add Turret"))
-            {
+            GUI.TextField(new Rect(x, y, 150, 30), City.name);
+        }
+        else
+        {
+            GUI.Label(new Rect(x, y, 150, 30), "City: " + City.name);
+        }
+        if (GUI.Button(new Rect(x + 175, y, 100, 30), "Edit City"))
+        {
+            editMode = !editMode;
+        }
 
-            }
-            y += 30 + 10;
-            GUI.Label(new Rect(x, y, x + 10, 30), "  Turrets: " + LaserTurrets.Count);
-            //y += 30 + 1
-            foreach (Transform child in Cities[index].transform)
+        // Map the city/s existing things to their coords in the city grid
+        IDictionary<Vector2, GameObject> CityGrid = new Dictionary<Vector2, GameObject>();
+        foreach (GameObject child in City.buildings)
+        {
+            Vector2 coord = new Vector2(child.transform.localPosition.x, child.transform.localPosition.z);
+            Debug.Log(child.gameObject.tag);
+            CityGrid[coord] = child.gameObject;
+        }
+        // City is a square
+        int cityMinCoord = 1;
+        int cityMaxCoord = 9;
+        for (int xAxis = cityMinCoord; xAxis <= cityMaxCoord; xAxis++)
+        {
+            for (int yAxis = cityMinCoord; yAxis <= cityMaxCoord; yAxis++)
             {
-                switch (child.tag)
+                string buttonText = "";
+                if (CityGrid.ContainsKey(new Vector2(xAxis, yAxis)))
                 {
-                    case "Turret":
-                        LaserTurrets.Add(child.gameObject);
-                        GUI.Button(new Rect(65 + child.transform.localPosition.x * 30 + 20, y + child.transform.localPosition.z * 30 + 10, 30, 30), "T");
-                        break;
-                    case "Building":
-                        Buildings.Add(child.gameObject);
-                        GUI.Button(new Rect(65 + child.transform.localPosition.x * 30 + 20, y + child.transform.localPosition.z * 30 + 10, 30, 30), "B");
-                        break;
+                    switch (CityGrid[new Vector2(xAxis, yAxis)].tag)
+                    {
+                        case "Turret":
+                            buttonText = "T";
+                            break;
+                        case "Building":
+                            buttonText = "B";
+                            break;
+                        default:
+                            Debug.Log(CityGrid[new Vector2(xAxis, yAxis)].tag);
+                            break;
+                    }
                 }
+                GUI.Button(new Rect(65 + xAxis * 30 + 20, y + yAxis * 30 + 10, 30, 30), buttonText);
             }
         }
-        // You may put a button to close the pop up too
-
         y += 350;
-        if (GUI.Button(new Rect(x, y, 75, 30), "Done"))
+        if (GUI.Button(new Rect(x, y, 150, 30), "Save And Continue"))
         {
             isPaused = false;
             ContinueGame();
-            // you may put other code to run according to your game too
         }
-
     }
 
 

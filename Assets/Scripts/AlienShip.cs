@@ -41,7 +41,7 @@ public class AlienShip : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // transform.Translate(Vector3.forward * Time.deltaTime);
+        // Determine how far earth's center(0,0,0) is
         float distanceToEarth = Vector3.Distance(earth.transform.position, transform.position);
 
         if (distanceToEarth < 10)

@@ -7,6 +7,7 @@ public class LaserTurret : MonoBehaviour
     private LineRenderer Laser;
     public bool isFiring;
     public bool isCharged;
+    public float firingRange = 15.0f;
     public int laserRechargeTime = 3;
     public float fireDuration = 0.5f;
 
@@ -19,12 +20,22 @@ public class LaserTurret : MonoBehaviour
         isCharged = true;
     }
 
+    (string, GameObject) GetBuilding()
+    {
+        return ("LasetTurret", this.gameObject);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        // Find how far the ship is
+        // TODO more efficient or cooler line of sight or targeting of alien ships for city laser turrets
         foreach (GameObject alienShip in GameObject.FindGameObjectsWithTag("Alien"))
         {
+            // Find how far the ship is
+            float distanceToAlienShip = Vector3.Distance(alienShip.transform.position, transform.position);
+            // TODO Add turret aiming animation
+            if (distanceToAlienShip > firingRange)
+                return;
             // Make sure this isn't a dead ship
             if (alienShip == null)
             {
@@ -32,9 +43,7 @@ public class LaserTurret : MonoBehaviour
                 Debug.Log("Dead Alien Confirmed");
                 return;
             }
-            float distanceToAlienShip = Vector3.Distance(alienShip.transform.position, transform.position);
-            // If within firing range then prepare to fire the laser
-            if (distanceToAlienShip < 15)
+            if (distanceToAlienShip < firingRange)
             {
                 // Animation for the laser while its bein fired
                 if (isFiring)
@@ -48,11 +57,6 @@ public class LaserTurret : MonoBehaviour
                     Debug.Log("Laser Turret Beginning Fire Sequence");
                     AimAtTarget(alienShip);
                 }
-            }
-            else
-            {
-                Debug.Log("Alien too far");
-                // Look for any visible target or do nothing, maybe the city can generate value while its not firing its lasers? idk just a thought
             }
         }
     }
