@@ -9,10 +9,10 @@ public class Earth : MonoBehaviour
     public bool isPaused = true;
 
     private bool editMode = false;
-    int windowWidth = 900;
-    int windowHeight = 750;
-    int windowOriginX = (Screen.width) / 2 - (900 / 2);
-    int windowOriginY = (Screen.height) / 2 - (750 / 2);
+    int windowOriginX = Screen.width / 4;
+    int windowOriginY = Screen.height / 6;
+    int windowWidth = Screen.width - 2 * (Screen.width / 4);
+    int windowHeight = Screen.height - 2 * (Screen.height / 6);
     // Used to display the currently viewed city in GUI
     List<City> Cities;
     // City is a square
