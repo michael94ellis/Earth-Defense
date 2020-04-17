@@ -35,7 +35,7 @@ public class AlienShip : MonoBehaviour
 
     private void GetCityInfo()
     {
-        city = GameObject.Find("City");
+        city = GameObject.Find("Earth");
         foreach (Transform child in city.transform)
         {
             cityBuildings.Add(child.gameObject);
@@ -48,7 +48,7 @@ public class AlienShip : MonoBehaviour
         // Determine how far earth's center(0,0,0) is
         float distanceToEarth = Vector3.Distance(earth.transform.position, transform.position);
 
-        if (distanceToEarth < 10)
+        if (distanceToEarth < 120)
         {
             // Orbit the earth
             transform.RotateAround(earth.transform.position, axis, rotationSpeed * Time.deltaTime);
@@ -95,9 +95,9 @@ public class AlienShip : MonoBehaviour
                     // Begin animating laser
                     FireLaserAt(building.transform.position);
                     // Destroy the building, move this later
-                    GameObject destroyedBuilding = building;
-                    cityBuildings.Remove(building);
-                    Destroy(destroyedBuilding);
+                    //GameObject destroyedBuilding = building;
+                    //cityBuildings.Remove(building);
+                    //Destroy(destroyedBuilding);
                     break;
                 }
                 else // Something is in the way

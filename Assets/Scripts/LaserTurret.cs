@@ -6,7 +6,7 @@ public class LaserTurret : MonoBehaviour
 {
     // City the turret exists in
     public City city;
-    public float firingRange = 15.0f;
+    public float firingRange = 150.0f;
     public float fireDuration = 0.5f;
     public int rechargeTime = 3;
     public bool isFiring;

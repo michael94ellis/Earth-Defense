@@ -23,7 +23,6 @@ public class City : MonoBehaviour
 
     void Start()
     {
-
         TurretRef = Resources.Load("Turret");
     }
 
@@ -39,7 +38,7 @@ public class City : MonoBehaviour
         switch (type)
         {
             case "Turret":
-                GameObject newTurret = Instantiate(TurretRef, new Vector3(gridLocation.x, 8, gridLocation.y), Quaternion.identity) as GameObject;
+                GameObject newTurret = Instantiate(TurretRef, new Vector3(gridLocation.x, 5, gridLocation.y), Quaternion.identity) as GameObject;
                 // Make the new turret a child object so it lives inside the city's coordinate space
                 newTurret.transform.SetParent(transform, false);
                 LaserTurret newLaserTurret = newTurret.GetComponent<LaserTurret>();
