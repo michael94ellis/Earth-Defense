@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Earth : MonoBehaviour
 {
-    public bool isPaused = true;
+    public bool isPaused = false;
 
     private bool editMode = false;
     int windowWidth = 900;
@@ -19,15 +19,9 @@ public class Earth : MonoBehaviour
     int cityMinCoord = 1;
     int cityMaxCoord = 9;
     int citySquareSize = 40;
-    int labelWidth = 150;
-    int labelHeight = 30;
-    string newCityName = "";
-    Object CityRef;
 
     void Start()
     {
-        CityRef = Resources.Load("City");
-        Cities = new List<City>();
     }
 
     void Update()
@@ -38,52 +32,36 @@ public class Earth : MonoBehaviour
     {
         if (!isPaused)
         {
+            Cities = new List<City>();
+            GameObject[] cities = GameObject.FindGameObjectsWithTag("City");
+            foreach (GameObject city in cities)
+            {
+                Cities.Add(city.GetComponent<City>());
+            }
             PauseGame();
         }
     }
 
     void OnGUI()
     {
-        if (isPaused && Cities.Count > 0)
+        if (isPaused)
         {
             GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), EditCityGUI, "Earth Defense Shop");
-        }
-        else if (isPaused)
-        {
-            GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), BuildFirstCity, "Build Your First City");
-        }
-    }
-
-    void BuildFirstCity(int windowID)
-    {
-        int x = 65, y = 40;
-        GUI.Label(new Rect(x, y, labelWidth, labelHeight), "Name Your City: ");
-        GUI.TextField(new Rect(x, y, labelWidth, labelHeight), newCityName);
-
-        // Bottom save and continue button
-        if (GUI.Button(new Rect(x, windowHeight - 2 * labelHeight, labelWidth, labelHeight), "Save And Continue"))
-        {
-            GameObject newCity = Instantiate(CityRef, new Vector3(0, 50, 0), Quaternion.identity) as GameObject;
-            // Make the new city a child object so it lives inside the earth's coordinate space
-            newCity.transform.SetParent(transform);
-            Cities.Add(newCity.GetComponent<City>());
-            newCity.name = newCityName;
-
-            isPaused = false;
-            ContinueGame();
         }
     }
 
     void EditCityGUI(int windowID)
     {
         int x = 65, y = 40;
+        int labelWidth = 150;
+        int labelHeight = 30;
         int spacer = 10;
         // Start positions, these are cursors for printing the UI elements
         foreach (City city in Cities)
         {
             if (editMode)
             {
-                GUI.TextField(new Rect(x, y, labelWidth, labelHeight), city.CityName);
+                GUI.TextField(new Rect(x, y, labelWidth, 30), city.CityName);
                 ModifyCityLayoutGUI(city);
             }
             else
@@ -99,10 +77,9 @@ public class Earth : MonoBehaviour
 
         }
         // Bottom save and continue button
-        if (GUI.Button(new Rect(x, windowHeight - 2 * labelHeight, labelWidth, labelHeight), "Save And Continue"))
+        if (GUI.Button(new Rect(x, windowHeight - 60, labelWidth, 30), "Save And Continue"))
         {
             isPaused = false;
-            AlienSpawner.SpawnAliens(4);
             ContinueGame();
         }
     }

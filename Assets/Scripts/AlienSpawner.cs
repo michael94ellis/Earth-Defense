@@ -6,8 +6,9 @@ using Random = UnityEngine.Random;
 
 public class AlienSpawner : MonoBehaviour
 {
-    public static Object shipRef;
-    private static Earth earth;
+    public Object shipRef;
+    private int activeAliens = 12;
+    private GameObject earth;
 
     private static List<GameObject> Aliens = new List<GameObject>();
     public static void AddAlien(GameObject alien)
@@ -25,35 +26,31 @@ public class AlienSpawner : MonoBehaviour
 
     void Start()
     {
-        earth = GameObject.Find("Earth").GetComponent<Earth>();
+        earth = GameObject.Find("Earth");
         shipRef = Resources.Load("AlienShip");
+        for (int i = 0; i < 7; i++)
+        {
+            Aliens.Add(NewAlienShip());
+        }
     }
 
     void Update()
     {
     }
 
-    public static void SpawnAliens(int count)
-    {
-        for (int i = 0; i < count; i++)
-        {
-            Aliens.Add(NewAlienShip());
-        }
-    }
-
-    private static GameObject NewAlienShip()
+    GameObject NewAlienShip()
     {
         // Pick a random spawn location
-        Vector3 randomSpawnPoint = new Vector3(RandomCoord(150,200), RandomCoord(150,200), RandomCoord(150,200));
+        Vector3 randomSpawnPoint = new Vector3(RandomCoord(40,50), RandomCoord(40,50), RandomCoord(40,50));
         //Create a new alien ship in at the random point
         GameObject newAlienShip = Instantiate(shipRef, randomSpawnPoint, Quaternion.identity) as GameObject;
         // This makes the alien live in the same coordinate space as the Earth
-        newAlienShip.transform.SetParent(earth.gameObject.transform, true);
+        newAlienShip.transform.SetParent(earth.transform, true);
         return newAlienShip;
     }
 
     // Returns a random value in the range, 50% change of being negative
-    private static int RandomCoord(int min, int max)
+    int RandomCoord(int min, int max)
     {
         // Sign(+/-): 1 is plus, 2 is minus
         var sign = Random.Range(1, 3);
