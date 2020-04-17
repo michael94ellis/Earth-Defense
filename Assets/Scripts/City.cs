@@ -8,7 +8,7 @@ public class City : MonoBehaviour
 {
     Object TurretRef;
 
-    public string CityName = "New York City";
+    public string CityName;
     private List<GameObject> LaserTurrets = new List<GameObject>();
     public void RemoveTurret(GameObject turret)
     {
