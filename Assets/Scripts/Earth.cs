@@ -13,21 +13,12 @@ public class Earth : MonoBehaviour
     int windowHeight = 750;
     int windowOriginX = (Screen.width) / 2 - (900 / 2);
     int windowOriginY = (Screen.height) / 2 - (750 / 2);
-
-    private IDictionary<Vector2, GameObject> CityGrid = new Dictionary<Vector2, GameObject>();
-    private static IDictionary<string, List<GameObject>> Cities = new Dictionary<string, List<GameObject>>();
-    public static void AddCity(string name, List<GameObject> cityBuildings)
-    {
-        Earth.Cities[name] = cityBuildings;
-    }
-    public static void RemoveCity(string name)
-    {
-        Earth.Cities.Remove(name);
-        if (Cities.Count == 0)
-        {
-            SceneManager.LoadScene("MainMenu");
-        }
-    }
+    // Used to display the currently viewed city in GUI
+    List<City> Cities;
+    // City is a square
+    int cityMinCoord = 1;
+    int cityMaxCoord = 9;
+    int citySquareSize = 40;
 
     void Start()
     {
@@ -41,7 +32,12 @@ public class Earth : MonoBehaviour
     {
         if (!isPaused)
         {
-            FetchCityInfo();
+            Cities = new List<City>();
+            GameObject[] cities = GameObject.FindGameObjectsWithTag("City");
+            foreach (GameObject city in cities)
+            {
+                Cities.Add(city.GetComponent<City>());
+            }
             PauseGame();
         }
     }
@@ -54,82 +50,91 @@ public class Earth : MonoBehaviour
         }
     }
 
-    void FetchCityInfo()
-    {
-        // Map the city/s existing things to their coords in the city grid
-        foreach (string key in Cities.Keys)
-        {
-            foreach (GameObject building in Cities[key])
-            {
-                Vector2 coord = new Vector2(building.transform.localPosition.x, building.transform.localPosition.z);
-                CityGrid[coord] = building;
-            }
-        }
-    }
-
     void EditCityGUI(int windowID)
     {
-        // Start positions, these are cursors for printing the UI elements
         int x = 65, y = 40;
         int labelWidth = 150;
         int labelHeight = 30;
-        int citySquareSize = 40;
-
-        foreach (string CityName in Cities.Keys)
+        int spacer = 10;
+        // Start positions, these are cursors for printing the UI elements
+        foreach (City city in Cities)
         {
-            foreach (GameObject building in Cities[CityName])
+            if (editMode)
             {
-                if (editMode)
+                GUI.TextField(new Rect(x, y, labelWidth, 30), city.CityName);
+                ModifyCityLayoutGUI(city);
+            }
+            else
+            {
+                GUI.Label(new Rect(x, y, labelWidth, labelHeight), "City: " + city.CityName);
+            }
+            if (GUI.Button(new Rect(x + 175, y, labelWidth, labelHeight), "Edit City"))
+            {
+                editMode = !editMode;
+            }
+            y += labelHeight + spacer;
+            // TODO Add ability to move camera to a city and look at it and open its edit page
+
+        }
+        // Bottom save and continue button
+        if (GUI.Button(new Rect(x, windowHeight - 60, labelWidth, 30), "Save And Continue"))
+        {
+            isPaused = false;
+            ContinueGame();
+        }
+    }
+
+    private IDictionary<Vector2, GameObject> CurrentlyDisplayedCityGrid = new Dictionary<Vector2, GameObject>();
+
+    void ModifyCityLayoutGUI(City city)
+    {
+        int y = 40;
+        int spacer = 20;
+
+        // Map the city/s existing things to their coords in the city grid
+        List<GameObject> existingBuildings = city.UpdateBuildings();
+        foreach (GameObject building in existingBuildings)
+        {
+            Vector2 coord = new Vector2(building.transform.localPosition.x, building.transform.localPosition.z);
+            CurrentlyDisplayedCityGrid[coord] = building;
+        }
+        foreach (GameObject building in existingBuildings)
+        {
+            for (int xAxis = cityMinCoord; xAxis <= cityMaxCoord; xAxis++)
+            {
+                for (int yAxis = cityMinCoord; yAxis <= cityMaxCoord; yAxis++)
                 {
-                    GUI.TextField(new Rect(x, y, labelWidth, 30), CityName);
-                }
-                else
-                {
-                    GUI.Label(new Rect(x, y, labelWidth, labelHeight), "City: " + CityName);
-                }
-                if (GUI.Button(new Rect(x + 175, y, labelWidth, labelHeight), "Edit City"))
-                {
-                    editMode = !editMode;
-                }
-                // City is a square
-                int cityMinCoord = 1;
-                int cityMaxCoord = 9;
-                for (int xAxis = cityMinCoord; xAxis <= cityMaxCoord; xAxis++)
-                {
-                    for (int yAxis = cityMinCoord; yAxis <= cityMaxCoord; yAxis++)
+                    string buttonText = "";
+                    if (CurrentlyDisplayedCityGrid.ContainsKey(new Vector2(xAxis, yAxis)))
                     {
-                        string buttonText = "";
-                        if (CityGrid.ContainsKey(new Vector2(xAxis, yAxis)))
+                        switch (CurrentlyDisplayedCityGrid[new Vector2(xAxis, yAxis)].tag)
                         {
-                            switch (CityGrid[new Vector2(xAxis, yAxis)].tag)
-                            {
-                                case "Turret":
-                                    buttonText = "T";
-                                    break;
-                                case "Building":
-                                    buttonText = "B";
-                                    break;
-                                default:
-                                    Debug.Log("Unkwonw tag: " + CityGrid[new Vector2(xAxis, yAxis)].tag);
-                                    break;
-                            }
+                            case "Turret":
+                                buttonText = "T";
+                                GUI.Button(new Rect(65 + xAxis * citySquareSize + spacer, y + yAxis * citySquareSize + spacer, citySquareSize, citySquareSize), buttonText);
+                                break;
+                            case "Building":
+                                buttonText = "B";
+                                GUI.Button(new Rect(65 + xAxis * citySquareSize + spacer, y + yAxis * citySquareSize + spacer, citySquareSize, citySquareSize), buttonText);
+                                break;
+                            default:
+                                Debug.Log("Unkwonw tag: " + CurrentlyDisplayedCityGrid[new Vector2(xAxis, yAxis)].tag);
+                                break;
                         }
-                        GUI.Button(new Rect(65 + xAxis * citySquareSize + 20, y + yAxis * citySquareSize + 20, citySquareSize, citySquareSize), buttonText);
+                    }
+                    else
+                    {
+                        if (GUI.Button(new Rect(65 + xAxis * citySquareSize + spacer, y + yAxis * citySquareSize + spacer, citySquareSize, citySquareSize), buttonText))
+                        {
+                            city.AddBuilding(new Vector2(xAxis, yAxis), "Turret");
+                        }
                     }
                 }
-            }
-            y += 350;
-            if (GUI.Button(new Rect(x, windowHeight - 60, labelWidth, 30), "Save And Continue"))
-            {
-                CityGrid = new Dictionary<Vector2, GameObject>();
-                isPaused = false;
-                ContinueGame();
             }
         }
     }
 
-
-        private void PauseGame()
+    private void PauseGame()
     {
         isPaused = true;
         Time.timeScale = 0;

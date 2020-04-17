@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class LaserTurret : MonoBehaviour
 {
+    // City the turret exists in
+    public City city;
     public float firingRange = 15.0f;
     public float fireDuration = 0.5f;
     public int rechargeTime = 3;
@@ -18,6 +20,11 @@ public class LaserTurret : MonoBehaviour
         Laser = gameObject.GetComponent<LineRenderer>();
         isFiring = false;
         isCharged = true;
+    }
+
+    private void OnDestroy()
+    {
+        city.RemoveTurret(this.gameObject);
     }
 
     // Update is called once per frame

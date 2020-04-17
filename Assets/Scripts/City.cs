@@ -1,54 +1,65 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class City : MonoBehaviour
 {
+    Object TurretRef;
+
     public string CityName = "New York City";
     private List<GameObject> LaserTurrets = new List<GameObject>();
+    public void RemoveTurret(GameObject turret)
+    {
+        LaserTurrets.Remove(turret);
+    }
     private List<GameObject> Buildings = new List<GameObject>();
+
+    private IDictionary<Vector2, GameObject> CityGrid = new Dictionary<Vector2, GameObject>();
 
     // The flat square the city buildings sit on
     private GameObject CityFoundation;
 
     void Start()
     {
-        // Give access to the buildings of the city to the earth
-        Earth.AddCity(CityName, GetAllBuildings());
+
+        TurretRef = Resources.Load("Turret");
     }
 
     void Update()
     {
     }
 
-    private void OnDestroy()
+    public bool AddBuilding(Vector2 gridLocation, string type)
     {
-        Earth.RemoveCity(CityName);
+        if (CityGrid.Keys.Contains(gridLocation))
+            return false;
+
+        switch (type)
+        {
+            case "Turret":
+                GameObject newTurret = Instantiate(TurretRef, new Vector3(gridLocation.x, 8, gridLocation.y), Quaternion.identity) as GameObject;
+                // Make the new turret a child object so it lives inside the city's coordinate space
+                newTurret.transform.SetParent(transform, false);
+                LaserTurret newLaserTurret = newTurret.GetComponent<LaserTurret>();
+                newLaserTurret.city = this;
+                return true;
+        }
+        return false;
     }
 
-    List<GameObject> GetAllBuildings()
-    {
-        UpdateBuildingsList();
-        List<GameObject> AllBuildings = new List<GameObject>();
-        foreach (GameObject building in Buildings)
-        {
-            AllBuildings.Add(building);
-        }
-        foreach (GameObject turret in LaserTurrets)
-        {
-            AllBuildings.Add(turret);
-        }
-        return AllBuildings;
-    }
-
-    void UpdateBuildingsList()
+    // Consumable list of all the city's weapons and buildings
+    public List<GameObject> UpdateBuildings()
     {
         // Reset the lists
+        List<GameObject> AllBuildings = new List<GameObject>();
         Buildings = new List<GameObject>();
         LaserTurrets = new List<GameObject>();
-        // Add the city's objects to the lists  
+        // Add the city's children to the lists  
         foreach (Transform child in transform)
         {
+            // Needs to be one of each type of object that lives in a city
             switch (child.tag)
             {
                 case "CityFoundation":
@@ -61,6 +72,9 @@ public class City : MonoBehaviour
                     Buildings.Add(child.gameObject);
                     break;
             }
+
+            AllBuildings.Add(child.gameObject);
         }
+        return AllBuildings;
     }
 }
