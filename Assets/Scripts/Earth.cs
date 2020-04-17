@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Earth : MonoBehaviour
 {
-    public bool isPaused = true;
+    public bool isPaused = false;
 
     private bool editMode = false;
     int windowOriginX = Screen.width / 4;
@@ -26,8 +26,6 @@ public class Earth : MonoBehaviour
 
     void Start()
     {
-        CityRef = Resources.Load("City");
-        Cities = new List<City>();
     }
 
     void Update()
@@ -38,13 +36,19 @@ public class Earth : MonoBehaviour
     {
         if (!isPaused)
         {
+            Cities = new List<City>();
+            GameObject[] cities = GameObject.FindGameObjectsWithTag("City");
+            foreach (GameObject city in cities)
+            {
+                Cities.Add(city.GetComponent<City>());
+            }
             PauseGame();
         }
     }
 
     void OnGUI()
     {
-        if (isPaused && Cities.Count > 0)
+        if (isPaused)
         {
             GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), EditCityGUI, "Earth Defense Shop");
         }
@@ -111,12 +115,13 @@ public class Earth : MonoBehaviour
             isPaused = false;
             ContinueGame();
         }
-
     }
 
     void EditCityGUI(int windowID)
     {
         int x = 65, y = 40;
+        int labelWidth = 150;
+        int labelHeight = 30;
         int spacer = 10;
         // Start positions, these are cursors for printing the UI elements
         foreach (City city in Cities)
@@ -139,10 +144,9 @@ public class Earth : MonoBehaviour
 
         }
         // Bottom save and continue button
-        if (GUI.Button(new Rect(x, windowHeight - 2 * labelHeight, labelWidth, labelHeight), "Save And Continue"))
+        if (GUI.Button(new Rect(x, windowHeight - 60, labelWidth, 30), "Save And Continue"))
         {
             isPaused = false;
-            AlienSpawner.SpawnAliens(4);
             ContinueGame();
         }
     }
