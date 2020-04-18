@@ -36,10 +36,14 @@ public class CameraController : MonoBehaviour
         if (Input.GetKey(KeyCode.E) && transform.position.y < boundary)
         {
             transform.Translate(Vector3.forward * mainSpeed);
+            if (mainSpeed >= 0.001f)
+                mainSpeed = 0.01f * Vector3.Distance(origin, transform.position);
         }
         if (Input.GetKey(KeyCode.Q) && transform.position.y > -boundary)
         {
             transform.Translate(Vector3.back * mainSpeed);
+            if (mainSpeed <= 0.3f)
+                mainSpeed = 1.01f * Vector3.Distance(origin, transform.position);
         }
     }
 }
