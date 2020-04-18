@@ -28,10 +28,6 @@ public class AlienSpawner : MonoBehaviour
     {
         earth = GameObject.Find("Earth");
         shipRef = Resources.Load("AlienShip");
-        for (int i = 0; i < 7; i++)
-        {
-            Aliens.Add(NewAlienShip());
-        }
     }
 
     void Update()
