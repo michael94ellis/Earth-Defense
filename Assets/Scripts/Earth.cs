@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class Earth : MonoBehaviour
 {
-    public bool isPaused = false;
+    public bool isPaused = true;
 
     private bool editMode = false;
     int windowOriginX = Screen.width / 4;
@@ -26,6 +26,8 @@ public class Earth : MonoBehaviour
 
     void Start()
     {
+        CityRef = Resources.Load("City");
+        Cities = new List<City>();
     }
 
     void Update()
@@ -36,25 +38,19 @@ public class Earth : MonoBehaviour
     {
         if (!isPaused)
         {
-            Cities = new List<City>();
-            GameObject[] cities = GameObject.FindGameObjectsWithTag("City");
-            foreach (GameObject city in cities)
-            {
-                Cities.Add(city.GetComponent<City>());
-            }
             PauseGame();
         }
     }
 
     void OnGUI()
     {
-        if (isPaused)
+        if (isPaused && Cities.Count == 0)
         {
-            GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), EditCityGUI, "Earth Defense Shop");
+            GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), BuildFirstCity, "Build Your First City");
         }
         else if (isPaused)
         {
-            GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), BuildFirstCity, "Build Your First City");
+            GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), EditCityGUI, "Earth Defense Shop");
         }
     }
 
@@ -66,9 +62,9 @@ public class Earth : MonoBehaviour
         y += 2 * labelHeight;
         if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "North Pole"))
         {
-            GameObject newCity = Instantiate(CityRef, new Vector3(-5, 49, -5), Quaternion.identity) as GameObject;
+            GameObject newCity = Instantiate(CityRef, new Vector3(-5, 4.9f, -5), Quaternion.identity) as GameObject;
             // Make the new city a child object so it lives inside the earth's coordinate space
-            newCity.transform.SetParent(transform);
+            newCity.transform.SetParent(transform, false);
             City newCityScript = newCity.GetComponent<City>();
             Cities.Add(newCityScript);
             newCityScript.CityName = newCityName;
@@ -79,9 +75,9 @@ public class Earth : MonoBehaviour
         y += 2 * labelHeight;
         if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "South Pole"))
         {
-            GameObject newCity = Instantiate(CityRef, new Vector3(5, -49, -5), Quaternion.Euler(0, 0, 180)) as GameObject;
+            GameObject newCity = Instantiate(CityRef, new Vector3(5, -4.9f, -5), Quaternion.Euler(0, 0, 180)) as GameObject;
             // Make the new city a child object so it lives inside the earth's coordinate space
-            newCity.transform.SetParent(transform);
+            newCity.transform.SetParent(transform, false);
             City newCityScript = newCity.GetComponent<City>();
             Cities.Add(newCityScript);
             newCityScript.CityName = newCityName;
@@ -92,9 +88,9 @@ public class Earth : MonoBehaviour
         y += 2 * labelHeight;
         if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "African Coast"))
         {
-            GameObject newCity = Instantiate(CityRef, new Vector3(49, 5, -5), Quaternion.Euler(0, 0, 270)) as GameObject;
+            GameObject newCity = Instantiate(CityRef, new Vector3(4.9f, 5, -5), Quaternion.Euler(0, 0, 270)) as GameObject;
             // Make the new city a child object so it lives inside the earth's coordinate space
-            newCity.transform.SetParent(transform);
+            newCity.transform.SetParent(transform, false);
             City newCityScript = newCity.GetComponent<City>();
             Cities.Add(newCityScript);
             newCityScript.CityName = newCityName;
@@ -105,9 +101,9 @@ public class Earth : MonoBehaviour
         y += 2 * labelHeight;
         if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "Pacific Ocean"))
         {
-            GameObject newCity = Instantiate(CityRef, new Vector3(-49, -5, -5), Quaternion.Euler(0, 0, 90)) as GameObject;
+            GameObject newCity = Instantiate(CityRef, new Vector3(-4.9f, -5, -5), Quaternion.Euler(0, 0, 90)) as GameObject;
             // Make the new city a child object so it lives inside the earth's coordinate space
-            newCity.transform.SetParent(transform);
+            newCity.transform.SetParent(transform, false);
             City newCityScript = newCity.GetComponent<City>();
             Cities.Add(newCityScript);
             newCityScript.CityName = newCityName;
