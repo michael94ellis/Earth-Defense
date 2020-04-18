@@ -6,22 +6,28 @@ using UnityEngine.SceneManagement;
 
 public class Earth : MonoBehaviour
 {
-    public bool isPaused = false;
+    public bool isPaused = true;
 
     private bool editMode = false;
-    int windowWidth = 900;
-    int windowHeight = 750;
-    int windowOriginX = (Screen.width) / 2 - (900 / 2);
-    int windowOriginY = (Screen.height) / 2 - (750 / 2);
+    int windowOriginX = Screen.width / 4;
+    int windowOriginY = Screen.height / 6;
+    int windowWidth = Screen.width - 2 * (Screen.width / 4);
+    int windowHeight = Screen.height - 2 * (Screen.height / 6);
     // Used to display the currently viewed city in GUI
     List<City> Cities;
     // City is a square
     int cityMinCoord = 1;
     int cityMaxCoord = 9;
     int citySquareSize = 40;
+    int labelWidth = 150;
+    int labelHeight = 30;
+    string newCityName;
+    Object CityRef;
 
     void Start()
     {
+        CityRef = Resources.Load("City");
+        Cities = new List<City>();
     }
 
     void Update()
@@ -32,21 +38,78 @@ public class Earth : MonoBehaviour
     {
         if (!isPaused)
         {
-            Cities = new List<City>();
-            GameObject[] cities = GameObject.FindGameObjectsWithTag("City");
-            foreach (GameObject city in cities)
-            {
-                Cities.Add(city.GetComponent<City>());
-            }
             PauseGame();
         }
     }
 
     void OnGUI()
     {
-        if (isPaused)
+        if (isPaused && Cities.Count == 0)
+        {
+            GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), BuildFirstCity, "Build Your First City");
+        }
+        else if (isPaused)
         {
             GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), EditCityGUI, "Earth Defense Shop");
+        }
+    }
+
+    void BuildFirstCity(int windowID)
+    {
+        int x = 65, y = 40;
+        GUI.Label(new Rect(x, y, labelWidth, labelHeight), "Name Your City: ");
+        newCityName = GUI.TextField(new Rect(x + labelWidth + 10, y, labelWidth, labelHeight), newCityName);
+        y += 2 * labelHeight;
+        if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "North Pole"))
+        {
+            GameObject newCity = Instantiate(CityRef, new Vector3(-5, 4.9f, -5), Quaternion.identity) as GameObject;
+            // Make the new city a child object so it lives inside the earth's coordinate space
+            newCity.transform.SetParent(transform, false);
+            City newCityScript = newCity.GetComponent<City>();
+            Cities.Add(newCityScript);
+            newCityScript.CityName = newCityName;
+
+            isPaused = false;
+            ContinueGame();
+        }
+        y += 2 * labelHeight;
+        if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "South Pole"))
+        {
+            GameObject newCity = Instantiate(CityRef, new Vector3(5, -4.9f, -5), Quaternion.Euler(0, 0, 180)) as GameObject;
+            // Make the new city a child object so it lives inside the earth's coordinate space
+            newCity.transform.SetParent(transform, false);
+            City newCityScript = newCity.GetComponent<City>();
+            Cities.Add(newCityScript);
+            newCityScript.CityName = newCityName;
+
+            isPaused = false;
+            ContinueGame();
+        }
+        y += 2 * labelHeight;
+        if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "African Coast"))
+        {
+            GameObject newCity = Instantiate(CityRef, new Vector3(4.9f, 5, -5), Quaternion.Euler(0, 0, 270)) as GameObject;
+            // Make the new city a child object so it lives inside the earth's coordinate space
+            newCity.transform.SetParent(transform, false);
+            City newCityScript = newCity.GetComponent<City>();
+            Cities.Add(newCityScript);
+            newCityScript.CityName = newCityName;
+
+            isPaused = false;
+            ContinueGame();
+        }
+        y += 2 * labelHeight;
+        if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "Pacific Ocean"))
+        {
+            GameObject newCity = Instantiate(CityRef, new Vector3(-4.9f, -5, -5), Quaternion.Euler(0, 0, 90)) as GameObject;
+            // Make the new city a child object so it lives inside the earth's coordinate space
+            newCity.transform.SetParent(transform, false);
+            City newCityScript = newCity.GetComponent<City>();
+            Cities.Add(newCityScript);
+            newCityScript.CityName = newCityName;
+
+            isPaused = false;
+            ContinueGame();
         }
     }
 
@@ -61,7 +124,7 @@ public class Earth : MonoBehaviour
         {
             if (editMode)
             {
-                GUI.TextField(new Rect(x, y, labelWidth, 30), city.CityName);
+                city.CityName = GUI.TextField(new Rect(x, y, labelWidth, labelHeight), city.CityName);
                 ModifyCityLayoutGUI(city);
             }
             else
