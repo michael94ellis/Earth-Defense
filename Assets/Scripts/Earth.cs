@@ -120,30 +120,31 @@ public class Earth : MonoBehaviour
         GUILayout.BeginScrollView(new Vector2(0, 0));
         if (GUILayout.Button("North Pole: $100,000,000"))
         {
-            HandleNewCity(new Vector3(-1.05f, 1.05f, -1.05f), Quaternion.identity);
+            HandleNewCity(new Vector3(-0.05f, 0.45f, -0.05f), Quaternion.identity);
         }
         if (GUILayout.Button("South Pole: $100,000,000"))
         {
-            HandleNewCity(new Vector3(1.05f, -1.05f - 1.05f), Quaternion.Euler(0, 0, 180));
+            HandleNewCity(new Vector3(0.05f, -0.45f - 0.05f), Quaternion.Euler(0, 0, 180));
         }
         if (GUILayout.Button("African Coast: $90,000,000"))
         {
-            HandleNewCity(new Vector3(1.05f, 1.05f, -1.05f), Quaternion.Euler(0, 0, 270));
+            HandleNewCity(new Vector3(0.45f, 0.05f, -0.05f), Quaternion.Euler(0, 0, 270));
         }
         if (GUILayout.Button("Pacific Ocean: $90,000,000"))
         {
-            HandleNewCity(new Vector3(-1.05f, -1.05f, -1.05f), Quaternion.Euler(0, 0, 90));
+            HandleNewCity(new Vector3(-0.45f, -0.05f, -0.05f), Quaternion.Euler(0, 0, 90));
         }
         GUILayout.EndScrollView();
     }
     // MagnetoCat: Erase this whole method when you add the city placement
     void HandleNewCity(Vector3 location, Quaternion angle)
     {
-        GameObject newCity = Instantiate(CityRef, location, angle) as GameObject; 
+        GameObject newCity = Instantiate(CityRef, location, angle) as GameObject;
+        // Make it smaller than the Earth
+        newCity.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         // Make the new city a child object so it lives inside the earth's coordinate space
         newCity.transform.SetParent(transform, false);
         // City needs to be smaller than earth
-        newCity.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         // This lets us control the City Script attached to the City object we just made
         City newCityScript = newCity.GetComponent<City>();
         Cities.Add(newCityScript);
