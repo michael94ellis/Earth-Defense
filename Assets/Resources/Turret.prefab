@@ -119,7 +119,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7393554902952231418}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5535104, y: 1.4911652, z: -0.64182854}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8974069782701750760}
@@ -236,6 +236,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53d1a258af08e4facb20b7b9ddb4e1e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  city: {fileID: 0}
   firingRange: 15
   fireDuration: 0.5
   rechargeTime: 3

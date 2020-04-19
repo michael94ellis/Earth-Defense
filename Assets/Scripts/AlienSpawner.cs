@@ -28,13 +28,13 @@ public class AlienSpawner : MonoBehaviour
     {
         earth = GameObject.Find("Earth");
         shipRef = Resources.Load("AlienShip");
-        // for (int i = 0; i < 7; i++)
-        // {
-        //     Aliens.Add(NewAlienShip());
-        // }
     }
 
-    public GameObject NewAlienShip()
+    void Update()
+    {
+    }
+
+    GameObject NewAlienShip()
     {
         // Pick a random spawn location
         Vector3 randomSpawnPoint = new Vector3(RandomCoord(40,50), RandomCoord(40,50), RandomCoord(40,50));
