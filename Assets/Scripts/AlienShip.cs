@@ -11,6 +11,7 @@ public class AlienShip : MonoBehaviour
     GameObject city = null;
     List<GameObject> cityBuildings = new List<GameObject>();
     LineRenderer laser;
+    WaveSpawner waveSpawner;
     /// Laser recharge time
     private bool isLaserCharged = true;
     private int laserRechargeTime = 4;
@@ -18,7 +19,11 @@ public class AlienShip : MonoBehaviour
     private Vector3 currentLaserTarget;
     private GameObject earth;
 
-    // Start is called before the first frame update
+    void Awake()
+    {
+        waveSpawner = GetComponent<WaveSpawner>();
+    }
+
     void Start()
     {
         earth = GameObject.Find("Earth");
