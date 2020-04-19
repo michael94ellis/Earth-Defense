@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AlienShip : MonoBehaviour
+public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in LaserTurret right now
 {
     public Vector3 axis = new Vector3(0,0,0);
     public float rotationSpeed = 80.0f;
@@ -113,7 +113,7 @@ public class AlienShip : MonoBehaviour
         }
     }
 
-    private void FireLaserAt(Vector3 target)
+    public void FireLaserAt(Vector3 target)
     {
         Debug.Log("City In Sight");
         currentLaserTarget = target;
@@ -134,7 +134,7 @@ public class AlienShip : MonoBehaviour
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
-    IEnumerator FireLaser()
+    public IEnumerator FireLaser()
     {
         yield return new WaitForSeconds(fireDuration);
         laser.enabled = false;
@@ -143,7 +143,7 @@ public class AlienShip : MonoBehaviour
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
-    IEnumerator RechargeLaser()
+    public IEnumerator RechargeLaser()
     {
         yield return new WaitForSeconds(laserRechargeTime);
         isLaserCharged = true;
