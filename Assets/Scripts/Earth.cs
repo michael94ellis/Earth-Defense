@@ -15,6 +15,7 @@ public class MenuManager
     {
         NewGame,
         BuyCity,
+        PickNewCityLocation,
         ShowAllCities,
         EditCity, // Eventually the City Object should present it's own edit screen
         GameOver
@@ -71,6 +72,19 @@ public class Earth : MonoBehaviour
             GameManager.CurrentScreen = MenuManager.MenuScreen.ShowAllCities;
             // Update and fetch data here, to not run loops like this every frame
         }
+        else if (GameManager.CurrentScreen == MenuManager.MenuScreen.PickNewCityLocation)
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit = new RaycastHit();
+            if (Physics.Raycast(ray, out hit))
+            {
+                // This hit.point is the point on earth where you clicked
+                Debug.Log(hit.point);
+                // HANDLE THE ROTATION PLEASE
+                HandleNewCity(hit.point, Quaternion.identity);
+                GameManager.CurrentScreen = MenuManager.MenuScreen.ShowAllCities;
+            }
+        }
     }
 
     void OnGUI()
@@ -85,6 +99,9 @@ public class Earth : MonoBehaviour
                     break;
                 case MenuManager.MenuScreen.BuyCity:
                     GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), BuyCityScreen, "Buy A New City");
+                    break;
+                case MenuManager.MenuScreen.PickNewCityLocation:
+                        // Handled in OnMouseUp()
                     break;
                 case MenuManager.MenuScreen.EditCity:
                     GUILayout.Window(0, new Rect(Earth.GameManager.windowOriginX, Earth.GameManager.windowOriginY, Earth.GameManager.windowWidth, Earth.GameManager.windowHeight), GameManager.CurrentCity.ShowCityMenu, "City Detail Page");
@@ -110,31 +127,11 @@ public class Earth : MonoBehaviour
     {
         GUILayout.Label("Name Your City: ");
         newCityName = GUILayout.TextField(newCityName);
-        // 
-        //if (GUILayout.Button("Click here to pick a city location on the earth")
-        //{
-        //  // Magneto Cat Code
-        //}
-        //
-        // MagnetoCat: Erase these buttons below and uncomment the one above
-        GUILayout.BeginScrollView(new Vector2(0, 0));
-        if (GUILayout.Button("North Pole: $100,000,000"))
+
+        if (GUILayout.Button("Click here to pick a city location on the earth"))
         {
-            HandleNewCity(new Vector3(-0.05f, 0.45f, -0.05f), Quaternion.identity);
+            GameManager.CurrentScreen = MenuManager.MenuScreen.PickNewCityLocation;
         }
-        if (GUILayout.Button("South Pole: $100,000,000"))
-        {
-            HandleNewCity(new Vector3(0.05f, -0.45f - 0.05f), Quaternion.Euler(0, 0, 180));
-        }
-        if (GUILayout.Button("African Coast: $90,000,000"))
-        {
-            HandleNewCity(new Vector3(0.45f, 0.05f, -0.05f), Quaternion.Euler(0, 0, 270));
-        }
-        if (GUILayout.Button("Pacific Ocean: $90,000,000"))
-        {
-            HandleNewCity(new Vector3(-0.45f, -0.05f, -0.05f), Quaternion.Euler(0, 0, 90));
-        }
-        GUILayout.EndScrollView();
     }
     // MagnetoCat: Erase this whole method when you add the city placement
     void HandleNewCity(Vector3 location, Quaternion angle)
