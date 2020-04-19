@@ -15,13 +15,15 @@ public class City : MonoBehaviour
         LaserTurrets.Remove(turret);
     }
     private List<GameObject> Buildings = new List<GameObject>();
-    public IDictionary<Vector2, string> CityGrid = new Dictionary<Vector2, string>();
+
+    private IDictionary<Vector2, GameObject> CityGrid = new Dictionary<Vector2, GameObject>();
 
     // The flat square the city buildings sit on
     private GameObject CityFoundation;
 
     void Start()
     {
+
         TurretRef = Resources.Load("Turret");
     }
 
@@ -37,7 +39,7 @@ public class City : MonoBehaviour
         switch (type)
         {
             case "Turret":
-                GameObject newTurret = Instantiate(TurretRef, new Vector3(gridLocation.x, 5, gridLocation.y), Quaternion.identity) as GameObject;
+                GameObject newTurret = Instantiate(TurretRef, new Vector3(gridLocation.x, 8, gridLocation.y), Quaternion.identity) as GameObject;
                 // Make the new turret a child object so it lives inside the city's coordinate space
                 newTurret.transform.SetParent(transform, false);
                 LaserTurret newLaserTurret = newTurret.GetComponent<LaserTurret>();
@@ -54,6 +56,7 @@ public class City : MonoBehaviour
         List<GameObject> AllBuildings = new List<GameObject>();
         Buildings = new List<GameObject>();
         LaserTurrets = new List<GameObject>();
+        // Add the city's children to the lists  
         foreach (Transform child in transform)
         {
             // Needs to be one of each type of object that lives in a city
@@ -69,7 +72,7 @@ public class City : MonoBehaviour
                     Buildings.Add(child.gameObject);
                     break;
             }
-            CityGrid[new Vector2(child.position.x, child.position.z)] = child.tag;
+
             AllBuildings.Add(child.gameObject);
         }
         return AllBuildings;

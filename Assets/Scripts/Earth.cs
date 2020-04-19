@@ -4,55 +4,30 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
-public class MenuManager
-{
-    public bool Paused;
-    public int windowWidth = Screen.width * 4 / 6;
-    public int windowHeight = Screen.height * 4 / 6;
-    public int windowOriginX = Screen.width / 6;
-    public int windowOriginY = Screen.height / 6;
-    public enum MenuScreen
-    {
-        NewGame,
-        BuyCity,
-        ShowAllCities,
-        EditCity,
-        GameOver
-    }
-    public MenuScreen CurrentScreen;
-    public City CurrentCity;
-}
-
 public class Earth : MonoBehaviour
 {
-    public static MenuManager GameManager;
-    Object CityRef;
+    public bool isPaused = true;
+
+    private bool editMode = false;
+    int windowOriginX = Screen.width / 4;
+    int windowOriginY = Screen.height / 6;
+    int windowWidth = Screen.width - 2 * (Screen.width / 4);
+    int windowHeight = Screen.height - 2 * (Screen.height / 6);
     // Used to display the currently viewed city in GUI
     List<City> Cities;
     // City is a square
     int cityMinCoord = 1;
     int cityMaxCoord = 9;
+    int citySquareSize = 40;
+    int labelWidth = 150;
+    int labelHeight = 30;
     string newCityName;
-    private static int globalcurrency;
-    public static int GlobalCurrency
-    {
-        get
-        {
-            return globalcurrency;
-        }
-    }
+    Object CityRef;
 
     void Start()
     {
         CityRef = Resources.Load("City");
         Cities = new List<City>();
-        // Init the world
-        globalcurrency = 150000000;
-        // Set up the game manager for beginning of game(will change when gameplay changes)
-        GameManager = new MenuManager();
-        GameManager.CurrentScreen = MenuManager.MenuScreen.NewGame;
-        // Pause the game so the player starts in the Menu Screen - OnGUI() method
-        GameManager.Paused = true;
     }
 
     void Update()
@@ -61,182 +36,176 @@ public class Earth : MonoBehaviour
 
     void OnMouseUp()
     {
-        // Only Pause if not already paused, menu must have unpause button
-        if (!GameManager.Paused)
+        if (!isPaused)
         {
             PauseGame();
-            // Show the user all their cities
-            GameManager.CurrentScreen = MenuManager.MenuScreen.ShowAllCities;
-            // Update and fetch data here, to not run loops like this every frame
-            foreach (City city in Cities)
-            {
-                city.UpdateBuildings();
-            }
         }
     }
 
     void OnGUI()
     {
-        // Only show menus if the game is paused
-        if (GameManager.Paused)
+        if (isPaused && Cities.Count == 0)
         {
-            switch (GameManager.CurrentScreen)
-            {
-                case MenuManager.MenuScreen.NewGame:
-                    GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), NewGameScreen, "New Game");
-                    break;
-                case MenuManager.MenuScreen.BuyCity:
-                    GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), BuyCityScreen, "Buy A New City");
-                    break;
-                case MenuManager.MenuScreen.EditCity:
-                    GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), EditCity, "Earth Defense Shop");
-                    break;
-                case MenuManager.MenuScreen.ShowAllCities:
-                    GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), ShowAllCities, "Earth Defense Shop");
-                    break;
-            }
+            GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), BuildFirstCity, "Build Your First City");
+        }
+        else if (isPaused)
+        {
+            GUI.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), EditCityGUI, "Earth Defense Shop");
         }
     }
 
-    void NewGameScreen(int windowID)
+    void BuildFirstCity(int windowID)
     {
-        GUILayout.Label("Welcome To The Game!");
-        if (GUILayout.Button("Click here to begin"))
+        int x = 65, y = 40;
+        GUI.Label(new Rect(x, y, labelWidth, labelHeight), "Name Your City: ");
+        newCityName = GUI.TextField(new Rect(x + labelWidth + 10, y, labelWidth, labelHeight), newCityName);
+        y += 2 * labelHeight;
+        if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "North Pole"))
         {
-            // MagnetoCat: Add/Invoke The Place City Feature Here
-            GameManager.CurrentScreen = MenuManager.MenuScreen.BuyCity; // Temporary: Just send the player to the buy city page for their first city
+            GameObject newCity = Instantiate(CityRef, new Vector3(-5, 4.9f, -5), Quaternion.identity) as GameObject;
+            // Make the new city a child object so it lives inside the earth's coordinate space
+            newCity.transform.SetParent(transform, false);
+            City newCityScript = newCity.GetComponent<City>();
+            Cities.Add(newCityScript);
+            newCityScript.CityName = newCityName;
+
+            isPaused = false;
+            ContinueGame();
+        }
+        y += 2 * labelHeight;
+        if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "South Pole"))
+        {
+            GameObject newCity = Instantiate(CityRef, new Vector3(5, -4.9f, -5), Quaternion.Euler(0, 0, 180)) as GameObject;
+            // Make the new city a child object so it lives inside the earth's coordinate space
+            newCity.transform.SetParent(transform, false);
+            City newCityScript = newCity.GetComponent<City>();
+            Cities.Add(newCityScript);
+            newCityScript.CityName = newCityName;
+
+            isPaused = false;
+            ContinueGame();
+        }
+        y += 2 * labelHeight;
+        if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "African Coast"))
+        {
+            GameObject newCity = Instantiate(CityRef, new Vector3(4.9f, 5, -5), Quaternion.Euler(0, 0, 270)) as GameObject;
+            // Make the new city a child object so it lives inside the earth's coordinate space
+            newCity.transform.SetParent(transform, false);
+            City newCityScript = newCity.GetComponent<City>();
+            Cities.Add(newCityScript);
+            newCityScript.CityName = newCityName;
+
+            isPaused = false;
+            ContinueGame();
+        }
+        y += 2 * labelHeight;
+        if (GUI.Button(new Rect(x, y, labelWidth, labelHeight), "Pacific Ocean"))
+        {
+            GameObject newCity = Instantiate(CityRef, new Vector3(-4.9f, -5, -5), Quaternion.Euler(0, 0, 90)) as GameObject;
+            // Make the new city a child object so it lives inside the earth's coordinate space
+            newCity.transform.SetParent(transform, false);
+            City newCityScript = newCity.GetComponent<City>();
+            Cities.Add(newCityScript);
+            newCityScript.CityName = newCityName;
+
+            isPaused = false;
+            ContinueGame();
         }
     }
 
-    void BuyCityScreen(int windowID)
+    void EditCityGUI(int windowID)
     {
-        GUILayout.Label("Name Your City: ");
-        newCityName = GUILayout.TextField(newCityName);
-        // 
-        //if (GUILayout.Button("Click here to pick a city location on the earth")
-        //{
-        //  // Magneto Cat Code
-        //}
-        //
-        // MagnetoCat: Erase these buttons below and uncomment the one above
-        GUILayout.BeginScrollView(new Vector2(0, 0));
-        if (GUILayout.Button("North Pole: $100,000,000"))
-        {
-            HandleNewCity(new Vector3(-1.05f, 1.05f, -1.05f), Quaternion.identity);
-        }
-        if (GUILayout.Button("South Pole: $100,000,000"))
-        {
-            HandleNewCity(new Vector3(1.05f, -1.05f - 1.05f), Quaternion.Euler(0, 0, 180));
-        }
-        if (GUILayout.Button("African Coast: $90,000,000"))
-        {
-            HandleNewCity(new Vector3(1.05f, 1.05f, -1.05f), Quaternion.Euler(0, 0, 270));
-        }
-        if (GUILayout.Button("Pacific Ocean: $90,000,000"))
-        {
-            HandleNewCity(new Vector3(-1.05f, -1.05f, -1.05f), Quaternion.Euler(0, 0, 90));
-        }
-        GUILayout.EndScrollView();
-    }
-    // MagnetoCat: Erase this whole method when you add the city placement
-    void HandleNewCity(Vector3 location, Quaternion angle)
-    {
-        GameObject newCity = Instantiate(CityRef, location, angle) as GameObject; 
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        newCity.transform.SetParent(transform, false);
-        // City needs to be smaller than earth
-        newCity.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        // This lets us control the City Script attached to the City object we just made
-        City newCityScript = newCity.GetComponent<City>();
-        Cities.Add(newCityScript);
-        newCityScript.CityName = newCityName;
-        // Now show all the cities 
-        GameManager.CurrentScreen = MenuManager.MenuScreen.ShowAllCities;
-        newCityName = "";
-    }
-
-    void ShowAllCities(int windowID)
-    {
-        if (GUILayout.Button("Buy New City"))
-        {
-            GameManager.CurrentScreen = MenuManager.MenuScreen.BuyCity;
-        }
+        int x = 65, y = 40;
+        int labelWidth = 150;
+        int labelHeight = 30;
+        int spacer = 10;
+        // Start positions, these are cursors for printing the UI elements
         foreach (City city in Cities)
         {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("City: " + city.CityName);
-            if (GUILayout.Button("Edit City"))
+            if (editMode)
             {
-                // Set the current city to edit it
-                GameManager.CurrentCity = city;
-                GameManager.CurrentScreen = MenuManager.MenuScreen.EditCity;
-
+                city.CityName = GUI.TextField(new Rect(x, y, labelWidth, labelHeight), city.CityName);
+                ModifyCityLayoutGUI(city);
             }
-            GUILayout.EndHorizontal();
+            else
+            {
+                GUI.Label(new Rect(x, y, labelWidth, labelHeight), "City: " + city.CityName);
+            }
+            if (GUI.Button(new Rect(x + 175, y, labelWidth, labelHeight), "Edit City"))
+            {
+                editMode = !editMode;
+            }
+            y += labelHeight + spacer;
+            // TODO Add ability to move camera to a city and look at it and open its edit page
+
         }
         // Bottom save and continue button
-        if (GUILayout.Button("Save And Continue"))
+        if (GUI.Button(new Rect(x, windowHeight - 60, labelWidth, 30), "Save And Continue"))
         {
+            isPaused = false;
             ContinueGame();
         }
     }
 
-    void EditCity(int windowID)
+    private IDictionary<Vector2, GameObject> CurrentlyDisplayedCityGrid = new Dictionary<Vector2, GameObject>();
+
+    void ModifyCityLayoutGUI(City city)
     {
-        GUILayout.Label("Global Defense Budget: $" + GlobalCurrency.ToString());
-        GameManager.CurrentCity.CityName = GUILayout.TextField(GameManager.CurrentCity.CityName);
+        int y = 40;
+        int spacer = 20;
+
         // Map the city/s existing things to their coords in the city grid
-        GUILayout.BeginVertical();
-        for (int xAxis = cityMinCoord; xAxis <= cityMaxCoord; xAxis++)
+        List<GameObject> existingBuildings = city.UpdateBuildings();
+        foreach (GameObject building in existingBuildings)
         {
-            GUILayout.BeginHorizontal();
-            for (int yAxis = cityMinCoord; yAxis <= cityMaxCoord; yAxis++)
+            Vector2 coord = new Vector2(building.transform.localPosition.x, building.transform.localPosition.z);
+            CurrentlyDisplayedCityGrid[coord] = building;
+        }
+        foreach (GameObject building in existingBuildings)
+        {
+            for (int xAxis = cityMinCoord; xAxis <= cityMaxCoord; xAxis++)
             {
-                string buttonText = "";
-                if (GameManager.CurrentCity.CityGrid.ContainsKey(new Vector2(xAxis, yAxis)))
+                for (int yAxis = cityMinCoord; yAxis <= cityMaxCoord; yAxis++)
                 {
-                    switch (GameManager.CurrentCity.CityGrid[new Vector2(xAxis, yAxis)])
+                    string buttonText = "";
+                    if (CurrentlyDisplayedCityGrid.ContainsKey(new Vector2(xAxis, yAxis)))
                     {
-                        case "Turret":
-                            buttonText = "T";
-                            GUILayout.Button(buttonText);
-                            break;
-                        case "Building":
-                            buttonText = "B";
-                            GUILayout.Button(buttonText);
-                            break;
-                        default:
-                            Debug.Log("Unknown tag");
-                            break;
+                        switch (CurrentlyDisplayedCityGrid[new Vector2(xAxis, yAxis)].tag)
+                        {
+                            case "Turret":
+                                buttonText = "T";
+                                GUI.Button(new Rect(65 + xAxis * citySquareSize + spacer, y + yAxis * citySquareSize + spacer, citySquareSize, citySquareSize), buttonText);
+                                break;
+                            case "Building":
+                                buttonText = "B";
+                                GUI.Button(new Rect(65 + xAxis * citySquareSize + spacer, y + yAxis * citySquareSize + spacer, citySquareSize, citySquareSize), buttonText);
+                                break;
+                            default:
+                                Debug.Log("Unkwonw tag: " + CurrentlyDisplayedCityGrid[new Vector2(xAxis, yAxis)].tag);
+                                break;
+                        }
                     }
-                }
-                else
-                {
-                    if (GUILayout.Button(buttonText))
+                    else
                     {
-                        GameManager.CurrentCity.AddBuilding(new Vector2(xAxis, yAxis), "Turret");
+                        if (GUI.Button(new Rect(65 + xAxis * citySquareSize + spacer, y + yAxis * citySquareSize + spacer, citySquareSize, citySquareSize), buttonText))
+                        {
+                            city.AddBuilding(new Vector2(xAxis, yAxis), "Turret");
+                        }
                     }
                 }
             }
-            GUILayout.EndHorizontal();
-        }
-        GUILayout.EndVertical();
-        // Bottom save and continue button
-        if (GUILayout.Button("Save And Continue"))
-        {
-            ContinueGame();
         }
     }
 
     private void PauseGame()
     {
-        GameManager.Paused = true;
+        isPaused = true;
         Time.timeScale = 0;
         //Disable scripts that still work while timescale is set to 0
     }
     private void ContinueGame()
     {
-        GameManager.Paused = false;
+        isPaused = false;
         Time.timeScale = 1;
         //enable the scripts again
     }
