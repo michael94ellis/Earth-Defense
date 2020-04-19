@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 // This class is instantiated by the Earth class
 // It holds important vars for the menu separate from the earth object
@@ -42,6 +43,7 @@ public class Earth : MonoBehaviour
     public static MenuManager GameManager;
     Object CityRef;
     Object LaserTurretRef;
+    Object SatelliteRef;
     // Used to display the currently viewed city in GUI
     List<City> Cities;
     // City is a square
@@ -63,6 +65,7 @@ public class Earth : MonoBehaviour
     {
         CityRef = Resources.Load("City");
         LaserTurretRef = Resources.Load("Turret");
+        SatelliteRef = Resources.Load("EarthSatellite");
         Cities = new List<City>();
         // Init the world
         globalcurrency = 1000000000;
@@ -119,8 +122,10 @@ public class Earth : MonoBehaviour
 
     void NewGameScreen(int windowID)
     {
+        GUIStyle f = new GUIStyle("f");
+        f.fontSize = 30;
         GUILayout.Label("Welcome To The Game!");
-        if (GUILayout.Button("Click here to begin"))
+        if (GUILayout.Button("Click here to begin", f))
         {
             // MagnetoCat: Add/Invoke The Place City Feature Here
             GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu; // Temporary: Just send the player to the buy city page for their first city
@@ -132,13 +137,35 @@ public class Earth : MonoBehaviour
     {
         GameObject NewObject = Instantiate(GameManager.NewObject, location, Quaternion.identity) as GameObject;
         // Make it smaller than the Earth
-        NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        if (GameManager.NewObject == LaserTurretRef)
+        {
+            NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
+        }
+        else
+        {
+            NewObject.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+        }
         // Make the new city a child object so it lives inside the earth's coordinate space
         NewObject.transform.SetParent(transform, false);
         // Get a point directly above the city away from earth
         Vector3 awayFromEarth = location - transform.position;
         // assign the up vector for the city
         NewObject.transform.up = awayFromEarth;
+        // Reset this
+        GameManager.NewObject = null;
+    }
+
+    void BuildNewEarthSatellite()
+    {
+        GameObject NewSatellite = Instantiate(SatelliteRef, new Vector3(RandomCoord(0.4f,0.7f), RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f)), Quaternion.identity) as GameObject;
+        // Make it smaller than the Earth
+        NewSatellite.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+        // Make the new city a child object so it lives inside the earth's coordinate space
+        NewSatellite.transform.SetParent(transform, false);
+        // Get a point directly above the city away from earth
+        Vector3 awayFromEarth = NewSatellite.transform.position - transform.position;
+        // assign the up vector for the city
+        NewSatellite.transform.up = awayFromEarth;
     }
 
     void MainEarthMenu(int windowID)
@@ -153,6 +180,10 @@ public class Earth : MonoBehaviour
             GameManager.NewObject = LaserTurretRef;
             GameManager.isPickingLocation = true;
         }
+        if (GUILayout.Button("Buy New Satellite"))
+        {
+            BuildNewEarthSatellite();
+        }
         foreach (City city in Cities)
         {
             GUILayout.BeginHorizontal();
@@ -163,6 +194,22 @@ public class Earth : MonoBehaviour
         if (GUILayout.Button("Save And Continue"))
         {
             GameManager.Resume();
+        }
+    }
+
+    // Returns a random value in the range, 50% change of being negative
+    float RandomCoord(float min, float max)
+    {
+        // Sign(+/-): 1 is plus, 2 is minus
+        var sign = Random.Range(1, 3);
+        var value = Random.Range(min, max);
+        if (sign == 2)
+        {
+            return value * -1;
+        }
+        else
+        {
+            return value;
         }
     }
 }

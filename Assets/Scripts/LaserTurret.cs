@@ -30,38 +30,38 @@ public class LaserTurret : MonoBehaviour, LaserGun
     // Update is called once per frame
     void Update()
     {
-        // TODO more efficient or cooler line of sight or targeting of alien ships for city laser turrets
-        foreach (GameObject alienShip in GameObject.FindGameObjectsWithTag("Alien"))
-        {
-            // Find how far the ship is
-            float distanceToAlienShip = Vector3.Distance(alienShip.transform.position, transform.position);
-            // TODO Add turret aiming animation
-            if (distanceToAlienShip > firingRange)
-                return;
-            // Make sure this isn't a dead ship
-            if (alienShip == null)
-            {
-                // Update our list if we found a dead ship and try again
-                Debug.Log("Dead Alien Confirmed");
-                return;
-            }
-            if (distanceToAlienShip < firingRange)
-            {
-                // Animation for the laser while its bein fired
-                if (isFiring)
-                {
-                    FireLaserAt(alienShip.transform.position);
-                    return;
-                }
-                // If the laser is done firing we have to wait for it to recharge to fire again
-                if (isCharged)
-                {
-                    Debug.Log("Laser Turret Beginning Fire Sequence");
-                    AimAtTarget(alienShip);
-                    return;
-                }
-            }
-        }
+        //// TODO more efficient or cooler line of sight or targeting of alien ships for city laser turrets
+        //foreach (GameObject alienShip in GameObject.FindGameObjectsWithTag("Alien"))
+        //{
+        //    // Find how far the ship is
+        //    float distanceToAlienShip = Vector3.Distance(alienShip.transform.position, transform.position);
+        //    // TODO Add turret aiming animation
+        //    if (distanceToAlienShip > firingRange)
+        //        return;
+        //    // Make sure this isn't a dead ship
+        //    if (alienShip == null)
+        //    {
+        //        // Update our list if we found a dead ship and try again
+        //        Debug.Log("Dead Alien Confirmed");
+        //        return;
+        //    }
+        //    if (distanceToAlienShip < firingRange)
+        //    {
+        //        // Animation for the laser while its bein fired
+        //        if (isFiring)
+        //        {
+        //            FireLaserAt(alienShip.transform.position);
+        //            return;
+        //        }
+        //        // If the laser is done firing we have to wait for it to recharge to fire again
+        //        if (isCharged)
+        //        {
+        //            Debug.Log("Laser Turret Beginning Fire Sequence");
+        //            AimAtTarget(alienShip);
+        //            return;
+        //        }
+        //    }
+        //}
     }
 
     public void AimAtTarget(GameObject alienShip)

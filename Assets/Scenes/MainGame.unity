@@ -229,7 +229,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -22.49}
+  m_LocalPosition: {x: 0, y: 0.02, z: -1.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -457,7 +457,7 @@ Transform:
   m_GameObject: {fileID: 2138679897}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 30.49998, y: 7.904108, z: 266}
-  m_LocalScale: {x: 109, y: 109, z: 109}
+  m_LocalScale: {x: 30, y: 30, z: 30}
   m_Children:
   - {fileID: 383840923}
   m_Father: {fileID: 1398910013}
@@ -564,7 +564,7 @@ MonoBehaviour:
     AttractorMass: 1000
     GravityConstant: 0.1
   VelocityHandle: {fileID: 383840923}
-  VelocityHandleLenghtScale: 0
+  VelocityHandleLenghtScale: 10
   TimeScale: 100
   OrbitData:
     GravConst: 0.10000000149011612
@@ -587,48 +587,48 @@ MonoBehaviour:
     AttractorDistance: 267.8595224376838
     AttractorMass: 1000
     Velocity:
-      x: 10.701942443847656
-      y: 0.00000858306884765625
-      z: 2.373748779296875
+      x: 0.29454880952835083
+      y: 0.0000002384185791015625
+      z: 0.06533203274011612
     MG: 100.00000149011612
-    SemiMinorAxis: 267.2420416841322
-    SemiMajorAxis: 0.8373835235654709
-    FocalParameter: 85287.45411590322
-    Eccentricity: 319.1409265891017
-    EnergyTotal: 119.41959529407627
-    Period: Infinity
-    TrueAnomaly: 0.10438866590483305
-    MeanAnomaly: 33.22680864368614
-    EccentricAnomaly: 0.10425100064823856
+    SemiMinorAxis: 99.26744250459583
+    SemiMajorAxis: 152.52441035164074
+    FocalParameter: 64.60621692413076
+    Eccentricity: 0.7592236017033265
+    EnergyTotal: -0.6556327689421577
+    Period: 1183.5562337845565
+    TrueAnomaly: 3.1084078693207653
+    MeanAnomaly: 2.983972610585112
+    EccentricAnomaly: 3.0519444847696393
     SquaresConstant: 0
     Periapsis:
-      x: -57.747509452357306
-      y: -7.903995502347394
-      z: 259.9517126521268
-    PeriapsisDistance: 266.4059700975658
+      x: 2.968814572113642
+      y: 1.079322284461763
+      z: -36.58816490409251
+    PeriapsisDistance: 36.72427817679194
     Apoapsis:
-      x: Infinity
-      y: Infinity
-      z: Infinity
-    ApoapsisDistance: Infinity
+      x: -21.69153081984296
+      y: -7.886027243957311
+      z: 267.3300360734821
+    ApoapsisDistance: 268.32454252648955
     CenterPoint:
-      x: -57.929024952646714
-      y: -7.928839823972684
-      z: 260.7688087593116
-    OrbitCompressionRatio: 101849.9310241504
+      x: -9.36135812386466
+      y: -3.403352479747774
+      z: 115.37093558469482
+    OrbitCompressionRatio: 0.4235795226166287
     OrbitNormal:
-      x: -0.006425366253985106
-      y: 0.9995597786418079
-      z: 0.028964868203432255
+      x: -0.006425326692141388
+      y: 0.9995597787645637
+      z: 0.02896487274330351
     SemiMinorAxisBasis:
-      x: -0.9762026520985273
-      y: 0.00000887381849030462
-      z: -0.21686028211052574
+      x: 0.996706327986758
+      y: 0.0040599729578680655
+      z: 0.08099390329360948
     SemiMajorAxisBasis:
-      x: -0.21676507261158023
-      y: -0.029668987896377542
-      z: 0.975772849823616
-    OrbitNormalDotEclipticNormal: 0.028964868203432255
+      x: 0.08084065145737286
+      y: 0.02938988424131492
+      z: -0.9962936433483001
+    OrbitNormalDotEclipticNormal: 0.02896487274330351
   LockOrbitEditing: 0
 --- !u!23 &2138679902
 MeshRenderer:

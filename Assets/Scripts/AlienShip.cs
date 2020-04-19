@@ -23,7 +23,7 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
     {
         earth = GameObject.Find("Earth");
         transform.LookAt(earth.transform.position);
-        laser = gameObject.AddComponent(typeof(LineRenderer)) as LineRenderer;
+        //laser = gameObject.GetComponent<LineRenderer>();
         // Alien ship scans city to find all buildings to destroy
         GetCityInfo();
     }
@@ -36,10 +36,6 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
     private void GetCityInfo()
     {
         city = GameObject.Find("City");
-        foreach (Transform child in city.transform)
-        {
-            cityBuildings.Add(child.gameObject);
-        }
     }
 
     // Update is called once per frame
@@ -52,21 +48,21 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         {
             // Orbit the earth
             transform.RotateAround(earth.transform.position, axis, rotationSpeed * Time.deltaTime);
-            // Animation for the laser
-            if (isFiringLaser)
-            {
-                FireLaserAt(currentLaserTarget);
-                return;
-            }
-            // There should be a recharge period for the laser
-            if (isLaserCharged)
-            {
-                if (cityBuildings.Count == 1)
-                    return;
-                // Search for a target to fire laser at
-                SearchForTarget();
+            //// Animation for the laser
+            //if (isFiringLaser)
+            //{
+            //    FireLaserAt(currentLaserTarget);
+            //    return;
+            //}
+            //// There should be a recharge period for the laser
+            //if (isLaserCharged)
+            //{
+            //    if (cityBuildings.Count == 1)
+            //        return;
+            //    // Search for a target to fire laser at
+            //    SearchForTarget();
                 
-            }
+            //}
         }
         else if (Time.timeScale > 0)
         {
