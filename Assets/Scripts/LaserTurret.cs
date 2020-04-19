@@ -2,15 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaserTurret : MonoBehaviour
+public interface LaserGun
 {
-    // City the turret exists in
-    public City city;
-    public float firingRange = 15.0f;
-    public float fireDuration = 0.5f;
-    public int rechargeTime = 3;
-    public bool isFiring;
-    public bool isCharged;
+    void FireLaserAt(Vector3 target);
+    IEnumerator FireLaser();
+    IEnumerator RechargeLaser();
+}
+
+public class LaserTurret : MonoBehaviour, LaserGun, CityBuilding
+{
+    private Vector2 position;
+    public Vector2 Position { get => position; set => position = value; }
+    public BuildingType category { get => BuildingType.Offensive; }
+
+    float firingRange = 15.0f;
+    float fireDuration = 0.5f;
+    int rechargeTime = 3;
+    bool isFiring;
+    bool isCharged;
     // Draws the laser
     private LineRenderer Laser;
 
@@ -20,11 +29,6 @@ public class LaserTurret : MonoBehaviour
         Laser = gameObject.GetComponent<LineRenderer>();
         isFiring = false;
         isCharged = true;
-    }
-
-    private void OnDestroy()
-    {
-        city.RemoveTurret(this.gameObject);
     }
 
     // Update is called once per frame
@@ -50,7 +54,7 @@ public class LaserTurret : MonoBehaviour
                 // Animation for the laser while its bein fired
                 if (isFiring)
                 {
-                    FireLaserAt(alienShip);
+                    FireLaserAt(alienShip.transform.position);
                     return;
                 }
                 // If the laser is done firing we have to wait for it to recharge to fire again
@@ -58,12 +62,13 @@ public class LaserTurret : MonoBehaviour
                 {
                     Debug.Log("Laser Turret Beginning Fire Sequence");
                     AimAtTarget(alienShip);
+                    return;
                 }
             }
         }
     }
 
-    private void AimAtTarget(GameObject alienShip)
+    public void AimAtTarget(GameObject alienShip)
     {
         // Determine if there is line of sight to the alien ship
         RaycastHit hit;
@@ -76,7 +81,7 @@ public class LaserTurret : MonoBehaviour
             if (hit.transform.tag == "Alien")
             {
                 // Begin animating laser
-                FireLaserAt(alienShip);
+                FireLaserAt(alienShip.transform.position);
                 // Destroy the ship
                 GameObject destroyedAlienShip = alienShip;
                 Destroy(destroyedAlienShip);
@@ -95,7 +100,7 @@ public class LaserTurret : MonoBehaviour
     }
 
     /// This animates the laser firing
-    private void FireLaserAt(GameObject alienShip)
+    public void FireLaserAt(Vector3 target)
     {
         Debug.Log("Alien Ship In Sight");
         // This begins the laser, the FireLaser() method disables when its done firing
@@ -112,11 +117,11 @@ public class LaserTurret : MonoBehaviour
         Laser.startWidth = 0.1f;
         Laser.endWidth = 0.1f;
         Laser.SetPosition(0, transform.position);
-        Laser.SetPosition(1, alienShip.transform.position);
+        Laser.SetPosition(1, target);
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
-    IEnumerator FireLaser()
+    public IEnumerator FireLaser()
     {
         yield return new WaitForSeconds(fireDuration);
         Laser.enabled = false;
@@ -125,7 +130,7 @@ public class LaserTurret : MonoBehaviour
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
-    IEnumerator RechargeLaser()
+    public IEnumerator RechargeLaser()
     {
         yield return new WaitForSeconds(rechargeTime);
         isCharged = true;
