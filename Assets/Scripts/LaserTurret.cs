@@ -9,12 +9,8 @@ public interface LaserGun
     IEnumerator RechargeLaser();
 }
 
-public class LaserTurret : MonoBehaviour, LaserGun, CityBuilding
+public class LaserTurret : MonoBehaviour, LaserGun
 {
-    private Vector2 position;
-    public Vector2 Position { get => position; set => position = value; }
-    public BuildingType category { get => BuildingType.Offensive; }
-
     float firingRange = 15.0f;
     float fireDuration = 0.5f;
     int rechargeTime = 3;
