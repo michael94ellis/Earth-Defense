@@ -22,19 +22,7 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
     {
         earth = GameObject.Find("Earth");
         transform.LookAt(earth.transform.position);
-        //laser = gameObject.GetComponent<LineRenderer>();
-        // Alien ship scans city to find all buildings to destroy
-        GetCityInfo();
-    }
-
-    void OnDestroy()
-    {
-        AlienSpawner.RemovAlien(this.gameObject);
-    }
-
-    private void GetCityInfo()
-    {
-        city = GameObject.Find("City");
+        laser = gameObject.GetComponent<LineRenderer>();
     }
 
     // Update is called once per frame

@@ -48,7 +48,7 @@ public class AlienSpawner : MonoBehaviour
         GameObject newAlienShip = Instantiate(shipRef, randomSpawnPoint, Quaternion.identity) as GameObject;
         // This makes the alien live in the same coordinate space as the Earth
         newAlienShip.transform.SetParent(earth.transform, true);
-        newAlienShip.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        newAlienShip.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
         return newAlienShip;
     }
 

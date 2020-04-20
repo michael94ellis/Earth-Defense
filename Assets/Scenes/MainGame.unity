@@ -476,7 +476,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 0.8962264, g: 0.8514882, b: 0.080322154, a: 1}
   m_Intensity: 1
-  m_Range: 1000
+  m_Range: 2000
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -564,8 +564,8 @@ MonoBehaviour:
     AttractorMass: 1000
     GravityConstant: 0.1
   VelocityHandle: {fileID: 383840923}
-  VelocityHandleLenghtScale: 10
-  TimeScale: 100
+  VelocityHandleLenghtScale: 5
+  TimeScale: 25
   OrbitData:
     GravConst: 0.10000000149011612
     EclipticNormal:
@@ -587,47 +587,47 @@ MonoBehaviour:
     AttractorDistance: 267.8595224376838
     AttractorMass: 1000
     Velocity:
-      x: 0.29454880952835083
-      y: 0.0000002384185791015625
-      z: 0.06533203274011612
+      x: 0.5890976190567017
+      y: 0.000000476837158203125
+      z: 0.13066406548023224
     MG: 100.00000149011612
-    SemiMinorAxis: 99.26744250459583
-    SemiMajorAxis: 152.52441035164074
-    FocalParameter: 64.60621692413076
-    Eccentricity: 0.7592236017033265
-    EnergyTotal: -0.6556327689421577
-    Period: 1183.5562337845565
-    TrueAnomaly: 3.1084078693207653
-    MeanAnomaly: 2.983972610585112
-    EccentricAnomaly: 3.0519444847696393
+    SemiMinorAxis: 259.9097172394029
+    SemiMajorAxis: 261.4030983844642
+    FocalParameter: 258.42486769652305
+    Eccentricity: 0.10673916515264664
+    EnergyTotal: -0.38255094185241423
+    Period: 2655.497895094805
+    TrueAnomaly: 1.9070847695428552
+    MeanAnomaly: 1.700467436391021
+    EccentricAnomaly: 1.804309639875599
     SquaresConstant: 0
     Periapsis:
-      x: 2.968814572113642
-      y: 1.079322284461763
-      z: -36.58816490409251
-    PeriapsisDistance: 36.72427817679194
+      x: -210.21005777982137
+      y: 1.594206623271655
+      z: -101.64633350762293
+    PeriapsisDistance: 233.50114989459138
     Apoapsis:
-      x: -21.69153081984296
-      y: -7.886027243957311
-      z: 267.3300360734821
-    ApoapsisDistance: 268.32454252648955
+      x: 260.4476708012006
+      y: -1.9752023580234512
+      z: 125.93855444952783
+    ApoapsisDistance: 289.3050468743371
     CenterPoint:
-      x: -9.36135812386466
-      y: -3.403352479747774
-      z: 115.37093558469482
-    OrbitCompressionRatio: 0.4235795226166287
+      x: 25.11880651068962
+      y: -0.19049786737589822
+      z: 12.146110470952447
+    OrbitCompressionRatio: 0.988606750622516
     OrbitNormal:
       x: -0.006425326692141388
       y: 0.9995597787645637
       z: 0.02896487274330351
     SemiMinorAxisBasis:
-      x: 0.996706327986758
-      y: 0.0040599729578680655
-      z: 0.08099390329360948
+      x: 0.4353201800974631
+      y: 0.02887274206505311
+      z: -0.8998125946915598
     SemiMajorAxisBasis:
-      x: 0.08084065145737286
-      y: 0.02938988424131492
-      z: -0.9962936433483001
+      x: -0.900252773379128
+      y: 0.006827403736518305
+      z: -0.4353140597102361
     OrbitNormalDotEclipticNormal: 0.02896487274330351
   LockOrbitEditing: 0
 --- !u!23 &2138679902

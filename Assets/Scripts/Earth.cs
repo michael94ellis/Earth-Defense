@@ -36,6 +36,44 @@ public class MenuManager
         Time.timeScale = 1;
         //enable the scripts again
     }
+
+    private GUIStyle _HeaderStyle;
+    public GUIStyle HeaderStyle
+    {
+        get
+        {
+            if (_HeaderStyle == null)
+            {
+                GUIStyle newStyle = new GUIStyle
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    fontSize = 24
+                };
+                newStyle.normal.textColor = Color.white;
+                _HeaderStyle = newStyle;
+            }
+            return _HeaderStyle;
+        }
+    }
+
+    private GUIStyle _ButtonStyle;
+    public GUIStyle ButtonStyle
+    {
+        get
+        {
+            if (_ButtonStyle == null)
+            {
+                GUIStyle newStyle = new GUIStyle(GUI.skin.button)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    fontSize = 22
+                };
+                newStyle.normal.textColor = Color.white;
+                _ButtonStyle = newStyle;
+            }
+            return _ButtonStyle;
+        }
+    }
 }
 
 public class Earth : MonoBehaviour
@@ -48,8 +86,8 @@ public class Earth : MonoBehaviour
     List<City> Cities;
     // City is a square
     string newCityName;
-    private static int globalcurrency;
-    public static int GlobalCurrency
+    private static float globalcurrency;
+    public static float GlobalCurrency
     {
         get
         {
@@ -68,7 +106,7 @@ public class Earth : MonoBehaviour
         SatelliteRef = Resources.Load("EarthSatellite");
         Cities = new List<City>();
         // Init the world
-        globalcurrency = 1000000000;
+        globalcurrency = 1000;
         // Set up the game manager for beginning of game(will change when gameplay changes)
         GameManager = new MenuManager();
         GameManager.CurrentScreen = MenuManager.MenuScreen.NewGame;
@@ -111,10 +149,10 @@ public class Earth : MonoBehaviour
             switch (GameManager.CurrentScreen)
             {
                 case MenuManager.MenuScreen.NewGame:
-                    GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), NewGameScreen, "New Game");
+                    GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), NewGameScreen, "");
                     break;
                 case MenuManager.MenuScreen.MainMenu:
-                    GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), MainEarthMenu, "Earth Defense Shop");
+                    GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), MainEarthMenu, "");
                     break;
             }
         }
@@ -122,8 +160,8 @@ public class Earth : MonoBehaviour
 
     void NewGameScreen(int windowID)
     {
-        GUILayout.Label("Welcome To The Game!", GUILayout.Height(75));
-        if (GUILayout.Button("Click here to begin", GUILayout.Height(75)))
+        GUILayout.Label("Welcome To The Game!", GameManager.HeaderStyle, GUILayout.Height(75));
+        if (GUILayout.Button("Click here to begin", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
             // MagnetoCat: Add/Invoke The Place City Feature Here
             GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu; // Temporary: Just send the player to the buy city page for their first city
@@ -168,33 +206,54 @@ public class Earth : MonoBehaviour
 
     void MainEarthMenu(int windowID)
     {
-
+        GUILayout.Label("Earth Defense Shop", GameManager.HeaderStyle, GUILayout.Height(40));
+        GUILayout.Label("Global Budget: $" + GlobalCurrency + " Million", GameManager.HeaderStyle, GUILayout.Height(75));
         GUILayout.BeginHorizontal(GUILayout.Height(75));
-        if (GUILayout.Button("Buy New City", GUILayout.Height(75)))
+        BuyCityButton();
+        BuyLaserTurretButton();
+        BuySatelliteButton();
+        GUILayout.EndHorizontal();
+        ResumeGameButton();
+    }
+
+    void ResumeGameButton()
+    {
+        GUI.enabled = true;
+        if (GUILayout.Button("Resume Game", GameManager.ButtonStyle, GUILayout.Height(75)))
+        {
+            GameManager.Resume();
+        }
+    }
+
+    void BuyCityButton()
+    {
+        GUI.enabled = GlobalCurrency > 100;
+        if (GUILayout.Button("Place New City $100M", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
             GameManager.NewObject = CityRef;
             GameManager.isPickingLocation = true;
+            GlobalCurrency -= 100;
         }
-        if (GUILayout.Button("Buy New Laser Turret", GUILayout.Height(75)))
+    }
+
+    void BuyLaserTurretButton()
+    {
+        GUI.enabled = GlobalCurrency > 40;
+        if (GUILayout.Button("Buy New Laser Turret $40M", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
             GameManager.NewObject = LaserTurretRef;
             GameManager.isPickingLocation = true;
+            GlobalCurrency -= 40;
         }
-        if (GUILayout.Button("Buy New Satellite", GUILayout.Height(75)))
+    }
+
+    void BuySatelliteButton()
+    {
+        GUI.enabled = GlobalCurrency > 75;
+        if (GUILayout.Button("Buy New Satellite $75M", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
             BuildNewEarthSatellite();
-        }
-        GUILayout.EndHorizontal();
-        foreach (City city in Cities)
-        {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("City at Location: " + city.transform.position, GUILayout.Height(75));
-            GUILayout.EndHorizontal();
-        }
-        // Bottom save and continue button
-        if (GUILayout.Button("Save And Continue", GUILayout.Height(75)))
-        {
-            GameManager.Resume();
+            GlobalCurrency -= 75;
         }
     }
 
