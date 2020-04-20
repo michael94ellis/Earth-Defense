@@ -9,6 +9,8 @@ public class AlienSpawner : MonoBehaviour
     public Object shipRef;
     private int activeAliens = 12;
     private GameObject earth;
+    // Positions of stuff to shoot at
+    public static List<Transform> Targets;
 
     private static List<GameObject> Aliens = new List<GameObject>();
     public static void AddAlien(GameObject alien)
@@ -64,5 +66,17 @@ public class AlienSpawner : MonoBehaviour
         {
             return value;
         }
+    }
+
+    /// Must be called like so: StartCoroutine(LaserWasFired());
+    public IEnumerator RefreshCitiesList()
+    {
+        yield return new WaitForSeconds(10);
+        Targets = new List<Transform>();
+        foreach (Transform child in earth.transform)
+        {
+            Targets.Add(child);
+        }
+        RefreshCitiesList();
     }
 }

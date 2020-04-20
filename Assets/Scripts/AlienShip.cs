@@ -9,7 +9,6 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
     public float moveSpeed = 0.1f;
     bool isFiringLaser = false; 
     GameObject city = null;
-    List<GameObject> cityBuildings = new List<GameObject>();
     LineRenderer laser;
     /// Laser recharge time
     private bool isLaserCharged = true;
@@ -44,25 +43,22 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         // Determine how far earth's center(0,0,0) is
         float distanceToEarth = Vector3.Distance(earth.transform.position, transform.position);
 
-        if (distanceToEarth < 10)
+        if (distanceToEarth < 5)
         {
             // Orbit the earth
             transform.RotateAround(earth.transform.position, axis, rotationSpeed * Time.deltaTime);
-            //// Animation for the laser
-            //if (isFiringLaser)
-            //{
-            //    FireLaserAt(currentLaserTarget);
-            //    return;
-            //}
-            //// There should be a recharge period for the laser
-            //if (isLaserCharged)
-            //{
-            //    if (cityBuildings.Count == 1)
-            //        return;
-            //    // Search for a target to fire laser at
-            //    SearchForTarget();
-                
-            //}
+            // Animation for the laser
+            if (isFiringLaser)
+            {
+                FireLaserAt(currentLaserTarget);
+                return;
+            }
+            // There should be a recharge period for the laser
+            if (isLaserCharged)
+            {
+                // Search for a target to fire laser at
+                SearchForTarget();
+            }
         }
         else if (Time.timeScale > 0)
         {
@@ -72,7 +68,7 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
 
     private void SearchForTarget()
     {
-        foreach (GameObject building in cityBuildings)
+        foreach (GameObject building in GameObject.FindGameObjectsWithTag("City"))
         {
             if (building == null || building.tag == "CityFoundation")
             {
@@ -90,10 +86,6 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
                 {
                     // Begin animating laser
                     FireLaserAt(building.transform.position);
-                    // Destroy the building, move this later
-                    GameObject destroyedBuilding = building;
-                    cityBuildings.Remove(building);
-                    Destroy(destroyedBuilding);
                     break;
                 }
                 else // Something is in the way

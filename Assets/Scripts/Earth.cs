@@ -122,10 +122,8 @@ public class Earth : MonoBehaviour
 
     void NewGameScreen(int windowID)
     {
-        GUIStyle f = new GUIStyle("f");
-        f.fontSize = 30;
-        GUILayout.Label("Welcome To The Game!");
-        if (GUILayout.Button("Click here to begin", f))
+        GUILayout.Label("Welcome To The Game!", GUILayout.Height(75));
+        if (GUILayout.Button("Click here to begin", GUILayout.Height(75)))
         {
             // MagnetoCat: Add/Invoke The Place City Feature Here
             GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu; // Temporary: Just send the player to the buy city page for their first city
@@ -170,28 +168,31 @@ public class Earth : MonoBehaviour
 
     void MainEarthMenu(int windowID)
     {
-        if (GUILayout.Button("Buy New City"))
+
+        GUILayout.BeginHorizontal(GUILayout.Height(75));
+        if (GUILayout.Button("Buy New City", GUILayout.Height(75)))
         {
             GameManager.NewObject = CityRef;
             GameManager.isPickingLocation = true;
         }
-        if (GUILayout.Button("Buy New Laser Turret"))
+        if (GUILayout.Button("Buy New Laser Turret", GUILayout.Height(75)))
         {
             GameManager.NewObject = LaserTurretRef;
             GameManager.isPickingLocation = true;
         }
-        if (GUILayout.Button("Buy New Satellite"))
+        if (GUILayout.Button("Buy New Satellite", GUILayout.Height(75)))
         {
             BuildNewEarthSatellite();
         }
+        GUILayout.EndHorizontal();
         foreach (City city in Cities)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("City at Location: " + city.transform.position);
+            GUILayout.Label("City at Location: " + city.transform.position, GUILayout.Height(75));
             GUILayout.EndHorizontal();
         }
         // Bottom save and continue button
-        if (GUILayout.Button("Save And Continue"))
+        if (GUILayout.Button("Save And Continue", GUILayout.Height(75)))
         {
             GameManager.Resume();
         }
