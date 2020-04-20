@@ -114,6 +114,7 @@ GameObject:
   - component: {fileID: -6920049090536414584}
   - component: {fileID: 3546220926287413955}
   - component: {fileID: 3476935787413281784}
+  - component: {fileID: -8024812624241169432}
   m_Layer: 0
   m_Name: AlienShip
   m_TagString: Alien
@@ -262,6 +263,22 @@ LineRenderer:
     generateLightingData: 0
   m_UseWorldSpace: 1
   m_Loop: 0
+--- !u!54 &-8024812624241169432
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1866810453155813578}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &1907189368380147779
 GameObject:
   m_ObjectHideFlags: 0

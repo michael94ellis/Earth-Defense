@@ -89,6 +89,15 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         }
     }
 
+    public void AddTarget(GameObject earthObject)
+    {
+        //TODO 
+    }
+    public void RemoveTarget(GameObject earthObject)
+    {
+        //TODO
+    }
+
     public void FireLaserAt(Vector3 target)
     {
         Debug.Log("City In Sight");
