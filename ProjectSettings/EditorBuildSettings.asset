@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: /Users/michaelellis/Downloads/Earth Defense/Assets/Scenes/MainGame.unity
+    path: Assets/Scenes/MainGame.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Event_Playground.unity
+    guid: 6936dcd0453c047c59af2d064dcea786
+  - enabled: 1
+    path: Assets/Scenes/UILayer.unity
+    guid: fe1d86041d6ce435893dd86287342893
   m_configObjects: {}

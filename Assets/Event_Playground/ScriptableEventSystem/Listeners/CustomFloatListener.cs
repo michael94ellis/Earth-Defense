@@ -1,0 +1,1 @@
+﻿public class CustomFloatListener : BaseGameEventListener<float, FloatEvent, CustomFloatEvent> { }
