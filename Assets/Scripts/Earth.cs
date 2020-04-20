@@ -55,6 +55,45 @@ public class MenuManager
             return _HeaderStyle;
         }
     }
+    private GUIStyle _Header2Style;
+    public GUIStyle Header2Style
+    {
+        get
+        {
+            if (_Header2Style == null)
+            {
+                GUIStyle newStyle = new GUIStyle
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    fontSize = 22
+                };
+                newStyle.normal.textColor = Color.white;
+                _Header2Style = newStyle;
+            }
+            return _Header2Style;
+        }
+    }
+
+    private GUIStyle _BodyStyle;
+    public GUIStyle BodyStyle
+    {
+        get
+        {
+            if (_BodyStyle == null)
+            {
+                GUIStyle newStyle = new GUIStyle
+                {
+                    alignment = TextAnchor.MiddleLeft,
+                    fontSize = 18,
+                    fixedWidth = 300,
+                    wordWrap = true
+                };
+                newStyle.normal.textColor = Color.white;
+                _BodyStyle = newStyle;
+            }
+            return _BodyStyle;
+        }
+    }
 
     private GUIStyle _ButtonStyle;
     public GUIStyle ButtonStyle
@@ -93,10 +132,11 @@ public class Earth : MonoBehaviour
         {
             return globalcurrency;
         }
-        set
-        {
-            globalcurrency = value;
-        }
+    }
+
+    public static void AddGlobalCurrency(float money)
+    {
+        globalcurrency += money;
     }
 
     void Start()
@@ -208,7 +248,7 @@ public class Earth : MonoBehaviour
     {
         GUILayout.Label("Earth Defense Shop", GameManager.HeaderStyle, GUILayout.Height(40));
         GUILayout.Label("Global Budget: $" + GlobalCurrency + " Million", GameManager.HeaderStyle, GUILayout.Height(75));
-        GUILayout.BeginHorizontal(GUILayout.Height(75));
+        GUILayout.BeginHorizontal();
         BuyCityButton();
         BuyLaserTurretButton();
         BuySatelliteButton();
@@ -228,33 +268,46 @@ public class Earth : MonoBehaviour
     void BuyCityButton()
     {
         GUI.enabled = GlobalCurrency > 100;
-        if (GUILayout.Button("Place New City $100M", GameManager.ButtonStyle, GUILayout.Height(75)))
+        GUILayout.BeginVertical();
+        if (GUILayout.Button("Buy City", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
             GameManager.NewObject = CityRef;
             GameManager.isPickingLocation = true;
-            GlobalCurrency -= 100;
+            globalcurrency -= 100;
         }
+        GUILayout.Label("Cost: $100M", GameManager.Header2Style);
+        GUILayout.Label("Generates Money Over Time \nStarting at $1 Million every 5 seconds \nIncreases by $1 Million up to $20 Million per 5 seconds", GameManager.BodyStyle);
+        GUILayout.EndVertical();
     }
 
     void BuyLaserTurretButton()
     {
         GUI.enabled = GlobalCurrency > 40;
-        if (GUILayout.Button("Buy New Laser Turret $40M", GameManager.ButtonStyle, GUILayout.Height(75)))
+        GUILayout.BeginVertical();
+        if (GUILayout.Button("Buy Laser Turret", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
             GameManager.NewObject = LaserTurretRef;
             GameManager.isPickingLocation = true;
-            GlobalCurrency -= 40;
+            globalcurrency -= 40;
         }
+        GUILayout.Label("Cost: $40M", GameManager.Header2Style);
+        GUILayout.Label("Shoots any Alien Ships above it \nRecharge time of 3 seconds", GameManager.BodyStyle);
+        GUILayout.Label("", GameManager.BodyStyle);
+        GUILayout.EndVertical();
     }
 
     void BuySatelliteButton()
     {
         GUI.enabled = GlobalCurrency > 75;
-        if (GUILayout.Button("Buy New Satellite $75M", GameManager.ButtonStyle, GUILayout.Height(75)))
+        GUILayout.BeginVertical();
+        if (GUILayout.Button("Buy New Satellite", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
             BuildNewEarthSatellite();
-            GlobalCurrency -= 75;
+            globalcurrency -= 75;
         }
+        GUILayout.Label("Cost: $75M", GameManager.Header2Style);
+        GUILayout.Label("Orbits Earth, look cool \nDoes Nothing Else Yet", GameManager.BodyStyle);
+        GUILayout.EndVertical();
     }
 
     // Returns a random value in the range, 50% change of being negative

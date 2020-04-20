@@ -343,7 +343,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1398910012}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -351,7 +351,7 @@ Transform:
   - {fileID: 2138679898}
   m_Father: {fileID: 0}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1399992433
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,14 +581,14 @@ MonoBehaviour:
       y: 0
       z: 0
     Position:
-      x: -30.499980926513672
-      y: -7.904108047485352
+      x: 30.499980926513672
+      y: 7.904108047485352
       z: 266
     AttractorDistance: 267.8595224376838
     AttractorMass: 1000
     Velocity:
-      x: 0.5890976190567017
-      y: 0.000000476837158203125
+      x: -0.5890976190567017
+      y: -0.000000476837158203125
       z: 0.13066406548023224
     MG: 100.00000149011612
     SemiMinorAxis: 259.9097172394029
@@ -602,31 +602,31 @@ MonoBehaviour:
     EccentricAnomaly: 1.804309639875599
     SquaresConstant: 0
     Periapsis:
-      x: -210.21005777982137
-      y: 1.594206623271655
+      x: 210.21005777982137
+      y: -1.594206623271655
       z: -101.64633350762293
     PeriapsisDistance: 233.50114989459138
     Apoapsis:
-      x: 260.4476708012006
-      y: -1.9752023580234512
+      x: -260.4476708012006
+      y: 1.9752023580234512
       z: 125.93855444952783
     ApoapsisDistance: 289.3050468743371
     CenterPoint:
-      x: 25.11880651068962
-      y: -0.19049786737589822
+      x: -25.11880651068962
+      y: 0.19049786737589822
       z: 12.146110470952447
     OrbitCompressionRatio: 0.988606750622516
     OrbitNormal:
-      x: -0.006425326692141388
-      y: 0.9995597787645637
+      x: 0.006425326692141388
+      y: -0.9995597787645637
       z: 0.02896487274330351
     SemiMinorAxisBasis:
-      x: 0.4353201800974631
-      y: 0.02887274206505311
+      x: -0.4353201800974631
+      y: -0.02887274206505311
       z: -0.8998125946915598
     SemiMajorAxisBasis:
-      x: -0.900252773379128
-      y: 0.006827403736518305
+      x: 0.900252773379128
+      y: -0.006827403736518305
       z: -0.4353140597102361
     OrbitNormalDotEclipticNormal: 0.02896487274330351
   LockOrbitEditing: 0
@@ -742,12 +742,12 @@ PrefabInstance:
     - target: {fileID: 702195907133829537, guid: 9580770e29b994bfe940613ae583705d,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 702195907133829537, guid: 9580770e29b994bfe940613ae583705d,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 702195907133829537, guid: 9580770e29b994bfe940613ae583705d,
         type: 3}
@@ -767,7 +767,7 @@ PrefabInstance:
     - target: {fileID: 702195907133829537, guid: 9580770e29b994bfe940613ae583705d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 702195907133829537, guid: 9580770e29b994bfe940613ae583705d,
         type: 3}

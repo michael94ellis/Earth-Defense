@@ -132,8 +132,8 @@ public class LaserTurret : MonoBehaviour, LaserGun
         }
         Laser.receiveShadows = false;
         Laser.material.color = Color.green;
-        Laser.startWidth = 0.1f;
-        Laser.endWidth = 0.1f;
+        Laser.startWidth = 0.025f;
+        Laser.endWidth = 0.025f;
         Laser.SetPosition(0, transform.position);
         Laser.SetPosition(1, target);
     }

@@ -15,21 +15,20 @@ public class CameraController : MonoBehaviour
     }
     void Update()
     {
-        this.transform.LookAt(origin);
 
-        if (Input.GetKey(KeyCode.A) && transform.position.x > -boundary)
+        if (Input.GetKey(KeyCode.A))
         {
             transform.Translate(Vector3.left * mainSpeed);
         }
-        if (Input.GetKey(KeyCode.D) && transform.position.x < boundary)
+        if (Input.GetKey(KeyCode.D))
         {
             transform.Translate(Vector3.right * mainSpeed);
         }
-        if (Input.GetKey(KeyCode.W) && transform.position.z < boundary)
+        if (Input.GetKey(KeyCode.W))
         {
             transform.Translate(Vector3.up * mainSpeed);
         }
-        if (Input.GetKey(KeyCode.S) && transform.position.z > -boundary)
+        if (Input.GetKey(KeyCode.S))
         {
             transform.Translate(Vector3.down * mainSpeed);
         }
@@ -41,8 +40,9 @@ public class CameraController : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Q) && transform.position.y > -boundary)
         {
-            mainSpeed = 0.5f;
+            mainSpeed = 0.3f;
             transform.Translate(Vector3.back * mainSpeed);
         }
+        this.transform.LookAt(origin);
     }
 }
