@@ -1,5 +1,62 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &990640875008645102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 11038346651485642}
+  - component: {fileID: 9033962417569947283}
+  - component: {fileID: 517360577273744017}
+  m_Layer: 0
+  m_Name: SightSphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &11038346651485642
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990640875008645102}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1.35, z: 1}
+  m_Children: []
+  m_Father: {fileID: 7212625095243368687}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &9033962417569947283
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990640875008645102}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 15
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &517360577273744017
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990640875008645102}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 717b28a5be3bc48d2a5aacbc7ba9fc01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1725752657153346303
 GameObject:
   m_ObjectHideFlags: 0
@@ -14,7 +71,7 @@ GameObject:
   - component: {fileID: 8052792270740573280}
   m_Layer: 0
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Alien
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -39,7 +96,7 @@ Transform:
   - {fileID: 7937911744750334090}
   - {fileID: 7974272193574600756}
   m_Father: {fileID: 7212625095243368687}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2458641410770560984
 MeshFilter:
@@ -133,6 +190,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 11038346651485642}
   - {fileID: 8952418255456557607}
   - {fileID: 8480312042763806630}
   m_Father: {fileID: 0}
@@ -150,9 +208,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45357a31508f148e6801b73c3681efe6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  axis: {x: 0, y: 1, z: 0}
-  rotationSpeed: 80
-  moveSpeed: 0.1
 --- !u!135 &3546220926287413955
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -289,7 +344,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7937911744750334090}
   - component: {fileID: 7781086693903648115}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Point Light (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -381,7 +436,7 @@ GameObject:
   m_Component:
   - component: {fileID: 617409174392470063}
   - component: {fileID: 1133393587962601563}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Point Light (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -477,7 +532,7 @@ GameObject:
   - component: {fileID: 2163641168148338789}
   m_Layer: 0
   m_Name: Sphere
-  m_TagString: Untagged
+  m_TagString: Alien
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -494,7 +549,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1.35, z: 1}
   m_Children: []
   m_Father: {fileID: 7212625095243368687}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9090032154287793139
 MeshFilter:
@@ -566,7 +621,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6173092245539847040}
   - component: {fileID: 5270540605641227079}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -658,7 +713,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7974272193574600756}
   - component: {fileID: 1368618540237234003}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Point Light (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -750,7 +805,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2239589863349242302}
   - component: {fileID: 8051356639351671336}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Point Light (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -842,7 +897,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5088701098954671201}
   - component: {fileID: 7617082212362895732}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Point Light (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -934,7 +989,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4749864787289441432}
   - component: {fileID: 3904487393516940398}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Point Light (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1026,7 +1081,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2021254391724528389}
   - component: {fileID: 7311984575331604348}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Point Light (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

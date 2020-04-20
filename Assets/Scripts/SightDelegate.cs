@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SightCone : MonoBehaviour
+public class SightDelegate : MonoBehaviour
 {
     // Allows a parent to plug in its own methods for what happens when a GameObject enters or exits sight
     public delegate void TriggerEnter(GameObject potentialTarget);

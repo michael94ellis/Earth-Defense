@@ -13,15 +13,16 @@ public interface LaserGun
 
 public class LaserTurret : MonoBehaviour, LaserGun
 {
-    SightCone TurretSightArea;
-    float fireDuration = 0.5f;
-    float firingRange = 15.0f;
-    int rechargeTime = 3;
-    bool isFiring;
-    bool isCharged;
+    private float fireDuration = 0.5f;
+    private float firingRange = 15.0f;
+    private int rechargeTime = 3;
+    private bool isCharged;
+    private bool isFiring;
+    private GameObject currentTarget;
     // Draws the laser
     private LineRenderer Laser;
     private List<GameObject> Targets;
+    private SightDelegate TurretSightCone;
 
     // Start is called before the first frame update
     void Start()
@@ -30,11 +31,11 @@ public class LaserTurret : MonoBehaviour, LaserGun
         Laser = gameObject.GetComponent<LineRenderer>();
         isFiring = false;
         isCharged = true;
-        TurretSightArea = transform.Find("SightCone").GetComponent<SightCone>();
-        if (TurretSightArea != null)
+        TurretSightCone = transform.Find("SightCone").GetComponent<SightDelegate>();
+        if (TurretSightCone != null)
         {
-            TurretSightArea.EnteredSight += AddTarget;
-            TurretSightArea.ExitedSight += RemoveTarget;
+            TurretSightCone.EnteredSight += AddTarget;
+            TurretSightCone.ExitedSight += RemoveTarget;
         }
         else
         {
@@ -55,35 +56,23 @@ public class LaserTurret : MonoBehaviour, LaserGun
     // Update is called once per frame
     void Update()
     {
+        // Animation for the laser while its bein fired
+        if (isFiring)
+        {
+            CheckLineOfSight(currentTarget);
+            return;
+        }
         foreach (GameObject alienShip in Targets)
         {
-            // Find how far the ship is
-            float distanceToAlienShip = Vector3.Distance(alienShip.transform.position, transform.position);
-            // TODO Add turret aiming animation
-            if (distanceToAlienShip > firingRange)
-                return;
-            // Make sure this isn't a dead ship
-            if (alienShip == null)
+            // If the laser is done firing we have to wait for it to recharge to fire again
+            if (isCharged)
             {
-                // Update our list if we found a dead ship and try again
-                Debug.Log("Dead Alien Confirmed");
+                Debug.Log("Laser Turret Beginning Fire Sequence");
+                // Set current target in case we can shoot it
+                currentTarget = alienShip;
+                // Check for any sight obstructions to the alien ship
+                CheckLineOfSight(alienShip);
                 return;
-            }
-            if (distanceToAlienShip < firingRange)
-            {
-                // Animation for the laser while its bein fired
-                if (isFiring)
-                {
-                    FireLaserAt(alienShip.transform.position);
-                    return;
-                }
-                // If the laser is done firing we have to wait for it to recharge to fire again
-                if (isCharged)
-                {
-                    Debug.Log("Laser Turret Beginning Fire Sequence");
-                    CheckLineOfSight(alienShip);
-                    return;
-                }
             }
         }
     }
@@ -142,6 +131,7 @@ public class LaserTurret : MonoBehaviour, LaserGun
     public IEnumerator FireLaser()
     {
         yield return new WaitForSeconds(fireDuration);
+        currentTarget = null;
         Laser.enabled = false;
         isFiring = false;
         StartCoroutine(RechargeLaser());

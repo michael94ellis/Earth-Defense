@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in LaserTurret right now
 {
-    public Vector3 axis = new Vector3(0,0,0);
-    public float rotationSpeed = 80.0f;
-    public float moveSpeed = 0.1f;
-    bool isFiringLaser = false; 
-    GameObject city = null;
-    LineRenderer laser;
-    /// Laser recharge time
+    private Vector3 axis = new Vector3(0,1,0);
+    private float rotationSpeed = 80.0f;
+    private float moveSpeed = 0.1f;
+    private bool isLaserFiring = false;
+    private GameObject currentLaserTarget;
     private bool isLaserCharged = true;
     private int laserRechargeTime = 4;
     private float fireDuration = 0.5f;
-    private Vector3 currentLaserTarget;
+    private SightDelegate AlienSightSphere;
+    private List<GameObject> Targets = new List<GameObject>();
     private GameObject earth;
+    private LineRenderer laser;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +23,41 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         earth = GameObject.Find("Earth");
         transform.LookAt(earth.transform.position);
         laser = gameObject.GetComponent<LineRenderer>();
+        AlienSightSphere = transform.Find("SightSphere").GetComponent<SightDelegate>();
+        if (AlienSightSphere != null)
+        {
+            AlienSightSphere.EnteredSight += AddTarget;
+            AlienSightSphere.ExitedSight += RemoveTarget;
+        }
+        else
+        {
+            Debug.Log("Error: Failed to get Cone Of Sight for LaserTurret");
+        }
     }
+
+    public void AddTarget(GameObject otherObject)
+    {
+        if (otherObject.tag == "City")
+        {
+            Targets.Add(otherObject);
+        } else
+        {
+            Debug.Log(otherObject.tag);
+        }
+    }
+
+    public void RemoveTarget(GameObject otherObject)
+    {
+        if (otherObject.tag == "City")
+        {
+            Targets.Remove(otherObject);
+        }
+        else
+        {
+            Debug.Log(otherObject.tag);
+        }
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -31,21 +65,28 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         // Determine how far earth's center(0,0,0) is
         float distanceToEarth = Vector3.Distance(earth.transform.position, transform.position);
 
-        if (distanceToEarth < 5)
+        if (distanceToEarth < 4)
         {
             // Orbit the earth
             transform.RotateAround(earth.transform.position, axis, rotationSpeed * Time.deltaTime);
-            // Animation for the laser
-            if (isFiringLaser)
+            // Animation for the laser while its bein fired
+            if (isLaserFiring)
             {
-                FireLaserAt(currentLaserTarget);
+                CheckLineOfSight(currentLaserTarget);
                 return;
             }
-            // There should be a recharge period for the laser
-            if (isLaserCharged)
+            foreach (GameObject alienShip in Targets)
             {
-                // Search for a target to fire laser at
-                SearchForTarget();
+                // If the laser is done firing we have to wait for it to recharge to fire again
+                if (isLaserCharged)
+                {
+                    Debug.Log("Laser Turret Beginning Fire Sequence");
+                    // Set current target in case we can shoot it
+                    currentLaserTarget = alienShip;
+                    // Check for any sight obstructions to the alien ship
+                    CheckLineOfSight(alienShip);
+                    return;
+                }
             }
         }
         else if (Time.timeScale > 0)
@@ -54,66 +95,50 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         }
     }
 
-    private void SearchForTarget()
+    public void CheckLineOfSight(GameObject alienShip)
     {
-        foreach (GameObject building in GameObject.FindGameObjectsWithTag("City"))
+        // Determine if there is line of sight to the alien ship
+        RaycastHit hit;
+        Vector3 alienShipDirection = alienShip.transform.position - transform.position;
+        Vector3 barrelTip = new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z);
+        if (Physics.Raycast(barrelTip, alienShipDirection, out hit))
         {
-            if (building == null || building.tag == "CityFoundation")
+            // An object is seen, is it an alien ship?
+            Debug.Log("Can See Object " + hit.transform.gameObject);
+            // Don't shoot other stuff
+            if (hit.transform.tag == "Alien")
             {
-                // Dont Destroy the Foundations of Cities
-                // aliens will land and build their own alien invasion city eventually
-                continue;
+                // Begin animating laser
+                FireLaserAt(alienShip.transform.position);
+                return;
             }
-            // Determine if there is line of sight to the building
-            RaycastHit hit;
-            Vector3 cityDirection = building.transform.position - transform.position;
-            if (Physics.Raycast(transform.position, cityDirection, out hit))
+            else
             {
-                Debug.Log("Can See Object " + hit.transform.gameObject);
-                if (hit.transform.IsChildOf(city.transform))
-                {
-                    // Begin animating laser
-                    FireLaserAt(building.transform.position);
-                    break;
-                }
-                else // Something is in the way
-                {
-                    Debug.Log("Building Not In Sight");
-                    laser.enabled = false;
-                }
-            }
-            else // Cannot see this building
-            {
-                Debug.Log("Did not Hit");
+                // Something is in the way
+                Debug.Log("Alien Ship Not In Sight");
             }
         }
-    }
-
-    public void AddTarget(GameObject earthObject)
-    {
-        //TODO 
-    }
-    public void RemoveTarget(GameObject earthObject)
-    {
-        //TODO
+        else
+        {
+            Debug.Log("Can Not See Alien Ship");
+        }
     }
 
     public void FireLaserAt(Vector3 target)
     {
         Debug.Log("City In Sight");
-        currentLaserTarget = target;
-        if (!isFiringLaser)
+        if (!isLaserFiring)
         {
             Debug.Log("Firing Laser");
             StartCoroutine(FireLaser());
             laser.enabled = true;
-            isFiringLaser = true;
+            isLaserFiring = true;
             isLaserCharged = false;
         }
         laser.receiveShadows = false;
         laser.material.color = Color.red;
         laser.startWidth = 0.5f;
-        laser.endWidth = 0.1f;
+        laser.endWidth = 0.005f;
         laser.SetPosition(0, transform.position);
         laser.SetPosition(1, target);
     }
@@ -123,7 +148,7 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
     {
         yield return new WaitForSeconds(fireDuration);
         laser.enabled = false;
-        isFiringLaser = false;
+        isLaserFiring = false;
         StartCoroutine(RechargeLaser());
     }
 
