@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 5430681811131202938}
   - component: {fileID: 1403668369634719180}
   - component: {fileID: 1477692534814987949}
-  m_Layer: 0
-  m_Name: Cone
+  m_Layer: 2
+  m_Name: SightCone
   m_TagString: Untagged
   m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0

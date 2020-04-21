@@ -42,7 +42,7 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
             Targets.Add(otherObject);
         } else
         {
-            Debug.Log(otherObject.tag);
+            //Debug.Log(otherObject.tag);
         }
     }
 
@@ -54,7 +54,7 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         }
         else
         {
-            Debug.Log(otherObject.tag);
+            //Debug.Log(otherObject.tag);
         }
     }
 
@@ -104,7 +104,7 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         if (Physics.Raycast(barrelTip, alienShipDirection, out hit))
         {
             // An object is seen, is it an alien ship?
-            Debug.Log("Can See Object " + hit.transform.gameObject);
+            //Debug.Log("Can See Object " + hit.transform.gameObject);
             // Don't shoot other stuff
             if (hit.transform.tag == "Alien")
             {
@@ -115,21 +115,21 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
             else
             {
                 // Something is in the way
-                Debug.Log("Alien Ship Not In Sight");
+                //Debug.Log("Alien Ship Not In Sight");
             }
         }
         else
         {
-            Debug.Log("Can Not See Alien Ship");
+            //Debug.Log("Can Not See Alien Ship");
         }
     }
 
     public void FireLaserAt(Vector3 target)
     {
-        Debug.Log("City In Sight");
+        //Debug.Log("City In Sight");
         if (!isLaserFiring)
         {
-            Debug.Log("Firing Laser");
+            //Debug.Log("Firing Laser");
             StartCoroutine(FireLaser());
             laser.enabled = true;
             isLaserFiring = true;
@@ -137,7 +137,7 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         }
         laser.receiveShadows = false;
         laser.material.color = Color.red;
-        laser.startWidth = 0.5f;
+        laser.startWidth = 0.05f;
         laser.endWidth = 0.005f;
         laser.SetPosition(0, transform.position);
         laser.SetPosition(1, target);

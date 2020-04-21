@@ -530,7 +530,7 @@ GameObject:
   - component: {fileID: 9090032154287793139}
   - component: {fileID: 2594154664705147037}
   - component: {fileID: 2163641168148338789}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere
   m_TagString: Alien
   m_Icon: {fileID: 0}

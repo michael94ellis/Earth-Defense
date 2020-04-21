@@ -86,7 +86,7 @@ public class LaserTurret : MonoBehaviour, LaserGun
         if (Physics.Raycast(barrelTip, alienShipDirection, out hit))
         {
             // An object is seen, is it an alien ship?
-            Debug.Log("Can See Object " + hit.transform.gameObject);
+            //Debug.Log("Can See Object " + hit.transform.gameObject);
             // Don't shoot other stuff
             if (hit.transform.tag == "Alien")
             {
@@ -97,23 +97,23 @@ public class LaserTurret : MonoBehaviour, LaserGun
             else
             {
                 // Something is in the way
-                Debug.Log("Alien Ship Not In Sight");
+                //Debug.Log("Alien Ship Not In Sight");
             }
         }
         else
         {
-            Debug.Log("Can Not See Alien Ship");
+            //Debug.Log("Can Not See Alien Ship");
         }
     }
 
     /// This animates the laser firing
     public void FireLaserAt(Vector3 target)
     {
-        Debug.Log("Alien Ship In Sight");
+        //Debug.Log("Alien Ship In Sight");
         // This begins the laser, the FireLaser() method disables when its done firing
         if (!isFiring)
         {
-            Debug.Log("Firing Laser");
+            //Debug.Log("Firing Laser");
             isFiring = true;
             isCharged = false;
             Laser.enabled = true;

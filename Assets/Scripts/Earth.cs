@@ -3,140 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-// This class is instantiated by the Earth class
-// It holds important vars for the menu separate from the earth object
-public class MenuManager
-{
-    public bool Paused;
-    public bool isPickingLocation;
-    public int windowWidth = Screen.width * 4 / 6;
-    public int windowHeight = Screen.height * 4 / 6;
-    public int windowOriginX = Screen.width / 6;
-    public int windowOriginY = Screen.height / 6;
-    // This holds an item that was just purchased so it can be placed on the earth
-    public Object NewObject;
-
-    public enum MenuScreen
-    {
-        NewGame,
-        MainMenu,
-        GameOver
-    }
-    public MenuScreen CurrentScreen;
-
-    public void Pause()
-    {
-        Paused = true;
-        Time.timeScale = 0;
-        //Disable scripts that still work while timescale is set to 0
-    }
-    public void Resume()
-    {
-        Paused = false;
-        Time.timeScale = 1;
-        //enable the scripts again
-    }
-
-    private GUIStyle _HeaderStyle;
-    public GUIStyle HeaderStyle
-    {
-        get
-        {
-            if (_HeaderStyle == null)
-            {
-                GUIStyle newStyle = new GUIStyle
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    fontSize = 24
-                };
-                newStyle.normal.textColor = Color.white;
-                _HeaderStyle = newStyle;
-            }
-            return _HeaderStyle;
-        }
-    }
-    private GUIStyle _Header2Style;
-    public GUIStyle Header2Style
-    {
-        get
-        {
-            if (_Header2Style == null)
-            {
-                GUIStyle newStyle = new GUIStyle
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    fontSize = 22
-                };
-                newStyle.normal.textColor = Color.white;
-                _Header2Style = newStyle;
-            }
-            return _Header2Style;
-        }
-    }
-
-    private GUIStyle _BodyStyle;
-    public GUIStyle BodyStyle
-    {
-        get
-        {
-            if (_BodyStyle == null)
-            {
-                GUIStyle newStyle = new GUIStyle
-                {
-                    alignment = TextAnchor.MiddleLeft,
-                    fontSize = 18,
-                    fixedWidth = 300,
-                    wordWrap = true
-                };
-                newStyle.normal.textColor = Color.white;
-                _BodyStyle = newStyle;
-            }
-            return _BodyStyle;
-        }
-    }
-
-    private GUIStyle _ButtonStyle;
-    public GUIStyle ButtonStyle
-    {
-        get
-        {
-            if (_ButtonStyle == null)
-            {
-                GUIStyle newStyle = new GUIStyle(GUI.skin.button)
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    fontSize = 22
-                };
-                newStyle.normal.textColor = Color.white;
-                _ButtonStyle = newStyle;
-            }
-            return _ButtonStyle;
-        }
-    }
-}
-
 public class Earth : MonoBehaviour
 {
     public static MenuManager GameManager;
     Object CityRef;
     Object LaserTurretRef;
     Object SatelliteRef;
-    // Used to display the currently viewed city in GUI
-    List<City> Cities;
-    // City is a square
-    string newCityName;
-    private static float globalcurrency;
-    public static float GlobalCurrency
-    {
-        get
-        {
-            return globalcurrency;
-        }
-    }
 
+    public static float GlobalCurrency { get; private set; }
     public static void AddGlobalCurrency(float money)
     {
-        globalcurrency += money;
+        GlobalCurrency += money;
     }
 
     void Start()
@@ -144,9 +21,8 @@ public class Earth : MonoBehaviour
         CityRef = Resources.Load("City");
         LaserTurretRef = Resources.Load("Turret");
         SatelliteRef = Resources.Load("EarthSatellite");
-        Cities = new List<City>();
         // Init the world
-        globalcurrency = 1000;
+        GlobalCurrency = 1000;
         // Set up the game manager for beginning of game(will change when gameplay changes)
         GameManager = new MenuManager();
         GameManager.CurrentScreen = MenuManager.MenuScreen.NewGame;
@@ -273,7 +149,7 @@ public class Earth : MonoBehaviour
         {
             GameManager.NewObject = CityRef;
             GameManager.isPickingLocation = true;
-            globalcurrency -= 100;
+            GlobalCurrency -= 100;
         }
         GUILayout.Label("Cost: $100M", GameManager.Header2Style);
         GUILayout.Label("Generates Money Over Time \nStarting at $1 Million every 5 seconds \nIncreases by $1 Million up to $20 Million per 5 seconds", GameManager.BodyStyle);
@@ -288,7 +164,7 @@ public class Earth : MonoBehaviour
         {
             GameManager.NewObject = LaserTurretRef;
             GameManager.isPickingLocation = true;
-            globalcurrency -= 40;
+            GlobalCurrency -= 40;
         }
         GUILayout.Label("Cost: $40M", GameManager.Header2Style);
         GUILayout.Label("Shoots any Alien Ships above it \nRecharge time of 3 seconds", GameManager.BodyStyle);
@@ -303,7 +179,7 @@ public class Earth : MonoBehaviour
         if (GUILayout.Button("Buy New Satellite", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
             BuildNewEarthSatellite();
-            globalcurrency -= 75;
+            GlobalCurrency -= 75;
         }
         GUILayout.Label("Cost: $75M", GameManager.Header2Style);
         GUILayout.Label("Orbits Earth, look cool \nDoes Nothing Else Yet", GameManager.BodyStyle);
