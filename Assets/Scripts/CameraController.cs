@@ -19,22 +19,18 @@ public class CameraController : MonoBehaviour
         Debug.Log(transform.eulerAngles);
         if (Input.GetKey(KeyCode.A))
         {
-            //transform.Translate(Vector3.left * mainSpeed);
             transform.RotateAround(origin, Vector3.up, mainSpeed);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            //transform.Translate(Vector3.right * mainSpeed);
             transform.RotateAround(origin, Vector3.down, mainSpeed);
         }
-        if (Input.GetKey(KeyCode.W) && transform.eulerAngles.x < 85)
+        if (Input.GetKey(KeyCode.W))
         {
-            //transform.Translate(Vector3.up * mainSpeed);
             transform.RotateAround(origin, Vector3.right, mainSpeed);
         }
-        if (Input.GetKey(KeyCode.S) && (transform.eulerAngles.x > 270 || transform.eulerAngles.x < 90))
+        if (Input.GetKey(KeyCode.S))
         {
-            //transform.Translate(Vector3.down * mainSpeed);
             transform.RotateAround(origin, Vector3.left, mainSpeed);
         }
         if (Input.GetKey(KeyCode.E) && transform.position.y < boundary)
