@@ -21,6 +21,7 @@ public class AlienSpawner : MonoBehaviour
     {
         activeAliens--;
         alien.transform.position = RandomCoord(40, 50);
+        alien.GetComponent<AlienShip>().Health = 100;
         if (activeAliens <= 0)
         {
             AliensDefeated = true;

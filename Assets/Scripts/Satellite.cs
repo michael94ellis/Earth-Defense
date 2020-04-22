@@ -7,6 +7,7 @@ public class Satellite : MonoBehaviour, Damageable
     public float rotationSpeed = 80.0f;
 
     Object DestructionEffect;
+    public AudioSource ExplosionSound;
 
     public int Health { get; private set; }
     public void TakeDamage()
@@ -15,6 +16,7 @@ public class Satellite : MonoBehaviour, Damageable
         Health--;
         if (Health == 0)
         {
+            ExplosionSound.Play();
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
             DestructionAnimation.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
             Destroy(gameObject);
@@ -28,7 +30,8 @@ public class Satellite : MonoBehaviour, Damageable
         Health = 120;
         int explosionNumber = Random.Range(1, 10);
         DestructionEffect = Resources.Load("Explosion" + explosionNumber);
-
+        AudioSource[] soundSources = gameObject.GetComponents<AudioSource>();
+        ExplosionSound = soundSources[0];
     }
 
     // Update is called once per frame

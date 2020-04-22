@@ -6,7 +6,6 @@ using Random = UnityEngine.Random;
 public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is declared in LaserTurret right now
 {
     private float moveSpeed = 0.1f;
-
     private float fireDuration = 0.5f;
     private int rechargeTime = 4;
     private bool isCharged = true;
@@ -14,7 +13,9 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     private GameObject currentTarget;
     // Draws the laser
     private LineRenderer Laser;
-    private SightDelegate AlienSightSphere;
+    public AudioSource LaserSound;
+    public AudioSource ExplosionSound;
+
     private Object DestructionEffect;
     private GameObject earth;
 
@@ -26,16 +27,20 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
         earth = GameObject.Find("Earth");
         transform.LookAt(earth.transform.position);
         Laser = gameObject.GetComponent<LineRenderer>();
+        AudioSource[] soundSources = gameObject.GetComponents<AudioSource>();
+        LaserSound = soundSources[0];
+        ExplosionSound = soundSources[1];
         int explosionNumber = Random.Range(1, 10);
         DestructionEffect = Resources.Load("Explosion" + explosionNumber);
     }
 
-    public int Health { get; private set; }
+    public int Health { get; set; }
     public void TakeDamage()
     {
         Health--;
         if (Health == 0)
         {
+            ExplosionSound.Play();
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
             DestructionAnimation.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
             AlienSpawner.RemovAlien(gameObject);
@@ -57,6 +62,8 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
                 CheckLineOfSight(currentTarget);
                 return;
             }
+            if (LaserSound.isPlaying)
+                LaserSound.Stop();
             foreach (GameObject earthObject in Earth.Children)
             {
                 // If the laser is done firing we have to wait for it to recharge to fire again
@@ -113,6 +120,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
         {
             //Debug.Log("Firing Laser");
             StartCoroutine(FireLaser());
+            LaserSound.Play();
             Laser.enabled = true;
             isFiring = true;
             isCharged = false;
@@ -129,6 +137,8 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     public IEnumerator FireLaser()
     {
         yield return new WaitForSeconds(fireDuration);
+        if (LaserSound.isPlaying)
+            LaserSound.Stop();
         Laser.enabled = false;
         isFiring = false;
         StartCoroutine(RechargeLaser());

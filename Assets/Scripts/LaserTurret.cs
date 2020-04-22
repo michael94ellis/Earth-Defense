@@ -18,9 +18,11 @@ public class LaserTurret : MonoBehaviour, LaserGun, Damageable
     private GameObject currentTarget;
     // Draws the laser
     private LineRenderer Laser;
+    public AudioSource LaserSound;
+    public AudioSource ExplosionSound;
+    private Object DestructionEffect;
     private List<GameObject> Targets = new List<GameObject>();
     private SightDelegate TurretSightCone;
-    Object DestructionEffect;
 
     public int Health { get; private set; }
     public void TakeDamage()
@@ -29,6 +31,7 @@ public class LaserTurret : MonoBehaviour, LaserGun, Damageable
         Health--;
         if (Health == 0)
         {
+            ExplosionSound.Play();
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
             DestructionAnimation.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
             Destroy(gameObject);
@@ -42,7 +45,12 @@ public class LaserTurret : MonoBehaviour, LaserGun, Damageable
         Health = 120;
         int explosionNumber = Random.Range(1, 10);
         DestructionEffect = Resources.Load("Explosion" + explosionNumber);
+        // Laser and Explosion Sounds
         Laser = gameObject.GetComponent<LineRenderer>();
+        AudioSource[] soundSources = gameObject.GetComponents<AudioSource>();
+        LaserSound = soundSources[0];
+        ExplosionSound = soundSources[1];
+        // Visibility of Turret
         TurretSightCone = transform.Find("SightCone").GetComponent<SightDelegate>();
         if (TurretSightCone != null)
         {
@@ -74,6 +82,8 @@ public class LaserTurret : MonoBehaviour, LaserGun, Damageable
             CheckLineOfSight(currentTarget);
             return;
         }
+        if (LaserSound.isPlaying)
+            LaserSound.Stop();
         Targets.RemoveAll(item => item == null);
         foreach (GameObject alienShip in Targets)
         {
@@ -135,6 +145,7 @@ public class LaserTurret : MonoBehaviour, LaserGun, Damageable
         if (!isFiring)
         {
             //Debug.Log("Firing Laser");
+            LaserSound.Play();
             isFiring = true;
             isCharged = false;
             Laser.enabled = true;
@@ -152,6 +163,8 @@ public class LaserTurret : MonoBehaviour, LaserGun, Damageable
     public IEnumerator FireLaser()
     {
         yield return new WaitForSeconds(fireDuration);
+        if (LaserSound.isPlaying)
+            LaserSound.Stop();
         currentTarget = null;
         Laser.enabled = false;
         isFiring = false;
