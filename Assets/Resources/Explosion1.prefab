@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 400000}
   - component: {fileID: 10800000}
-  - component: {fileID: 11400000}
   m_Layer: 0
   m_Name: Point light
   m_TagString: Untagged
@@ -93,21 +92,6 @@ Light:
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 741004066245a714390df3757b77251a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _lihgt: {fileID: 10800000}
-  Delay: 0.5
-  Down: 2
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0
@@ -9609,7 +9593,7 @@ GameObject:
   - component: {fileID: 400006}
   - component: {fileID: 11400002}
   m_Layer: 0
-  m_Name: Exploson1
+  m_Name: Explosion1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public interface LaserGun
 {
-    void AddTarget(GameObject target);
-    void RemoveTarget(GameObject alienShip);
     void FireLaserAt(Vector3 target);
     IEnumerator FireLaser();
     IEnumerator RechargeLaser();
@@ -14,28 +12,26 @@ public interface LaserGun
 public class LaserTurret : MonoBehaviour, LaserGun
 {
     private float fireDuration = 0.5f;
-    private float firingRange = 15.0f;
     private int rechargeTime = 3;
-    private bool isCharged;
-    private bool isFiring;
+    private bool isCharged = true;
+    private bool isFiring = false;
     private GameObject currentTarget;
     // Draws the laser
     private LineRenderer Laser;
-    private List<GameObject> Targets;
+    private List<GameObject> Targets = new List<GameObject>();
     private SightDelegate TurretSightCone;
+    Object DestructionEffect;
 
     public int Health { get; private set; }
     public void TakeDamage()
     {
-        Debug.Log("Damage");
+        //Debug.Log("Damage");
         Health--;
         if (Health == 0)
         {
-            int explosionNumber = Random.Range(1, 10);
-            Debug.Log("Explosion" + explosionNumber);
-            Object DestructionEffect = Resources.Load("Explosion" + explosionNumber);
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
             Destroy(gameObject);
+            Earth.Children.Remove(gameObject);
         }
     }
 
@@ -43,10 +39,9 @@ public class LaserTurret : MonoBehaviour, LaserGun
     void Start()
     {
         Health = 120;
-        Targets = new List<GameObject>();
+        int explosionNumber = Random.Range(1, 10);
+        DestructionEffect = Resources.Load("Explosion" + explosionNumber);
         Laser = gameObject.GetComponent<LineRenderer>();
-        isFiring = false;
-        isCharged = true;
         TurretSightCone = transform.Find("SightCone").GetComponent<SightDelegate>();
         if (TurretSightCone != null)
         {

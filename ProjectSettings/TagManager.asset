@@ -4,13 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - CityFoundation
+  - Planet
+  - Human
   - Alien
-  - City
-  - Turret
-  - Building
-  - Earth
-  - Sight
   layers:
   - Default
   - TransparentFX

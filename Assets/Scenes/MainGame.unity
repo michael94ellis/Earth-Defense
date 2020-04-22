@@ -130,7 +130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 383840923}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: VelocityHandle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,9 +361,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1399992434}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: VelocityHandle
-  m_TagString: Untagged
+  m_TagString: Earth
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -392,7 +392,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1845341102}
   - component: {fileID: 1845341103}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AlienSpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -441,7 +441,7 @@ GameObject:
   - component: {fileID: 2138679901}
   - component: {fileID: 2138679900}
   - component: {fileID: 2138679899}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -700,6 +700,11 @@ PrefabInstance:
     - target: {fileID: 702195907133829533, guid: 9580770e29b994bfe940613ae583705d,
         type: 3}
       propertyPath: m_Name
+      value: Earth
+      objectReference: {fileID: 0}
+    - target: {fileID: 702195907133829533, guid: 9580770e29b994bfe940613ae583705d,
+        type: 3}
+      propertyPath: m_TagString
       value: Earth
       objectReference: {fileID: 0}
     - target: {fileID: 702195907133829536, guid: 9580770e29b994bfe940613ae583705d,

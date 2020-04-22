@@ -9,25 +9,26 @@ public class City : MonoBehaviour
     private bool generateCurrency = true;
     float age = 1;
     float maxAge = 20;
+    Object DestructionEffect;
 
     public int Health { get; private set; }
     public void TakeDamage()
     {
-        Debug.Log("Damage");
+        //Debug.Log("Damage");
         Health--;
         if (Health == 0)
         {
-            int explosionNumber = Random.Range(1, 10);
-            Debug.Log("Explosion" + explosionNumber);
-            Object DestructionEffect = Resources.Load("Explosion" + explosionNumber);
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
             Destroy(gameObject);
+            Earth.Children.Remove(gameObject);
         }
     }
 
     void Start()
     {
         Health = 200;
+        int explosionNumber = Random.Range(1, 10);
+        DestructionEffect = Resources.Load("Explosion" + explosionNumber);
     }
 
     void Update()

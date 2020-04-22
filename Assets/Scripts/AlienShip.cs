@@ -7,35 +7,27 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
 {
     private float moveSpeed = 0.1f;
 
-    private bool isLaserFiring = false;
-    private bool isLaserCharged = true;
-    private int laserRechargeTime = 4;
     private float fireDuration = 0.5f;
-
+    private int rechargeTime = 4;
+    private bool isCharged = true;
+    private bool isFiring = false;
+    private GameObject currentTarget;
+    // Draws the laser
+    private LineRenderer Laser;
     private SightDelegate AlienSightSphere;
-    private LineRenderer laser;
-    private List<GameObject> Targets = new List<GameObject>();
-    private GameObject currentLaserTarget;
-
+    private Object DestructionEffect;
     private GameObject earth;
 
     // Start is called before the first frame update
     void Start()
     {
         Health = 100;
+        //Find where to go
         earth = GameObject.Find("Earth");
         transform.LookAt(earth.transform.position);
-        laser = gameObject.GetComponent<LineRenderer>();
-        AlienSightSphere = transform.Find("SightSphere").GetComponent<SightDelegate>();
-        if (AlienSightSphere != null)
-        {
-            AlienSightSphere.EnteredSight += AddTarget;
-            AlienSightSphere.ExitedSight += RemoveTarget;
-        }
-        else
-        {
-            Debug.Log("Error: Failed to get Sight for Alien Ship");
-        }
+        Laser = gameObject.GetComponent<LineRenderer>();
+        int explosionNumber = Random.Range(1, 10);
+        DestructionEffect = Resources.Load("Explosion" + explosionNumber);
     }
 
     public int Health { get; private set; }
@@ -44,37 +36,10 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         Health--;
         if (Health == 0)
         {
-            int explosionNumber = Random.Range(1, 10);
-            Object DestructionEffect = Resources.Load("Explosion" + explosionNumber);
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
             Destroy(gameObject);
         }
     }
-
-    public void AddTarget(GameObject otherObject)
-    {
-        if (otherObject.tag == "City" || otherObject.tag == "Turret")
-        {
-            Targets.Add(otherObject);
-        }
-        else
-        {
-            Debug.Log(otherObject + " tag " + otherObject.tag);
-        }
-    }
-
-    public void RemoveTarget(GameObject otherObject)
-    {
-        if (otherObject.tag == "City" || otherObject.tag == "Turret")
-        {
-            Targets.Remove(otherObject);
-        }
-        else
-        {
-            //Debug.Log(otherObject.tag);
-        }
-    }
-
 
     // Update is called once per frame
     void Update()
@@ -86,20 +51,19 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
             // Orbit the earth
             transform.RotateAround(earth.transform.position, Vector3.down, 80f * Time.deltaTime);
             // Animation for the laser while its bein fired
-            Targets.RemoveAll(item => item == null);
-            if (isLaserFiring && currentLaserTarget != null)
+            if (isFiring && currentTarget != null)
             {
-                CheckLineOfSight(currentLaserTarget);
+                CheckLineOfSight(currentTarget);
                 return;
             }
-            foreach (GameObject earthObject in Targets)
+            foreach (GameObject earthObject in Earth.Children)
             {
                 // If the laser is done firing we have to wait for it to recharge to fire again
-                if (isLaserCharged)
+                if (isCharged)
                 {
-                    Debug.Log("Laser Turret Beginning Fire Sequence");
+                    //Debug.Log("Laser Turret Beginning Fire Sequence");
                     // Set current target in case we can shoot it
-                    currentLaserTarget = earthObject;
+                    currentTarget = earthObject;
                     // Check for any sight obstructions to the thing on earth
                     if (CheckLineOfSight(earthObject))
                         return;
@@ -108,7 +72,7 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         }
         else if (Time.timeScale > 0)
         {
-           transform.position = Vector3.MoveTowards(transform.position, earth.transform.position, moveSpeed);
+            transform.position = Vector3.MoveTowards(transform.position, earth.transform.position, moveSpeed);
         }
     }
 
@@ -117,31 +81,25 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         // Determine if there is line of sight to the alien ship
         RaycastHit hit;
         Vector3 alienShipDirection = earthObject.transform.position - transform.position;
-        Vector3 barrelTip = new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z);
-        if (Physics.Raycast(barrelTip, alienShipDirection, out hit))
+        if (Physics.Raycast(transform.position, alienShipDirection, out hit))
         {
-            // An object is seen, is it an alien ship?
-            Debug.Log("Can See Object " + hit.transform.gameObject);
+            // An object is seen, is it what we want?
+            //Debug.Log("Can See Object " + hit.collider.gameObject);
             // Don't shoot other stuff
-            if (hit.transform.gameObject == earthObject)
+            if (hit.collider.gameObject.tag == "Turret")
             {
-                if (earthObject.tag == "Turret")
-                {
-                    LaserTurret script = earthObject.GetComponent<LaserTurret>();
-                    script.TakeDamage();
-                }
-                if (earthObject.tag == "City")
-                {
-                    City script = earth.GetComponent<City>();
-                    script.TakeDamage();
-                }
+                //Debug.Log(earthObject + " :T: " + hit.collider.gameObject);
+                LaserTurret script = earthObject.GetComponent<LaserTurret>();
+                script.TakeDamage();
                 FireLaserAt(earthObject.transform.position);
                 return true;
             }
-            else
+            else if (earthObject.tag == "City")
             {
-                // Something is in the way
-                //Debug.Log("Alien Ship Not In Sight");
+                City script = earthObject.GetComponent<City>();
+                script.TakeDamage();
+                FireLaserAt(earthObject.transform.position);
+                return true;
             }
         }
         else
@@ -154,35 +112,35 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
     public void FireLaserAt(Vector3 target)
     {
         //Debug.Log("City In Sight");
-        if (!isLaserFiring)
+        if (!isFiring)
         {
             //Debug.Log("Firing Laser");
             StartCoroutine(FireLaser());
-            laser.enabled = true;
-            isLaserFiring = true;
-            isLaserCharged = false;
+            Laser.enabled = true;
+            isFiring = true;
+            isCharged = false;
         }
-        laser.receiveShadows = false;
-        laser.material.color = Color.red;
-        laser.startWidth = 0.05f;
-        laser.endWidth = 0.005f;
-        laser.SetPosition(0, transform.position);
-        laser.SetPosition(1, target);
+        Laser.receiveShadows = false;
+        Laser.material.color = Color.red;
+        Laser.startWidth = 0.05f;
+        Laser.endWidth = 0.005f;
+        Laser.SetPosition(0, transform.position);
+        Laser.SetPosition(1, target);
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
     public IEnumerator FireLaser()
     {
         yield return new WaitForSeconds(fireDuration);
-        laser.enabled = false;
-        isLaserFiring = false;
+        Laser.enabled = false;
+        isFiring = false;
         StartCoroutine(RechargeLaser());
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
     public IEnumerator RechargeLaser()
     {
-        yield return new WaitForSeconds(laserRechargeTime);
-        isLaserCharged = true;
+        yield return new WaitForSeconds(rechargeTime);
+        isCharged = true;
     }
 }

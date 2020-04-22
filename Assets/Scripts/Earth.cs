@@ -10,6 +10,8 @@ public class Earth : MonoBehaviour
     Object LaserTurretRef;
     Object SatelliteRef;
 
+    public static List<GameObject> Children = new List<GameObject>();
+
     public static float GlobalCurrency { get; private set; }
     public static void AddGlobalCurrency(float money)
     {
@@ -88,6 +90,7 @@ public class Earth : MonoBehaviour
     void BuildNewObjectOnEarth(Vector3 location)
     {
         GameObject NewObject = Instantiate(GameManager.NewObject, location, Quaternion.identity) as GameObject;
+        Children.Add(NewObject);
         // Make it smaller than the Earth
         if (GameManager.NewObject == LaserTurretRef)
         {
@@ -110,6 +113,7 @@ public class Earth : MonoBehaviour
     void BuildNewEarthSatellite()
     {
         GameObject NewSatellite = Instantiate(SatelliteRef, new Vector3(RandomCoord(0.4f,0.7f), RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f)), Quaternion.identity) as GameObject;
+        Children.Add(NewSatellite);
         // Make it smaller than the Earth
         NewSatellite.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
         // Make the new city a child object so it lives inside the earth's coordinate space
@@ -152,7 +156,7 @@ public class Earth : MonoBehaviour
             GlobalCurrency -= 100;
         }
         GUILayout.Label("Cost: $100M", GameManager.Header2Style);
-        GUILayout.Label("Generates Money Over Time \nStarting at $1 Million every 5 seconds \nIncreases by $1 Million up to $20 Million per 5 seconds", GameManager.BodyStyle);
+        GUILayout.Label("Generates Money Over Time \nStarting at $5 Million every 5 seconds \nIncreases by $50 Million up to $20 Million per 5 seconds", GameManager.BodyStyle);
         GUILayout.EndVertical();
     }
 
