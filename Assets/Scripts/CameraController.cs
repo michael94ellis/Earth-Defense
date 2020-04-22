@@ -16,7 +16,6 @@ public class CameraController : MonoBehaviour
     }
     void Update()
     {
-        Debug.Log(transform.eulerAngles);
         if (Input.GetKey(KeyCode.A))
         {
             transform.RotateAround(origin, Vector3.up, mainSpeed);

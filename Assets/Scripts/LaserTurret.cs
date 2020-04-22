@@ -24,9 +24,25 @@ public class LaserTurret : MonoBehaviour, LaserGun
     private List<GameObject> Targets;
     private SightDelegate TurretSightCone;
 
+    public int Health { get; private set; }
+    public void TakeDamage()
+    {
+        Debug.Log("Damage");
+        Health--;
+        if (Health == 0)
+        {
+            int explosionNumber = Random.Range(1, 10);
+            Debug.Log("Explosion" + explosionNumber);
+            Object DestructionEffect = Resources.Load("Explosion" + explosionNumber);
+            GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
+            Destroy(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        Health = 120;
         Targets = new List<GameObject>();
         Laser = gameObject.GetComponent<LineRenderer>();
         isFiring = false;
@@ -57,27 +73,27 @@ public class LaserTurret : MonoBehaviour, LaserGun
     void Update()
     {
         // Animation for the laser while its bein fired
-        if (isFiring)
+        if (isFiring && currentTarget != null)
         {
             CheckLineOfSight(currentTarget);
             return;
         }
+        Targets.RemoveAll(item => item == null);
         foreach (GameObject alienShip in Targets)
         {
             // If the laser is done firing we have to wait for it to recharge to fire again
             if (isCharged)
             {
-                Debug.Log("Laser Turret Beginning Fire Sequence");
+                //Debug.Log("Laser Turret Beginning Fire Sequence");
                 // Set current target in case we can shoot it
-                currentTarget = alienShip;
                 // Check for any sight obstructions to the alien ship
-                CheckLineOfSight(alienShip);
-                return;
+                if (CheckLineOfSight(alienShip))
+                    return;
             }
         }
     }
 
-    public void CheckLineOfSight(GameObject alienShip)
+    public bool CheckLineOfSight(GameObject alienShip)
     {
         // Determine if there is line of sight to the alien ship
         RaycastHit hit;
@@ -86,13 +102,21 @@ public class LaserTurret : MonoBehaviour, LaserGun
         if (Physics.Raycast(barrelTip, alienShipDirection, out hit))
         {
             // An object is seen, is it an alien ship?
-            //Debug.Log("Can See Object " + hit.transform.gameObject);
+            //Debug.Log("Turret Can See Object " + hit.transform.gameObject);
             // Don't shoot other stuff
             if (hit.transform.tag == "Alien")
             {
                 // Begin animating laser
-                FireLaserAt(alienShip.transform.position);
-                return;
+                //Debug.Log("Aiming Turret at: " + hit.transform.gameObject);
+                AlienShip alienScript = hit.transform.gameObject.GetComponent<AlienShip>();
+                if (alienScript != null)
+                {
+                    //Debug.Log("Firing");
+                    currentTarget = alienShip;
+                    alienScript.TakeDamage();
+                    FireLaserAt(alienShip.transform.position);
+                    return true;
+                }
             }
             else
             {
@@ -104,6 +128,7 @@ public class LaserTurret : MonoBehaviour, LaserGun
         {
             //Debug.Log("Can Not See Alien Ship");
         }
+        return false;
     }
 
     /// This animates the laser firing

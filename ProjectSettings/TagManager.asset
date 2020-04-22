@@ -10,6 +10,7 @@ TagManager:
   - Turret
   - Building
   - Earth
+  - Sight
   layers:
   - Default
   - TransparentFX
