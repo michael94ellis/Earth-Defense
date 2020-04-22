@@ -9,7 +9,7 @@ public interface LaserGun
     IEnumerator RechargeLaser();
 }
 
-public class LaserTurret : MonoBehaviour, LaserGun
+public class LaserTurret : MonoBehaviour, LaserGun, Damageable
 {
     private float fireDuration = 0.5f;
     private int rechargeTime = 3;
@@ -30,6 +30,7 @@ public class LaserTurret : MonoBehaviour, LaserGun
         if (Health == 0)
         {
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
+            DestructionAnimation.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
             Destroy(gameObject);
             Earth.Children.Remove(gameObject);
         }

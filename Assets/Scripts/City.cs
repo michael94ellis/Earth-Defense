@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class City : MonoBehaviour
+public class City : MonoBehaviour, Damageable
 {
     public string CityName;
     private float currencyGenerationTime = 5f;
@@ -19,6 +19,7 @@ public class City : MonoBehaviour
         if (Health == 0)
         {
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
+            DestructionAnimation.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
             Destroy(gameObject);
             Earth.Children.Remove(gameObject);
         }

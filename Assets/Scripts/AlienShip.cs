@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in LaserTurret right now
+public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is declared in LaserTurret right now
 {
     private float moveSpeed = 0.1f;
 
@@ -37,7 +37,8 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
         if (Health == 0)
         {
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
-            Destroy(gameObject);
+            DestructionAnimation.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+            AlienSpawner.RemovAlien(gameObject);
         }
     }
 
@@ -86,18 +87,14 @@ public class AlienShip : MonoBehaviour, LaserGun // LaserGun is declared in Lase
             // An object is seen, is it what we want?
             //Debug.Log("Can See Object " + hit.collider.gameObject);
             // Don't shoot other stuff
-            if (hit.collider.gameObject.tag == "Turret")
+            if (earthObject == null)
+                return false;
+            if (hit.collider.gameObject.tag == "Human")
             {
-                //Debug.Log(earthObject + " :T: " + hit.collider.gameObject);
-                LaserTurret script = earthObject.GetComponent<LaserTurret>();
-                script.TakeDamage();
-                FireLaserAt(earthObject.transform.position);
-                return true;
-            }
-            else if (earthObject.tag == "City")
-            {
-                City script = earthObject.GetComponent<City>();
-                script.TakeDamage();
+                Damageable humanObject = earthObject.GetComponent<Damageable>();
+                if (humanObject == null)
+                    return false;
+                humanObject.TakeDamage();
                 FireLaserAt(earthObject.transform.position);
                 return true;
             }

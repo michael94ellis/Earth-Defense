@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+public interface Damageable
+{
+    void TakeDamage();
+}
+
 public class Earth : MonoBehaviour
 {
     public static MenuManager GameManager;
     Object CityRef;
     Object LaserTurretRef;
     Object SatelliteRef;
+    // 0 for none, 1 for grow, 2 for shrink
+    int scaleUp = 0;
 
     public static List<GameObject> Children = new List<GameObject>();
 
@@ -31,11 +38,7 @@ public class Earth : MonoBehaviour
         // Pause the game so the player starts in the Menu Screen - OnGUI() method
         GameManager.Paused = true;
     }
-
-    void Update()
-    {
-    }
-
+    
     void OnMouseUp()
     {
         // Only Pause if not already paused, menu must have unpause button
@@ -49,6 +52,7 @@ public class Earth : MonoBehaviour
         else if (GameManager.isPickingLocation)
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Debug.Log(ray);
             RaycastHit hit = new RaycastHit();
             if (Physics.Raycast(ray, out hit))
             {
@@ -73,6 +77,11 @@ public class Earth : MonoBehaviour
                     GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), MainEarthMenu, "");
                     break;
             }
+        }
+        else
+        {
+            GUI.Label(new Rect(30, 30, 100, 40), "Alien Count: " + AlienSpawner.activeAliens, GameManager.BodyStyle);
+            GUI.Label(new Rect(30, 70, 100, 40), "Global Wealth: $" + GlobalCurrency + "M", GameManager.BodyStyle);
         }
     }
 
@@ -162,7 +171,7 @@ public class Earth : MonoBehaviour
 
     void BuyLaserTurretButton()
     {
-        GUI.enabled = GlobalCurrency > 40;
+        GUI.enabled = GlobalCurrency > 75;
         GUILayout.BeginVertical();
         if (GUILayout.Button("Buy Laser Turret", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
@@ -204,5 +213,12 @@ public class Earth : MonoBehaviour
         {
             return value;
         }
+    }
+
+    public static void Explode()
+    {
+        int explosionNumber = Random.Range(1, 10);
+        Object DestructionEffect = Resources.Load("Explosion" + explosionNumber);
+        GameObject DestructionAnimation = Instantiate(DestructionEffect, Vector3.zero, Quaternion.identity) as GameObject;
     }
 }

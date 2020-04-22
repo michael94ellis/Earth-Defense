@@ -2,20 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Satellite : MonoBehaviour
+public class Satellite : MonoBehaviour, Damageable
 {
-    public Vector3 axis = Vector3.up;
     public float rotationSpeed = 80.0f;
-    Vector3 origin = new Vector3(0, 0, 0);
+
+    Object DestructionEffect;
+
+    public int Health { get; private set; }
+    public void TakeDamage()
+    {
+        //Debug.Log("Damage");
+        Health--;
+        if (Health == 0)
+        {
+            GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
+            DestructionAnimation.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+            Destroy(gameObject);
+            Earth.Children.Remove(gameObject);
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        Health = 120;
+        int explosionNumber = Random.Range(1, 10);
+        DestructionEffect = Resources.Load("Explosion" + explosionNumber);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.RotateAround(origin, axis, rotationSpeed * Time.deltaTime);
+        transform.RotateAround(Vector3.zero, Vector3.up, rotationSpeed * Time.deltaTime);
     }
 }
