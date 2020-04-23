@@ -14,8 +14,6 @@ public class Earth : MonoBehaviour
     Object CityRef;
     Object LaserTurretRef;
     Object SatelliteRef;
-    // 0 for none, 1 for grow, 2 for shrink
-    int scaleUp = 0;
 
     public static List<GameObject> Children = new List<GameObject>();
 
@@ -52,13 +50,16 @@ public class Earth : MonoBehaviour
         else if (GameManager.isPickingLocation)
         {
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            Debug.Log(ray);
-            RaycastHit hit = new RaycastHit();
-            if (Physics.Raycast(ray, out hit))
+            RaycastHit[] hits;
+            hits = Physics.RaycastAll(ray);
+            foreach (RaycastHit hit in hits)
             {
                 GameManager.isPickingLocation = false;
                 // This hit.point is the point on earth where you clicked
-                BuildNewObjectOnEarth(hit.point);
+                if (hit.transform.gameObject == this.gameObject)
+                {
+                    BuildNewObjectOnEarth(hit.point);
+                }
             }
         }
     }
