@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2303481287892511934}
   - component: {fileID: -4469497149602557096}
   - component: {fileID: 1390820123610511272}
+  - component: {fileID: 1316357916311953636}
   m_Layer: 0
   m_Name: EarthSatellite
   m_TagString: Human
@@ -143,6 +144,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!135 &1316357916311953636
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8845501147404502414}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &8853601107012998013
 PrefabInstance:
   m_ObjectHideFlags: 0

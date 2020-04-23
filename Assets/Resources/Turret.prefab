@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5513932731188932566}
   m_Layer: 0
   m_Name: TurretFoundation
-  m_TagString: Turret
+  m_TagString: Human
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -119,7 +119,7 @@ GameObject:
   - component: {fileID: 9202259535134946143}
   m_Layer: 2
   m_Name: Spot Light
-  m_TagString: Untagged
+  m_TagString: Sight
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -214,7 +214,7 @@ GameObject:
   - component: {fileID: 7025484811200676973}
   m_Layer: 0
   m_Name: Turret
-  m_TagString: Turret
+  m_TagString: Human
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -555,7 +555,7 @@ GameObject:
   - component: {fileID: 6684132481019973506}
   m_Layer: 0
   m_Name: Barrel
-  m_TagString: Turret
+  m_TagString: Human
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -663,7 +663,7 @@ GameObject:
   - component: {fileID: 2479014229722826061}
   m_Layer: 0
   m_Name: BarrelPivot
-  m_TagString: Turret
+  m_TagString: Human
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

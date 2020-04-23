@@ -5,26 +5,24 @@ using Random = UnityEngine.Random;
 
 public class AlienSpawner : MonoBehaviour
 {
-    public Object shipRef;
-    public static int activeAliens = 12;
-    private static bool AliensDefeated = false;
-    private GameObject earth;
-    // Positions of stuff to shoot at
-    public static List<Transform> Targets;
+    public static int DeadAlienCount = 0;
 
-    private static List<GameObject> Aliens = new List<GameObject>();
+    static Object shipRef;
+    static GameObject earth;
+    static List<GameObject> Aliens = new List<GameObject>();
+
     public static void AddAlien(GameObject alien)
     {
         AlienSpawner.Aliens.Add(alien);
     }
     public static void RemovAlien(GameObject alien)
     {
-        activeAliens--;
+        DeadAlienCount++;
         alien.transform.position = RandomCoord(40, 50);
         alien.GetComponent<AlienShip>().Health = 100;
-        if (activeAliens <= 0)
+        for (int i = 0; i < DeadAlienCount + 1 - Aliens.Count; i++)
         {
-            AliensDefeated = true;
+            AddAlien(NewAlienShip());
         }
     }
 
@@ -32,35 +30,17 @@ public class AlienSpawner : MonoBehaviour
     {
         earth = GameObject.Find("Earth");
         shipRef = Resources.Load("AlienShip");
-        NewAlienShip();
-        NewAlienShip();
-        NewAlienShip();
-        NewAlienShip();
     }
 
-    void Update()
+    public static void BeginInvasion(int difficulty = 1)
     {
-    }
-
-    void OnGUI()
-    {
-        if (AliensDefeated)
+        for (int i = 0; i < difficulty; i++)
         {
-            Earth.GameManager.Pause();
-            GUILayout.Window(0, new Rect(Earth.GameManager.windowOriginX, Earth.GameManager.windowOriginY, Earth.GameManager.windowWidth, Earth.GameManager.windowHeight), PlayerWinScreen, "");
+            AddAlien(NewAlienShip());
         }
     }
 
-    void PlayerWinScreen(int windowID)
-    {
-        GUILayout.Label("All the Aliens are dead!", Earth.GameManager.HeaderStyle, GUILayout.Height(75));
-        if (GUILayout.Button("Click here to dispose of the excess war supplies", Earth.GameManager.ButtonStyle, GUILayout.Height(75)))
-        {
-            Earth.Explode();
-        }
-    }
-
-    GameObject NewAlienShip()
+    static GameObject NewAlienShip()
     {
         // Pick a random spawn location
         Vector3 randomSpawnPoint = RandomCoord(40, 50);
@@ -91,17 +71,5 @@ public class AlienSpawner : MonoBehaviour
     public static Vector3 RandomCoord(int min, int max)
     {
         return new Vector3(RandomCoordNum(40, 50), RandomCoordNum(40, 50), RandomCoordNum(40, 50));
-    }
-
-    /// Must be called like so: StartCoroutine(LaserWasFired());
-    public IEnumerator RefreshCitiesList()
-    {
-        yield return new WaitForSeconds(10);
-        Targets = new List<Transform>();
-        foreach (Transform child in earth.transform)
-        {
-            Targets.Add(child);
-        }
-        RefreshCitiesList();
     }
 }

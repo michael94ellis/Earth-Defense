@@ -14,6 +14,10 @@ public class Earth : MonoBehaviour
     Object CityRef;
     Object LaserTurretRef;
     Object SatelliteRef;
+    private Touch touchOne;   //First touch position
+    private Touch touchTwo;   //Last touch position
+    private float minimumDragDistance = 20f;
+    float mainSpeed = 0.5f; //regular speed
 
     public static List<GameObject> Children = new List<GameObject>();
 
@@ -28,15 +32,106 @@ public class Earth : MonoBehaviour
         CityRef = Resources.Load("City");
         LaserTurretRef = Resources.Load("Turret");
         SatelliteRef = Resources.Load("EarthSatellite");
-        // Init the world
-        GlobalCurrency = 1000;
+        GlobalCurrency = 0;
         // Set up the game manager for beginning of game(will change when gameplay changes)
         GameManager = new MenuManager();
         GameManager.CurrentScreen = MenuManager.MenuScreen.NewGame;
         // Pause the game so the player starts in the Menu Screen - OnGUI() method
         GameManager.Paused = true;
     }
-    
+    public Vector2 startPos;
+    public Vector2 direction;
+
+    void Update()
+    {
+        // Touch controls for mobile only
+        if (Input.touchCount == 2)
+        {
+            Debug.Log("Pinch");
+            touchOne = Input.GetTouch(0);
+            touchTwo = Input.GetTouch(1);
+            float previousMagnitude = ((touchOne.position - touchOne.deltaPosition) - (touchTwo.position - touchTwo.deltaPosition)).magnitude; // pop pop
+            float currentMagnitude = (touchOne.position - touchTwo.position).magnitude;
+            Vector3 Direction = currentMagnitude > previousMagnitude ? Vector3.zero : Camera.main.transform.position * 2;
+            Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, Direction, mainSpeed * Time.deltaTime);
+        }
+        else if (Input.touchCount == 1) // user is touching the screen with a single touch
+        {
+            Touch currentTouch = Input.GetTouch(0);
+            if (currentTouch.phase == TouchPhase.Began)
+            {
+                //Debug.Log("Begin Touches");
+                touchOne = currentTouch;
+            }
+            else if (currentTouch.deltaPosition.magnitude > 0)
+            {
+                if (currentTouch.phase == TouchPhase.Moved)
+                {
+                    //Debug.Log("Swiping");
+                    touchTwo = currentTouch;  //last touch position. Ommitted if you use list
+
+                    if (Mathf.Abs(touchTwo.position.x - touchOne.position.x) > minimumDragDistance || Mathf.Abs(touchTwo.position.y - touchOne.position.y) > minimumDragDistance)
+                    {//It's a drag
+                     //check if the drag is vertical or horizontal
+                        if (Mathf.Abs(touchTwo.position.x - touchOne.position.x) > Mathf.Abs(touchTwo.position.y - touchOne.position.y))
+                        {   //If the horizontal movement is greater than the vertical movement...
+                            if ((touchTwo.position.x > touchOne.position.x))  //If the movement was to the right)
+                            {   //Right swipe
+                                //Debug.Log("Right Swipe");
+                                Camera.main.transform.RotateAround(Vector3.zero, Vector3.down, mainSpeed);
+                            }
+                            else
+                            {   //Left swipe
+                                //Debug.Log("Left Swipe");
+                                Camera.main.transform.RotateAround(Vector3.zero, Vector3.up, mainSpeed);
+                            }
+                        }
+                        else
+                        {   //the vertical movement is greater than the horizontal movement
+                            if (touchTwo.position.y > touchOne.position.y)  //If the movement was up
+                            {   //Up swipe
+                                //Debug.Log("Up Swipe");
+                                Camera.main.transform.RotateAround(Vector3.zero, Vector3.left, mainSpeed);
+                            }
+                            else
+                            {   //Down swipe
+                                //Debug.Log("Down Swipe");
+                                Camera.main.transform.RotateAround(Vector3.zero, Vector3.right, mainSpeed);
+                            }
+                        }
+                    }
+                }
+            }
+            else if (currentTouch.phase == TouchPhase.Ended) 
+            {
+                //Debug.Log("Tap");
+                // Only Pause if not already paused, menu must have unpause button
+                if (!GameManager.Paused)
+                {
+                    GameManager.Pause();
+                    // Show the user all their cities
+                    GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
+                    // Update and fetch data here, to not run loops like this every frame
+                }
+                else if (GameManager.isPickingLocation)
+                {
+                    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit[] hits;
+                    hits = Physics.RaycastAll(ray);
+                    foreach (RaycastHit hit in hits)
+                    {
+                        GameManager.isPickingLocation = false;
+                        // This hit.point is the point on earth where you clicked
+                        if (hit.transform.gameObject == this.gameObject)
+                        {
+                            BuildNewObjectOnEarth(hit.point);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // For PC/Mac
     void OnMouseUp()
     {
         // Only Pause if not already paused, menu must have unpause button
@@ -66,6 +161,9 @@ public class Earth : MonoBehaviour
 
     void OnGUI()
     {
+        GUI.Label(new Rect(65, 30, 120, 40), " Alien Kill Count: " + AlienSpawner.DeadAlienCount, GameManager.HeaderStyle);
+        GUI.Label(new Rect(65, 70, 120, 40), " Earth Object Count: " + Children.Count, GameManager.HeaderStyle);
+        GUI.Label(new Rect(65, 120, 120, 40), " Global Wealth: $" + GlobalCurrency + "M", GameManager.HeaderStyle);
         // Only show menus if the game is paused
         if (GameManager.Paused && !GameManager.isPickingLocation)
         {
@@ -79,20 +177,26 @@ public class Earth : MonoBehaviour
                     break;
             }
         }
-        else
-        {
-            GUI.Label(new Rect(30, 30, 100, 40), "Alien Count: " + AlienSpawner.activeAliens, GameManager.BodyStyle);
-            GUI.Label(new Rect(30, 70, 100, 40), "Global Wealth: $" + GlobalCurrency + "M", GameManager.BodyStyle);
-        }
     }
 
     void NewGameScreen(int windowID)
     {
-        GUILayout.Label("Welcome To The Game!", GameManager.HeaderStyle, GUILayout.Height(75));
-        if (GUILayout.Button("Click here to begin", GameManager.ButtonStyle, GUILayout.Height(75)))
+        if (GlobalCurrency == 0)
         {
-            // MagnetoCat: Add/Invoke The Place City Feature Here
-            GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu; // Temporary: Just send the player to the buy city page for their first city
+            GUILayout.Label("Welcome To The Game!", GameManager.HeaderStyle, GUILayout.Height(75));
+            if (GUILayout.Button("Click here to celebrate the USA's Independence Day, July 4th", GameManager.ButtonStyle, GUILayout.Height(75)))
+            {
+                GlobalCurrency = 1000;
+                Earth.Explode();
+            }
+        }
+        else
+        {
+            GUILayout.Label("You notice something in the sky", GameManager.HeaderStyle, GUILayout.Height(75));
+            if (GUILayout.Button("You've angered the Aliens living in Uranus!\nHere's some money to defend earth i guess", GameManager.ButtonStyle, GUILayout.Height(75)))
+            {
+                GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
+            }
         }
     }
 
@@ -100,7 +204,15 @@ public class Earth : MonoBehaviour
     void BuildNewObjectOnEarth(Vector3 location)
     {
         GameObject NewObject = Instantiate(GameManager.NewObject, location, Quaternion.identity) as GameObject;
-        Children.Add(NewObject);
+        if (Children.Count > 0)
+        {
+            Children.Add(NewObject);
+        }
+        else
+        {
+            Children.Add(NewObject);
+            AlienSpawner.BeginInvasion();
+        }
         // Make it smaller than the Earth
         if (GameManager.NewObject == LaserTurretRef)
         {
@@ -166,7 +278,7 @@ public class Earth : MonoBehaviour
             GlobalCurrency -= 100;
         }
         GUILayout.Label("Cost: $100M", GameManager.Header2Style);
-        GUILayout.Label("Generates Money Over Time \nStarting at $5 Million every 5 seconds \nIncreases by $50 Million up to $20 Million per 5 seconds", GameManager.BodyStyle);
+        GUILayout.Label("Generates Money Over Time \nStarting at $5 Million every 5 seconds \nIncreases by $5 Million up to $50 Million per 5 seconds", GameManager.BodyStyle);
         GUILayout.EndVertical();
     }
 
@@ -178,9 +290,9 @@ public class Earth : MonoBehaviour
         {
             GameManager.NewObject = LaserTurretRef;
             GameManager.isPickingLocation = true;
-            GlobalCurrency -= 40;
+            GlobalCurrency -= 75;
         }
-        GUILayout.Label("Cost: $40M", GameManager.Header2Style);
+        GUILayout.Label("Cost: $75M", GameManager.Header2Style);
         GUILayout.Label("Shoots any Alien Ships above it \nRecharge time of 3 seconds", GameManager.BodyStyle);
         GUILayout.Label("", GameManager.BodyStyle);
         GUILayout.EndVertical();
