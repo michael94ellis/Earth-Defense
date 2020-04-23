@@ -21,7 +21,7 @@ public class City : MonoBehaviour, Damageable
         {
             ExplosionSound.Play();
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
-            DestructionAnimation.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+            DestructionAnimation.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
             Destroy(gameObject);
             Earth.Children.Remove(gameObject);
         }

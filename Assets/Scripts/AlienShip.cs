@@ -16,12 +16,18 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     public AudioSource LaserSound;
     public AudioSource ExplosionSound;
 
+    float orbitDistance;
+    Vector3 currentOrbit;
+    Vector3[] orbits = new Vector3[] { Vector3.left, Vector3.right, Vector3.back, Vector3.forward };
+
     private Object DestructionEffect;
     private GameObject earth;
 
     // Start is called before the first frame update
     void Start()
     {
+        orbitDistance = Random.Range(3f, 4f);
+        currentOrbit = orbits[Random.Range(0, orbits.Length - 1)];
         Health = 100;
         //Find where to go
         earth = GameObject.Find("Earth");
@@ -38,6 +44,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     public void TakeDamage()
     {
         Health--;
+        currentOrbit = orbits[Random.Range(0, orbits.Length - 1)];
         if (Health == 0)
         {
             ExplosionSound.Play();
@@ -52,10 +59,11 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     {
         // Determine how far earth's center(0,0,0) is
         float distanceToEarth = Vector3.Distance(earth.transform.position, transform.position);
-        if (distanceToEarth < 3)
+        if (distanceToEarth < orbitDistance)
         {
             // Orbit the earth
-            transform.RotateAround(earth.transform.position, Vector3.down, 80f * Time.deltaTime);
+            transform.RotateAround(earth.transform.position, Vector3.down, 30f * Time.deltaTime);
+            transform.RotateAround(earth.transform.position, currentOrbit, 30f * Time.deltaTime);
             // Animation for the laser while its bein fired
             if (isFiring && currentTarget != null)
             {
