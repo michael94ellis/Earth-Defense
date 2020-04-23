@@ -213,6 +213,12 @@ public class Earth : MonoBehaviour
             Children.Add(NewObject);
             AlienSpawner.BeginInvasion();
         }
+        // Make the new city a child object so it lives inside the earth's coordinate space
+        NewObject.transform.SetParent(transform, false);
+        // Get a point directly above the city away from earth
+        Vector3 awayFromEarth = location - transform.position;
+        // assign the up vector for the city
+        NewObject.transform.up = awayFromEarth;
         // Make it smaller than the Earth
         if (GameManager.NewObject == LaserTurretRef)
         {
@@ -222,12 +228,6 @@ public class Earth : MonoBehaviour
         {
             NewObject.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
         }
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        NewObject.transform.SetParent(transform, false);
-        // Get a point directly above the city away from earth
-        Vector3 awayFromEarth = location - transform.position;
-        // assign the up vector for the city
-        NewObject.transform.up = awayFromEarth;
         // Reset this
         GameManager.NewObject = null;
     }

@@ -59,7 +59,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     {
         // Determine how far earth's center(0,0,0) is
         float distanceToEarth = Vector3.Distance(earth.transform.position, transform.position);
-        if (distanceToEarth < orbitDistance)
+        if (distanceToEarth < 3)
         {
             // Orbit the earth
             transform.RotateAround(earth.transform.position, Vector3.down, 30f * Time.deltaTime);
@@ -97,7 +97,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
         // Determine if there is line of sight to the alien ship
         RaycastHit hit;
         Vector3 alienShipDirection = earthObject.transform.position - transform.position;
-        if (Physics.Raycast(transform.position, alienShipDirection, out hit))
+        if (Physics.Raycast(transform.position, alienShipDirection, out hit, 10f))
         {
             // An object is seen, is it what we want?
             //Debug.Log("Can See Object " + hit.collider.gameObject);
