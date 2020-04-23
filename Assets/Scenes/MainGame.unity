@@ -229,7 +229,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.02, z: -90.3}
+  m_LocalPosition: {x: 0, y: 0.02, z: -1.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -454,8 +454,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2138679897}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 30.49998, y: 7.904108, z: 421}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalPosition: {x: 30.49998, y: 7.904108, z: 266}
+  m_LocalScale: {x: 30, y: 30, z: 30}
   m_Children:
   - {fileID: 383840923}
   m_Father: {fileID: 1398910013}
@@ -534,8 +534,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6830bec90f469e45947a153a51aa976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OrbitPointsCount: 100
-  MaxOrbitWorldUnitsDistance: 500
+  OrbitPointsCount: 50
+  MaxOrbitWorldUnitsDistance: 1000
   LineRendererReference: {fileID: 0}
   ShowOrbitGizmoInEditor: 1
   ShowOrbitGizmoWhileInPlayMode: 1
@@ -562,8 +562,8 @@ MonoBehaviour:
     AttractorMass: 1000
     GravityConstant: 0.1
   VelocityHandle: {fileID: 383840923}
-  VelocityHandleLenghtScale: 8.7
-  TimeScale: 40
+  VelocityHandleLenghtScale: 5
+  TimeScale: 25
   OrbitData:
     GravConst: 0.10000000149011612
     EclipticNormal:
@@ -581,52 +581,52 @@ MonoBehaviour:
     Position:
       x: 30.499980926513672
       y: 7.904108047485352
-      z: 421
-    AttractorDistance: 422.17736054950177
+      z: 266
+    AttractorDistance: 267.8595224376838
     AttractorMass: 1000
     Velocity:
-      x: -0.5579475164413452
-      y: -0.001539690769277513
-      z: 0.04045157507061958
+      x: -0.29124870896339417
+      y: -0.0008037567022256553
+      z: 0.0211181640625
     MG: 100.00000149011612
-    SemiMinorAxis: 588.976898109762
-    SemiMajorAxis: 621.9276059544659
-    FocalParameter: 557.7719708624651
-    Eccentricity: 0.3211792554266793
-    EnergyTotal: -0.160790420834668
-    Period: 9745.174429850966
-    TrueAnomaly: 0.000009659975930866997
-    MeanAnomaly: 0.000004700333723846408
-    EccentricAnomaly: 0.000006924263528191196
+    SemiMinorAxis: 96.09550637855243
+    SemiMajorAxis: 151.1972703804071
+    FocalParameter: 61.074821806750315
+    Eccentricity: 0.7720483799434571
+    EnergyTotal: -0.6613876112876879
+    Period: 1168.1424093614469
+    TrueAnomaly: 3.1539579095307593
+    MeanAnomaly: 3.2026756277464585
+    EccentricAnomaly: 3.176065891509818
     SquaresConstant: 0
     Periapsis:
-      x: 30.504048456692097
-      y: 7.904119271810939
-      z: 420.9997050863452
-    PeriapsisDistance: 422.17736054471334
+      x: -4.347542778605163
+      y: -1.0175966048754552
+      z: -34.175214358486286
+    PeriapsisDistance: 34.465662731340934
     Apoapsis:
-      x: -59.369599927067036
-      y: -15.383676026133738
-      z: -819.3857971303515
-    ApoapsisDistance: 821.6778513642184
+      x: 33.796891356381636
+      y: 7.910583897838608
+      z: 265.670992920139
+    ApoapsisDistance: 267.92887802947325
     CenterPoint:
-      x: -14.43277573518747
-      y: -3.7397783771613993
-      z: -199.19304602200316
-    OrbitCompressionRatio: 0.8968438858835639
+      x: 14.724674288888238
+      y: 3.4464936464815765
+      z: 115.74788928082636
+    OrbitCompressionRatio: 0.4039412990266833
     OrbitNormal:
-      x: 0.004098468784835429
-      y: -0.9998209349616585
-      z: 0.01847432180120993
+      x: 0.00487162725938499
+      y: -0.999563377311288
+      z: 0.029143129308591965
     SemiMinorAxisBasis:
-      x: 0.9973778353668935
-      y: 0.002752190550420613
-      z: -0.07231790211298929
+      x: -0.9920003250903813
+      y: -0.0011544215703248562
+      z: 0.12623003735805388
     SemiMajorAxisBasis:
-      x: 0.07225410765118793
-      y: 0.018722271752357043
-      z: 0.9972105196336235
-    OrbitNormalDotEclipticNormal: 0.01847432180120993
+      x: -0.12614127900264577
+      y: -0.029524939439220927
+      z: -0.991572819152828
+    OrbitNormalDotEclipticNormal: 0.029143129308591965
   LockOrbitEditing: 0
 --- !u!23 &2138679902
 MeshRenderer:
@@ -775,17 +775,17 @@ PrefabInstance:
     - target: {fileID: 702195907133829537, guid: 9580770e29b994bfe940613ae583705d,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 702195907133829537, guid: 9580770e29b994bfe940613ae583705d,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 702195907133829537, guid: 9580770e29b994bfe940613ae583705d,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 10
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9580770e29b994bfe940613ae583705d, type: 3}
