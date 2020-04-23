@@ -12,33 +12,14 @@ public class ARMInputManager : MonoBehaviour
     // Hidden Private Fields
     private Vector2 MousePosition;
 
-    // Public / Private Set Fields
-    private RaycastHit _lastRaycastHit;
-    public RaycastHit lastRaycastHit
-    {
-        get
-        {
-            if (_lastRaycastHit.point == null)
-                RaycastFromCamera();
-                
-            OnNewLocationClicked.Raise(_lastRaycastHit.point);
-            OnNewClickedLocationRaycastHit.Raise(_lastRaycastHit);
-            
-            return _lastRaycastHit;
-        }
-        set
-        {
-            _lastRaycastHit = value;
-         
-        }
-    }
+
 
     // Exposed Events
     [SerializeField] private VoidEvent OnToggleBuildMode;
     [SerializeField] private Vector3Event OnNewLocationClicked;
-    [SerializeField] private RaycastHitEvent OnNewClickedLocationRaycastHit;
-
-
+    [SerializeField] private RaycastHitEvent OnNewRaycastHitEarth;
+    [SerializeField] private VoidEvent OnEscapeButtonPressed;
+    
 
     // Runtime
     private void Awake()
@@ -55,21 +36,25 @@ public class ARMInputManager : MonoBehaviour
             RaycastFromCamera();
         }
 
-        if (Input.GetKeyUp(KeyCode.B))
-        {
-            OnToggleBuildMode.Raise();
+       
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            OnEscapeButtonPressed.Raise();
         }
     }
     
     // API
     public void RaycastFromCamera()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(MousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit))
         {
-            OnNewClickedLocationRaycastHit.Raise(hit);     
+            if (hit.collider.transform.gameObject.name == "Big_Earth")
+            {
+                OnNewRaycastHitEarth.Raise(hit);
+            }
+                 
         }
 
         

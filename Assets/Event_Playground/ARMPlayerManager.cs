@@ -2,19 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ARMPlayer
-{
-    public bool instantiateCityMode = false;
-
-    void ToggleInstateiateCityMode()
-    {
-        instantiateCityMode = !instantiateCityMode;
-    }
-}
 
 public class ARMPlayerManager : MonoBehaviour
 {
-    ARMPlayer Player = new ARMPlayer();
+   
+
 
     [SerializeField] GameObject[] _buildingPrefabs;
 
@@ -22,13 +14,31 @@ public class ARMPlayerManager : MonoBehaviour
     private int selectedBuildingBlueprintIndex = 0;
 
 
+    public GameObject Target { get; private set; }
+    public GameObject Parent { get; private set; }
+
+    public bool InstantiateCityMode { get; private set; }
+
+    
+    public void SetTarget(GameObject newTarget)
+    {
+        Target = newTarget;
+    }
+    public void SetParent(GameObject newParent)
+    {
+        Parent = newParent;
+    }
 
 
+    public void SetBuildingBluePrintIndex(int index)
+    {
+        selectedBuildingBlueprintIndex = index;
+    }
     public void ToggleBuildCityMode()
     {
 
-        Player.instantiateCityMode = !Player.instantiateCityMode;
-        if (Player.instantiateCityMode)
+        InstantiateCityMode = !InstantiateCityMode;
+        if (InstantiateCityMode)
         {
             print("Player May Build");
         }
@@ -38,12 +48,14 @@ public class ARMPlayerManager : MonoBehaviour
         }
     }
 
+   
     public void InstatiateBuildingFromRaycastHit(RaycastHit raycastHit)
     {
-        if (Player.instantiateCityMode)
+        if (InstantiateCityMode)
         {
            
             GameObject buildingInstance = Instantiate(_buildingPrefabs[selectedBuildingBlueprintIndex],raycastHit.collider.gameObject.transform);
+            buildingInstance.name = _buildingPrefabs[selectedBuildingBlueprintIndex].name;
         
             // Find the line from the gun to the point that was clicked.
             Vector3 incomingVec = raycastHit.point - Camera.main.transform.position;
@@ -59,7 +71,7 @@ public class ARMPlayerManager : MonoBehaviour
             Debug.DrawLine(Camera.main.transform.position, raycastHit.point, Color.red);
             Debug.DrawRay(raycastHit.point, reflectVec, Color.green);
 
-            print("Building Done");
+            print("Building Done: " + buildingInstance.name + "built at " + buildingInstance.transform.position + ". Belongs to " + buildingInstance.transform.parent.gameObject.name);
         }
     }
 
