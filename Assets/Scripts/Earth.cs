@@ -156,7 +156,6 @@ public class Earth : MonoBehaviour
                 // This hit.point is the point on earth where you clicked
                 if (hit.transform.gameObject == this.gameObject)
                 {
-                    Debug.Log(hit.point);
                     BuildNewObjectOnEarth(hit.point);
                 }
             }

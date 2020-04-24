@@ -23,6 +23,7 @@ public class LaserTurret : MonoBehaviour, LaserGun, Damageable
     private Object DestructionEffect;
     private List<GameObject> Targets = new List<GameObject>();
     private SightDelegate TurretSightCone;
+    public Transform BarrelPivot;
 
     public int Health { get; private set; }
     public void TakeDamage()
@@ -105,6 +106,7 @@ public class LaserTurret : MonoBehaviour, LaserGun, Damageable
         RaycastHit hit;
         Vector3 alienShipDirection = alienShip.transform.position - transform.position;
         Vector3 barrelTip = new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z);
+        BarrelPivot.up = alienShipDirection;
         if (Physics.Raycast(barrelTip, alienShipDirection, out hit))
         {
             // An object is seen, is it an alien ship?
@@ -149,12 +151,12 @@ public class LaserTurret : MonoBehaviour, LaserGun, Damageable
             isFiring = true;
             isCharged = false;
             Laser.enabled = true;
+            Laser.material.color = Color.green;
+            Laser.receiveShadows = false;
             StartCoroutine(FireLaser());
         }
-        Laser.receiveShadows = false;
-        Laser.material.color = Color.green;
-        Laser.startWidth = 0.025f;
-        Laser.endWidth = 0.025f;
+        Laser.startWidth = 1f;
+        Laser.endWidth = 1f;
         Laser.SetPosition(0, transform.position);
         Laser.SetPosition(1, target);
     }

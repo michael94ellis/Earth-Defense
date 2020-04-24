@@ -28,6 +28,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     void Start()
     {
         currentOrbit = orbits[Random.Range(0, orbits.Length - 1)];
+        currentOrbit2 = orbits[Random.Range(0, orbits.Length - 1)];
         Health = 100;
         //Find where to go
         earth = GameObject.Find("Earth");
@@ -45,8 +46,6 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     public void TakeDamage()
     {
         Health--;
-        currentOrbit = orbits[Random.Range(0, orbits.Length - 1)];
-        currentOrbit2 = orbits[Random.Range(0, orbits.Length - 1)];
         if (Health == 0)
         {
             ExplosionSound.Play();
@@ -61,7 +60,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     {
         // Determine how far earth's center(0,0,0) is
         float distanceToEarth = Vector3.Distance(earth.transform.position, transform.position);
-        if (distanceToEarth < orbitDistance)
+        if (distanceToEarth < 70)
         {
             // Orbit the earth
             transform.RotateAround(earth.transform.position, currentOrbit, 30f * Time.deltaTime);
@@ -69,6 +68,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
             // Animation for the laser while its bein fired
             if (isFiring && currentTarget != null)
             {
+                transform.RotateAround(earth.transform.position, currentTarget.transform.position, 30f * Time.deltaTime);
                 CheckLineOfSight(currentTarget);
                 return;
             }
@@ -90,7 +90,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
         }
         else if (Time.timeScale > 0)
         {
-            transform.position = Vector3.MoveTowards(transform.position, earth.transform.position, moveSpeed);
+            transform.position = Vector3.MoveTowards(transform.position, earth.transform.position, 30f  );
         }
     }
 
@@ -137,8 +137,8 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
         }
         Laser.receiveShadows = false;
         Laser.material.color = Color.red;
-        Laser.startWidth = 0.05f;
-        Laser.endWidth = 0.005f;
+        Laser.startWidth = 1f;
+        Laser.endWidth = 1f;
         Laser.SetPosition(0, transform.position);
         Laser.SetPosition(1, target);
     }
