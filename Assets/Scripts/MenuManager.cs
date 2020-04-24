@@ -99,6 +99,25 @@ public class MenuManager
         }
     }
 
+    private GUIStyle _InfoStyle;
+    public GUIStyle InfoStyle
+    {
+        get
+        {
+            if (_InfoStyle == null)
+            {
+                GUIStyle newStyle = new GUIStyle
+                {
+                    alignment = TextAnchor.MiddleLeft,
+                    fontSize = 26,
+                };
+                newStyle.normal.textColor = Color.white;
+                _InfoStyle = newStyle;
+            }
+            return _InfoStyle;
+        }
+    }
+
     private GUIStyle _ButtonStyle;
     public GUIStyle ButtonStyle
     {

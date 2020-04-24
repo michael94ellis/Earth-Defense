@@ -16,9 +16,10 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     public AudioSource LaserSound;
     public AudioSource ExplosionSound;
 
-    float orbitDistance;
+    float orbitDistance = 20;
     Vector3 currentOrbit;
-    Vector3[] orbits = new Vector3[] { Vector3.left, Vector3.right, Vector3.back, Vector3.forward };
+    Vector3 currentOrbit2;
+    Vector3[] orbits = new Vector3[] { Vector3.left, Vector3.right, Vector3.back, Vector3.forward, Vector3.up, Vector3.down };
 
     private Object DestructionEffect;
     private GameObject earth;
@@ -26,11 +27,11 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     // Start is called before the first frame update
     void Start()
     {
-        orbitDistance = Random.Range(3f, 4f);
         currentOrbit = orbits[Random.Range(0, orbits.Length - 1)];
         Health = 100;
         //Find where to go
         earth = GameObject.Find("Earth");
+        orbitDistance += earth.transform.localScale.x;
         transform.LookAt(earth.transform.position);
         Laser = gameObject.GetComponent<LineRenderer>();
         AudioSource[] soundSources = gameObject.GetComponents<AudioSource>();
@@ -45,6 +46,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     {
         Health--;
         currentOrbit = orbits[Random.Range(0, orbits.Length - 1)];
+        currentOrbit2 = orbits[Random.Range(0, orbits.Length - 1)];
         if (Health == 0)
         {
             ExplosionSound.Play();
@@ -59,11 +61,11 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     {
         // Determine how far earth's center(0,0,0) is
         float distanceToEarth = Vector3.Distance(earth.transform.position, transform.position);
-        if (distanceToEarth < 3)
+        if (distanceToEarth < orbitDistance)
         {
             // Orbit the earth
-            transform.RotateAround(earth.transform.position, Vector3.down, 30f * Time.deltaTime);
             transform.RotateAround(earth.transform.position, currentOrbit, 30f * Time.deltaTime);
+            transform.RotateAround(earth.transform.position, currentOrbit2, 30f * Time.deltaTime);
             // Animation for the laser while its bein fired
             if (isFiring && currentTarget != null)
             {
@@ -97,7 +99,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
         // Determine if there is line of sight to the alien ship
         RaycastHit hit;
         Vector3 alienShipDirection = earthObject.transform.position - transform.position;
-        if (Physics.Raycast(transform.position, alienShipDirection, out hit, 10f))
+        if (Physics.Raycast(transform.position, alienShipDirection, out hit, 35))
         {
             // An object is seen, is it what we want?
             //Debug.Log("Can See Object " + hit.collider.gameObject);

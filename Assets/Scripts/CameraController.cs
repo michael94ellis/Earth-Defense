@@ -17,7 +17,6 @@ public class CameraController : MonoBehaviour
     void Update()
     {
         // MARK: - Keyboard Controls
-
         if (Input.GetKey(KeyCode.A))
         {
             transform.RotateAround(Vector3.zero, Vector3.up, mainSpeed);

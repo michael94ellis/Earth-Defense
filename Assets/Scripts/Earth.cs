@@ -44,6 +44,8 @@ public class Earth : MonoBehaviour
 
     void Update()
     {
+        if (SystemInfo.deviceType == DeviceType.Desktop)
+            return;
         // Touch controls for mobile only
         if (Input.touchCount == 2)
         {
@@ -106,28 +108,29 @@ public class Earth : MonoBehaviour
             {
                 //Debug.Log("Tap");
                 // Only Pause if not already paused, menu must have unpause button
-                if (!GameManager.Paused)
-                {
-                    GameManager.Pause();
-                    // Show the user all their cities
-                    GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
-                    // Update and fetch data here, to not run loops like this every frame
-                }
-                else if (GameManager.isPickingLocation)
-                {
-                    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit[] hits;
-                    hits = Physics.RaycastAll(ray);
-                    foreach (RaycastHit hit in hits)
-                    {
-                        GameManager.isPickingLocation = false;
-                        // This hit.point is the point on earth where you clicked
-                        if (hit.transform.gameObject == this.gameObject)
-                        {
-                            BuildNewObjectOnEarth(hit.point);
-                        }
-                    }
-                }
+                //if (!GameManager.Paused)
+                //{
+                //    GameManager.Pause();
+                //    // Show the user all their cities
+                //    GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
+                //    // Update and fetch data here, to not run loops like this every frame
+                //}
+                //else if (GameManager.isPickingLocation)
+                //{
+                //    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                //    RaycastHit[] hits;
+                //    hits = Physics.RaycastAll(ray);
+                //    foreach (RaycastHit hit in hits)
+                //    {
+                //        GameManager.isPickingLocation = false;
+                //        // This hit.point is the point on earth where you clicked
+                //        if (hit.transform.gameObject == this.gameObject)
+                //        {
+                //            Debug.Log(hit.point);
+                //            BuildNewObjectOnEarth(hit.point);
+                //        }
+                //    }
+                //}
             }
         }
     }
@@ -153,6 +156,7 @@ public class Earth : MonoBehaviour
                 // This hit.point is the point on earth where you clicked
                 if (hit.transform.gameObject == this.gameObject)
                 {
+                    Debug.Log(hit.point);
                     BuildNewObjectOnEarth(hit.point);
                 }
             }
@@ -161,9 +165,10 @@ public class Earth : MonoBehaviour
 
     void OnGUI()
     {
-        GUI.Label(new Rect(65, 30, 120, 40), " Alien Kill Count: " + AlienSpawner.DeadAlienCount, GameManager.HeaderStyle);
-        GUI.Label(new Rect(65, 70, 120, 40), " Earth Object Count: " + Children.Count, GameManager.HeaderStyle);
-        GUI.Label(new Rect(65, 120, 120, 40), " Global Wealth: $" + GlobalCurrency + "M", GameManager.HeaderStyle);
+        GUI.Label(new Rect(65, 30, 120, 40),
+            "Alien Kill Count: " + AlienSpawner.DeadAlienCount + "\n" +
+            "Defense Assets: " + Children.Count + "\n" +
+            "Global Wealth: $" + GlobalCurrency + "M", GameManager.HeaderStyle);
         // Only show menus if the game is paused
         if (GameManager.Paused && !GameManager.isPickingLocation)
         {
@@ -183,8 +188,8 @@ public class Earth : MonoBehaviour
     {
         if (GlobalCurrency == 0)
         {
-            GUILayout.Label("Welcome To The Game!", GameManager.HeaderStyle, GUILayout.Height(75));
-            if (GUILayout.Button("Click here to celebrate the USA's Independence Day, July 4th", GameManager.ButtonStyle, GUILayout.Height(75)))
+            GUILayout.Label("Welcome To The Game, it's July 4th on Earth!", GameManager.HeaderStyle, GUILayout.Height(75));
+            if (GUILayout.Button("Click here to celebrate the USA's Independence Day", GameManager.ButtonStyle, GUILayout.Height(75)))
             {
                 GlobalCurrency = 1000;
                 Earth.Explode();
@@ -193,7 +198,7 @@ public class Earth : MonoBehaviour
         else
         {
             GUILayout.Label("You notice something in the sky", GameManager.HeaderStyle, GUILayout.Height(75));
-            if (GUILayout.Button("You've angered the Aliens living in Uranus!\nHere's some money to defend earth i guess", GameManager.ButtonStyle, GUILayout.Height(75)))
+            if (GUILayout.Button("You've angered the Aliens living in Uranus.\nHere's some money to defend Earth!", GameManager.ButtonStyle, GUILayout.Height(75)))
             {
                 GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
             }
@@ -214,7 +219,7 @@ public class Earth : MonoBehaviour
             AlienSpawner.BeginInvasion();
         }
         // Make the new city a child object so it lives inside the earth's coordinate space
-        NewObject.transform.SetParent(transform, false);
+        NewObject.transform.SetParent(transform, true);
         // Get a point directly above the city away from earth
         Vector3 awayFromEarth = location - transform.position;
         // assign the up vector for the city
@@ -222,11 +227,11 @@ public class Earth : MonoBehaviour
         // Make it smaller than the Earth
         if (GameManager.NewObject == LaserTurretRef)
         {
-            NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
+            NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
         }
         else
         {
-            NewObject.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+            NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
         }
         // Reset this
         GameManager.NewObject = null;

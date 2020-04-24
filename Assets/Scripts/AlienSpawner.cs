@@ -43,12 +43,12 @@ public class AlienSpawner : MonoBehaviour
     static GameObject NewAlienShip()
     {
         // Pick a random spawn location
-        Vector3 randomSpawnPoint = RandomCoord(40, 50);
+        Vector3 randomSpawnPoint = RandomCoord(250, 320);
         //Create a new alien ship in at the random point
         GameObject newAlienShip = Instantiate(shipRef, randomSpawnPoint, Quaternion.identity) as GameObject;
         // This makes the alien live in the same coordinate space as the Earth
         newAlienShip.transform.SetParent(earth.transform, true);
-        newAlienShip.transform.localScale = new Vector3(0.25f, 0.25f, 0.25f);
+        newAlienShip.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
         return newAlienShip;
     }
 
@@ -70,6 +70,6 @@ public class AlienSpawner : MonoBehaviour
 
     public static Vector3 RandomCoord(int min, int max)
     {
-        return new Vector3(RandomCoordNum(40, 50), RandomCoordNum(40, 50), RandomCoordNum(40, 50));
+        return new Vector3(RandomCoordNum(min, max), RandomCoordNum(min, max), RandomCoordNum(min, max));
     }
 }
