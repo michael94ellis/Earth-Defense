@@ -8,11 +8,7 @@ public class ARMMainProgram : MonoBehaviour
 
     [SerializeField] private VoidEvent OnGameStart;
 
-    private void Awake()
-    {
-        
-    }
-
+   
     // Start is called before the first frame update
     private void Start()
     {

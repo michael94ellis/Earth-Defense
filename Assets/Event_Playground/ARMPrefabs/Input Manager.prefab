@@ -47,7 +47,7 @@ MonoBehaviour:
   OnToggleBuildMode: {fileID: 11400000, guid: f85304ffbfb33480a957d741bfb65554, type: 2}
   OnNewLocationClicked: {fileID: 11400000, guid: 00e5e297403d741a2b1a60ab418ebfe1,
     type: 2}
-  OnNewClickedLocationRaycastHit: {fileID: 11400000, guid: 3647a7464756c4c2f8acf7f69b471e68,
+  OnNewRaycastHitEarth: {fileID: 11400000, guid: 3647a7464756c4c2f8acf7f69b471e68,
     type: 2}
   OnEscapeButtonPressed: {fileID: 11400000, guid: 9aa1b82445bfc431ab208a229e58401b,
     type: 2}

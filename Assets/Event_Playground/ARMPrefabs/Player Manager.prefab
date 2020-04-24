@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7961979159895127852}
   - component: {fileID: 7961979159895127843}
+  - component: {fileID: 3666727140420109928}
   m_Layer: 0
   m_Name: Player Manager
   m_TagString: Untagged
@@ -44,10 +45,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _buildingPrefabs:
-  - {fileID: 6394460805084629920, guid: 9d0aae13c2e914ed7acfbf42757445f3, type: 3}
-  - {fileID: 9140643011354377241, guid: 2f50af839d4ba4379bc484a282b7f8e3, type: 3}
-  - {fileID: 7040336929811917536, guid: 22475557ff01f482b95ecedd6d9fa030, type: 3}
-  - {fileID: 577909566351523896, guid: ff3d8999ff14d4f43b28fd873741b7dd, type: 3}
-  - {fileID: 1792235927202633072, guid: 14cecf56a003648798c0e0548a736317, type: 3}
-  - {fileID: 5337141582880067729, guid: 60eab2aab48044264bddb5a0d2b11ba4, type: 3}
-  - {fileID: 256912460688822489, guid: 55c369e4441a14b2aa200af665ff6520, type: 3}
+  - {fileID: 8035818980771368270, guid: 47dba39df04404fdb83be6bbbe75d7fc, type: 3}
+  - {fileID: 5166900519421687893, guid: 6f14a0d3aaf814e8c9b1a42760f8ff64, type: 3}
+  - {fileID: 7124981122805318914, guid: 6679e2acd0ade4362a20769bb3124ca7, type: 3}
+  - {fileID: 8277023342083926994, guid: e4dc322159ec94c42b002151fe785053, type: 3}
+  - {fileID: 8787349674694935160, guid: 3ed20e8d547e24ca28921baf4e3d7b35, type: 3}
+  - {fileID: 4223998805118027089, guid: 6311970615e0d4ecf97e56d230074008, type: 3}
+  - {fileID: 2053823759856547379, guid: e1633b8c0ee2a47b4b08900881a822e6, type: 3}
+  - {fileID: 5301442831130222771, guid: fb8a03710d5544a369e5ebe48b97ad25, type: 3}
+  - {fileID: 4632183949980483667, guid: ea6c59652f96848829d2fe672a547ae3, type: 3}
+  - {fileID: 4918933886690046698, guid: b732e3f197e204f63812fafdd7ee2779, type: 3}
+  OnSendBuildingsToUI: {fileID: 11400000, guid: 1601bd87f7c124a2bbe3014a9e9d5713,
+    type: 2}
+  OnUIStateChanged: {fileID: 11400000, guid: 41fddcc1ab7954669b46cf1b43dffce0, type: 2}
+--- !u!114 &3666727140420109928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7961979159895127842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ae43204755944baf9e7d712a0e152ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameEvent: {fileID: 11400000, guid: 19a05e81ddd824ed48e57e0e7b61c0f4, type: 2}
+  unityEventResponse:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7961979159895127843}
+        m_MethodName: SetBuildingBluePrintIndex
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2

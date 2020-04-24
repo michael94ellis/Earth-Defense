@@ -16,10 +16,14 @@ public class ARMPlayerManager : MonoBehaviour
 
     public GameObject Target { get; private set; }
     public GameObject Parent { get; private set; }
+    public bool readyToSetNewParent { get; private set; }
 
     public bool InstantiateCityMode { get; private set; }
 
-    
+    [SerializeField] private GameObjectArrayEvent OnSendBuildingsToUI;
+
+
+
     public void SetTarget(GameObject newTarget)
     {
         Target = newTarget;
@@ -27,9 +31,24 @@ public class ARMPlayerManager : MonoBehaviour
     public void SetParent(GameObject newParent)
     {
         Parent = newParent;
+        transform.SetParent(Parent.transform);
+    }
+    public void PrepareToSetNewParent()
+    {
+        readyToSetNewParent = true;
+    }
+    public void FinishedSettingNewParent()
+    {
+        readyToSetNewParent = false;
     }
 
 
+    [SerializeField] private UIStateEvent OnUIStateChanged;
+
+    public void BuildButtonTapped()
+    {
+        OnSendBuildingsToUI.Raise(_buildingPrefabs);
+    }
     public void SetBuildingBluePrintIndex(int index)
     {
         selectedBuildingBlueprintIndex = index;
@@ -48,6 +67,10 @@ public class ARMPlayerManager : MonoBehaviour
         }
     }
 
+    public void SendBuildingsToUIViaEventListener()
+    {
+        OnSendBuildingsToUI.Raise(_buildingPrefabs);
+    }
    
     public void InstatiateBuildingFromRaycastHit(RaycastHit raycastHit)
     {
