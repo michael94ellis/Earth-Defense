@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using TMPro.EditorUtilities;
 using UnityEngine.UI;
 
 
@@ -16,7 +15,7 @@ public struct UIButtonInstance_Building
 
 public class ARMBuildingOptionsCanvasBehaviour : MonoBehaviour
 {
-    [SerializeField] Canvas canvas;
+    [SerializeField] private Canvas canvas;
     UIButtonInstance_Building UI;
     VerticalLayoutGroup verticalLayoutGroup;
 

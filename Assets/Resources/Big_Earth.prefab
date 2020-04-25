@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 4860946933622582028}
   - component: {fileID: 4860946933622582029}
   - component: {fileID: 4860946933622582030}
-  - component: {fileID: 655521495002763835}
   m_Layer: 0
   m_Name: Big_Earth
   m_TagString: Untagged
@@ -94,15 +93,3 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &655521495002763835
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4860946933622582031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8259436ac424046a098fd60131839d81, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System.Linq;
 
 [RequireComponent(typeof(TextMeshPro))]
 public class ARMUICanvas_Buildiing : MonoBehaviour, IUICanvas
@@ -66,7 +67,8 @@ public class ARMUICanvas_Buildiing : MonoBehaviour, IUICanvas
         {
             GameObject newButtonInstance = Instantiate(_buildingOptionButtonPrefab, this.transform);
             var name = currentBuildingPrefabs[i].gameObject.name;
-            newButtonInstance.GetComponentInChildren<UnityEngine.UI.Button>().GetComponentInChildren<TextMeshProUGUI>().text = name;
+            var refinedName = name.Remove(0, 3);
+            newButtonInstance.GetComponentInChildren<UnityEngine.UI.Button>().GetComponentInChildren<TextMeshProUGUI>().text = refinedName;
             BuildingIndex buildingIndex = new BuildingIndex { value = i };
             var buildBehaviour = newButtonInstance.GetComponent<BuildButtonBehaviour>();
             buildBehaviour.SetBuildingIndex(buildingIndex);

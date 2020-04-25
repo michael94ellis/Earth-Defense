@@ -19,7 +19,7 @@ public class ARMInputManager : MonoBehaviour
     [SerializeField] private Vector3Event OnNewLocationClicked;
     [SerializeField] private RaycastHitEvent OnNewRaycastHitEarth;
     [SerializeField] private VoidEvent OnEscapeButtonPressed;
-    
+    [SerializeField] private GameObjectEvent OnRaycastToSetCameraParent;
 
     // Runtime
     private void Awake()

@@ -9,10 +9,10 @@ public struct CameraInput
 }
 public class OrbitingObject
 {
-    public GameObject Parent;
-    
+    public GameObject Parent; 
 }
 
+[RequireComponent(typeof(CharacterController))]
 public class ARMCameraBehaviour : MonoBehaviour
 {
     private CameraInput _cameraInput;
@@ -25,5 +25,26 @@ public class ARMCameraBehaviour : MonoBehaviour
             _cameraInput = value;
         } }
 
-    
+    private CharacterController CharacterController;
+    private void Awake()
+    {
+        CharacterController = gameObject.GetComponent<CharacterController>();
+        
+    }
+    private OrbitingObject OrbitingObject;
+    private OrbitingObject cachesOrbitingObject;
+
+    [SerializeField] private GameObject _earth;
+
+    public void ToggleEarthParent()
+    {
+        if (transform.parent == _earth) {
+            transform.SetParent(_earth.transform);
+        }
+        else
+        {
+            transform.SetParent(transform);
+        };
+
+    }
 }
