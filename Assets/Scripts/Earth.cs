@@ -59,6 +59,10 @@ public class Earth : MonoBehaviour
                     // assign the up vector for the city
                     GameManager.NewObject.transform.up = awayFromEarth;
                     GameManager.NewObject.transform.position = hit.point;
+                    if (Input.GetMouseButton(0))
+                    {
+                        GameManager.isPickingLocation = false;
+                    }
                     return;
                 }
             }
@@ -167,10 +171,6 @@ public class Earth : MonoBehaviour
             // Show the user all their cities
             GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
             // Update and fetch data here, to not run loops like this every frame
-        }
-        else if (GameManager.isPickingLocation)
-        {
-            GameManager.isPickingLocation = false;
         }
     }
 
