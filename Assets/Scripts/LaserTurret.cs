@@ -9,7 +9,7 @@ public interface LaserGun
     IEnumerator RechargeLaser();
 }
 
-public class LaserTurret : MonoBehaviour, LaserGun, Damageable
+public class LaserTurret : MonoBehaviour, LaserGun
 {
     private float fireDuration = 0.5f;
     private int rechargeTime = 3;
@@ -25,25 +25,9 @@ public class LaserTurret : MonoBehaviour, LaserGun, Damageable
     private SightDelegate TurretSightCone;
     public Transform BarrelPivot;
 
-    public int Health { get; private set; }
-    public void TakeDamage()
-    {
-        //Debug.Log("Damage");
-        Health--;
-        if (Health == 0)
-        {
-            ExplosionSound.Play();
-            GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
-            DestructionAnimation.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
-            Destroy(gameObject);
-            Earth.Children.Remove(gameObject);
-        }
-    }
-
     // Start is called before the first frame update
     void Start()
     {
-        Health = 120;
         int explosionNumber = Random.Range(1, 10);
         DestructionEffect = Resources.Load("Explosion" + explosionNumber);
         // Laser and Explosion Sounds

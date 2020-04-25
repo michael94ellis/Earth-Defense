@@ -13,7 +13,7 @@ public class City : MonoBehaviour, Damageable
     public AudioSource ExplosionSound;
 
     public int Health { get; private set; }
-    public void TakeDamage()
+    public bool TakeDamage()
     {
         //Debug.Log("Damage");
         Health--;
@@ -23,8 +23,10 @@ public class City : MonoBehaviour, Damageable
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
             DestructionAnimation.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
             Destroy(gameObject);
-            Earth.Children.Remove(gameObject);
+            Earth.Cities.Remove(this);
+            return false;
         }
+        return true;
     }
 
     void Start()

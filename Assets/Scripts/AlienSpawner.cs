@@ -6,10 +6,12 @@ using Random = UnityEngine.Random;
 public class AlienSpawner : MonoBehaviour
 {
     public static int DeadAlienCount = 0;
+    private static int waveSize = 3;
 
     static Object shipRef;
     static GameObject earth;
     static List<GameObject> Aliens = new List<GameObject>();
+    static List<GameObject> InactiveAliens = new List<GameObject>();
 
     public static void AddAlien(GameObject alien)
     {
@@ -18,12 +20,8 @@ public class AlienSpawner : MonoBehaviour
     public static void RemovAlien(GameObject alien)
     {
         DeadAlienCount++;
-        alien.transform.position = RandomCoord(40, 50);
-        alien.GetComponent<AlienShip>().Health = 100;
-        for (int i = 0; i < DeadAlienCount + 1 - Aliens.Count; i++)
-        {
-            AddAlien(NewAlienShip());
-        }
+        alien.SetActive(false);
+        InactiveAliens.Add(alien);
     }
 
     void Start()
@@ -32,9 +30,9 @@ public class AlienSpawner : MonoBehaviour
         shipRef = Resources.Load("AlienShip");
     }
 
-    public static void BeginInvasion(int difficulty = 1)
+    public static void BeginInvasion()
     {
-        for (int i = 0; i < difficulty; i++)
+        for (int i = 0; i < waveSize; i++)
         {
             AddAlien(NewAlienShip());
         }
@@ -44,12 +42,23 @@ public class AlienSpawner : MonoBehaviour
     {
         // Pick a random spawn location
         Vector3 randomSpawnPoint = RandomCoord(250, 320);
-        //Create a new alien ship in at the random point
-        GameObject newAlienShip = Instantiate(shipRef, randomSpawnPoint, Quaternion.identity) as GameObject;
-        // This makes the alien live in the same coordinate space as the Earth
-        newAlienShip.transform.SetParent(earth.transform, true);
-        newAlienShip.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-        return newAlienShip;
+        if (InactiveAliens.Count > 0)
+        {
+            GameObject existingAlienShip = InactiveAliens[0];
+            existingAlienShip.GetComponent<AlienShip>().Health = 100;
+            existingAlienShip.SetActive(true);
+            existingAlienShip.transform.position = randomSpawnPoint;
+            return existingAlienShip;
+        }
+        else
+        {
+            //Create a new alien ship at the random point
+            GameObject newAlienShip = Instantiate(shipRef, randomSpawnPoint, Quaternion.identity) as GameObject;
+            // This makes the alien live in the same coordinate space as the Earth
+            newAlienShip.transform.SetParent(earth.transform, true);
+            newAlienShip.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            return newAlienShip;
+        }
     }
 
     // Returns a random value in the range, 50% change of being negative

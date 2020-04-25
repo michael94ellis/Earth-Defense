@@ -13,7 +13,7 @@ public class MenuManager
     public int windowOriginX = Screen.width / 6;
     public int windowOriginY = Screen.height / 6;
     // This holds an item that was just purchased so it can be placed on the earth
-    public Object NewObject;
+    public GameObject NewObject;
 
     public enum MenuScreen
     {

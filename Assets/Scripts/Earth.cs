@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 public interface Damageable
 {
-    void TakeDamage();
+    bool TakeDamage();
 }
 
 public class Earth : MonoBehaviour
@@ -19,7 +19,7 @@ public class Earth : MonoBehaviour
     private float minimumDragDistance = 20f;
     float mainSpeed = 0.5f; //regular speed
 
-    public static List<GameObject> Children = new List<GameObject>();
+    public static List<City> Cities = new List<City>();
 
     public static float GlobalCurrency { get; private set; }
     public static void AddGlobalCurrency(float money)
@@ -44,6 +44,29 @@ public class Earth : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.isPickingLocation)
+        {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit[] hits;
+            hits = Physics.RaycastAll(ray);
+            foreach (RaycastHit hit in hits)
+            {
+                // This hit.point is the point on earth where you clicked
+                if (hit.transform.gameObject == this.gameObject)
+                {
+                    // Get a point directly above the city away from earth
+                    Vector3 awayFromEarth = hit.point - transform.position;
+                    // assign the up vector for the city
+                    GameManager.NewObject.transform.up = awayFromEarth;
+                    GameManager.NewObject.transform.position = hit.point;
+                    return;
+                }
+            }
+            return;
+        }
+        // Earth rotation
+        transform.RotateAround(Vector3.zero, Vector3.up, Time.deltaTime * 30);
+
         if (SystemInfo.deviceType == DeviceType.Desktop)
             return;
         // Touch controls for mobile only
@@ -107,30 +130,30 @@ public class Earth : MonoBehaviour
             else if (currentTouch.phase == TouchPhase.Ended) 
             {
                 //Debug.Log("Tap");
-                // Only Pause if not already paused, menu must have unpause button
-                //if (!GameManager.Paused)
-                //{
-                //    GameManager.Pause();
-                //    // Show the user all their cities
-                //    GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
-                //    // Update and fetch data here, to not run loops like this every frame
-                //}
-                //else if (GameManager.isPickingLocation)
-                //{
-                //    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                //    RaycastHit[] hits;
-                //    hits = Physics.RaycastAll(ray);
-                //    foreach (RaycastHit hit in hits)
-                //    {
-                //        GameManager.isPickingLocation = false;
-                //        // This hit.point is the point on earth where you clicked
-                //        if (hit.transform.gameObject == this.gameObject)
-                //        {
-                //            Debug.Log(hit.point);
-                //            BuildNewObjectOnEarth(hit.point);
-                //        }
-                //    }
-                //}
+                //Only Pause if not already paused, menu must have unpause button
+                if (!GameManager.Paused)
+                {
+                    GameManager.Pause();
+                    // Show the user all their cities
+                    GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
+                    // Update and fetch data here, to not run loops like this every frame
+                }
+                else if (GameManager.isPickingLocation)
+                {
+                    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    RaycastHit[] hits;
+                    hits = Physics.RaycastAll(ray);
+                    foreach (RaycastHit hit in hits)
+                    {
+                        GameManager.isPickingLocation = false;
+                        // This hit.point is the point on earth where you clicked
+                        if (hit.transform.gameObject == this.gameObject)
+                        {
+                            Debug.Log(hit.point);
+                            //DisplayNewObjectOnEarth(hit.point);
+                        }
+                    }
+                }
             }
         }
     }
@@ -147,18 +170,7 @@ public class Earth : MonoBehaviour
         }
         else if (GameManager.isPickingLocation)
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hits;
-            hits = Physics.RaycastAll(ray);
-            foreach (RaycastHit hit in hits)
-            {
-                GameManager.isPickingLocation = false;
-                // This hit.point is the point on earth where you clicked
-                if (hit.transform.gameObject == this.gameObject)
-                {
-                    BuildNewObjectOnEarth(hit.point);
-                }
-            }
+            GameManager.isPickingLocation = false;
         }
     }
 
@@ -166,8 +178,9 @@ public class Earth : MonoBehaviour
     {
         GUI.Label(new Rect(65, 30, 120, 40),
             "Alien Kill Count: " + AlienSpawner.DeadAlienCount + "\n" +
-            "Defense Assets: " + Children.Count + "\n" +
+            "Earth Cities: " + Cities.Count + "\n" +
             "Global Wealth: $" + GlobalCurrency + "M", GameManager.HeaderStyle);
+
         // Only show menus if the game is paused
         if (GameManager.Paused && !GameManager.isPickingLocation)
         {
@@ -187,11 +200,10 @@ public class Earth : MonoBehaviour
     {
         if (GlobalCurrency == 0)
         {
-            GUILayout.Label("Welcome To The Game, it's July 4th on Earth!", GameManager.HeaderStyle, GUILayout.Height(75));
-            if (GUILayout.Button("Click here to celebrate the USA's Independence Day", GameManager.ButtonStyle, GUILayout.Height(75)))
+            GUILayout.Label("Welcome To Earth, you are an exiled alien in disguise and have just taken control of the World!", GameManager.HeaderStyle, GUILayout.Height(75));
+            if (GUILayout.Button("Continue", GameManager.ButtonStyle, GUILayout.Height(75)))
             {
                 GlobalCurrency = 1000;
-                Earth.Explode();
             }
         }
         else
@@ -202,52 +214,6 @@ public class Earth : MonoBehaviour
                 GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
             }
         }
-    }
-
-    // MagnetoCat: Erase this whole method when you add the city placement
-    void BuildNewObjectOnEarth(Vector3 location)
-    {
-        GameObject NewObject = Instantiate(GameManager.NewObject, location, Quaternion.identity) as GameObject;
-        if (Children.Count > 0)
-        {
-            Children.Add(NewObject);
-        }
-        else
-        {
-            Children.Add(NewObject);
-            AlienSpawner.BeginInvasion();
-        }
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        NewObject.transform.SetParent(transform, true);
-        // Get a point directly above the city away from earth
-        Vector3 awayFromEarth = location - transform.position;
-        // assign the up vector for the city
-        NewObject.transform.up = awayFromEarth;
-        // Make it smaller than the Earth
-        if (GameManager.NewObject == LaserTurretRef)
-        {
-            NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
-        }
-        else
-        {
-            NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
-        }
-        // Reset this
-        GameManager.NewObject = null;
-    }
-
-    void BuildNewEarthSatellite()
-    {
-        GameObject NewSatellite = Instantiate(SatelliteRef, new Vector3(RandomCoord(0.4f,0.7f), RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f)), Quaternion.identity) as GameObject;
-        Children.Add(NewSatellite);
-        // Make it smaller than the Earth
-        NewSatellite.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        NewSatellite.transform.SetParent(transform, false);
-        // Get a point directly above the city away from earth
-        Vector3 awayFromEarth = NewSatellite.transform.position - transform.position;
-        // assign the up vector for the city
-        NewSatellite.transform.up = awayFromEarth;
     }
 
     void MainEarthMenu(int windowID)
@@ -262,22 +228,21 @@ public class Earth : MonoBehaviour
         ResumeGameButton();
     }
 
-    void ResumeGameButton()
-    {
-        GUI.enabled = true;
-        if (GUILayout.Button("Resume Game", GameManager.ButtonStyle, GUILayout.Height(75)))
-        {
-            GameManager.Resume();
-        }
-    }
-
     void BuyCityButton()
     {
         GUI.enabled = GlobalCurrency > 100;
         GUILayout.BeginVertical();
         if (GUILayout.Button("Buy City", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
-            GameManager.NewObject = CityRef;
+            GameObject NewObject = Instantiate(CityRef) as GameObject;
+            GameManager.NewObject = NewObject;
+            // Make the new city a child object so it lives inside the earth's coordinate space
+            GameManager.NewObject.transform.SetParent(transform, true);
+            City newCity = GameManager.NewObject.GetComponent<City>();
+            if (newCity != null)
+                Cities.Add(newCity);
+            GameManager.Pause();
+            GameManager.NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
             GameManager.isPickingLocation = true;
             GlobalCurrency -= 100;
         }
@@ -292,9 +257,14 @@ public class Earth : MonoBehaviour
         GUILayout.BeginVertical();
         if (GUILayout.Button("Buy Laser Turret", GameManager.ButtonStyle, GUILayout.Height(75)))
         {
-            GameManager.NewObject = LaserTurretRef;
+            GameObject NewObject = Instantiate(LaserTurretRef) as GameObject;
+            GameManager.NewObject = NewObject;
+            // Make the new city a child object so it lives inside the earth's coordinate space
+            GameManager.NewObject.transform.SetParent(transform, true);
+            NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
             GameManager.isPickingLocation = true;
             GlobalCurrency -= 75;
+            GameManager.Pause();
         }
         GUILayout.Label("Cost: $75M", GameManager.Header2Style);
         GUILayout.Label("Shoots any Alien Ships above it \nRecharge time of 3 seconds", GameManager.BodyStyle);
@@ -316,6 +286,28 @@ public class Earth : MonoBehaviour
         GUILayout.EndVertical();
     }
 
+    void BuildNewEarthSatellite()
+    {
+        GameObject NewSatellite = Instantiate(SatelliteRef, new Vector3(RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f)), Quaternion.identity) as GameObject;
+        // Make it smaller than the Earth
+        NewSatellite.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+        // Make the new city a child object so it lives inside the earth's coordinate space
+        NewSatellite.transform.SetParent(transform, false);
+        // Get a point directly above the city away from earth
+        Vector3 awayFromEarth = NewSatellite.transform.position - transform.position;
+        // assign the up vector for the city
+        NewSatellite.transform.up = awayFromEarth;
+    }
+
+    void ResumeGameButton()
+    {
+        GUI.enabled = true;
+        if (GUILayout.Button("Resume Game", GameManager.ButtonStyle, GUILayout.Height(75)))
+        {
+            GameManager.Resume();
+        }
+    }
+
     // Returns a random value in the range, 50% change of being negative
     float RandomCoord(float min, float max)
     {
@@ -330,12 +322,5 @@ public class Earth : MonoBehaviour
         {
             return value;
         }
-    }
-
-    public static void Explode()
-    {
-        int explosionNumber = Random.Range(1, 10);
-        Object DestructionEffect = Resources.Load("Explosion" + explosionNumber);
-        GameObject DestructionAnimation = Instantiate(DestructionEffect, Vector3.zero, Quaternion.identity) as GameObject;
     }
 }

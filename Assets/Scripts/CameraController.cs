@@ -16,22 +16,27 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+
         // MARK: - Keyboard Controls
         if (Input.GetKey(KeyCode.A))
         {
             transform.RotateAround(Vector3.zero, Vector3.up, mainSpeed);
+            transform.RotateAround(Vector3.zero, Vector3.down, -mainSpeed);
         }
         if (Input.GetKey(KeyCode.D))
         {
             transform.RotateAround(Vector3.zero, Vector3.down, mainSpeed);
+            transform.RotateAround(Vector3.zero, Vector3.up, -mainSpeed);
         }
         if (Input.GetKey(KeyCode.W))
         {
             transform.RotateAround(Vector3.zero, Vector3.right, mainSpeed);
+            transform.RotateAround(Vector3.zero, Vector3.left, -mainSpeed);
         }
         if (Input.GetKey(KeyCode.S))
         {
             transform.RotateAround(Vector3.zero, Vector3.left, mainSpeed);
+            transform.RotateAround(Vector3.zero, Vector3.right, -mainSpeed);
         }
         if (Input.GetKey(KeyCode.E) && transform.position.y < boundary)
         {
