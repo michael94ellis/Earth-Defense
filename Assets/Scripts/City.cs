@@ -11,12 +11,14 @@ public class City : MonoBehaviour, Damageable
     float maxAge = 10;
     Object DestructionEffect;
     public AudioSource ExplosionSound;
+    GameObject Shield;
 
+    public int ShieldHealth { get; private set; } = 0;
+    private int BaseHealth = 500;
     public int Health { get; private set; }
     public bool TakeDamage()
     {
         //Debug.Log("Damage");
-        Health--;
         if (Health == 0)
         {
             ExplosionSound.Play();
@@ -26,16 +28,24 @@ public class City : MonoBehaviour, Damageable
             Earth.Cities.Remove(this);
             return false;
         }
+        if (ShieldHealth > 0 && Shield.activeInHierarchy)
+            ShieldHealth--;
+        else if (Health < BaseHealth && Shield.activeInHierarchy)
+            Shield.SetActive(false);
+        else
+            Health--;
         return true;
     }
 
     void Start()
     {
-        Health = 200;
+        Health = BaseHealth;
         int explosionNumber = Random.Range(1, 10);
         DestructionEffect = Resources.Load("Explosion" + explosionNumber);
         AudioSource[] soundSources = gameObject.GetComponents<AudioSource>();
         ExplosionSound = soundSources[0];
+        Shield = transform.Find("Shield").gameObject;
+        Shield.SetActive(false);
     }
 
     void Update()
@@ -44,6 +54,12 @@ public class City : MonoBehaviour, Damageable
         {
             StartCoroutine(GeneratGlobalCurrency());
         }
+    }
+
+    public void AddShield()
+    {
+        Shield.SetActive(true);
+        Health += BaseHealth;
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());

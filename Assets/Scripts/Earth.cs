@@ -10,7 +10,7 @@ public interface Damageable
 
 public class Earth : MonoBehaviour
 {
-    public static MenuManager GameManager;
+    MenuManager GameManager;
     Object CityRef;
     Object LaserTurretRef;
     Object SatelliteRef;
@@ -19,58 +19,55 @@ public class Earth : MonoBehaviour
     private float minimumDragDistance = 20f;
     float mainSpeed = 0.5f; //regular speed
 
+    Collider NorthAmerica;
+    Collider SouthAmerica;
     public static List<City> Cities = new List<City>();
-
     public static float GlobalCurrency { get; private set; }
     public static void AddGlobalCurrency(float money)
     {
         GlobalCurrency += money;
     }
+    public static void SpendGlobalCurrency(float money)
+    {
+        GlobalCurrency -= money;
+    }
 
     void Start()
     {
+        GameManager = GameObject.Find("Earth").GetComponent<MenuManager>();
         CityRef = Resources.Load("City");
         LaserTurretRef = Resources.Load("Turret");
         SatelliteRef = Resources.Load("EarthSatellite");
+        NorthAmerica = GameObject.Find("NorthAmerica").GetComponent<BoxCollider>();
+        SouthAmerica = GameObject.Find("SouthAmerica").GetComponent<BoxCollider>();
         GlobalCurrency = 0;
-        // Set up the game manager for beginning of game(will change when gameplay changes)
-        GameManager = new MenuManager();
-        GameManager.CurrentScreen = MenuManager.MenuScreen.NewGame;
-        // Pause the game so the player starts in the Menu Screen - OnGUI() method
-        GameManager.Paused = true;
     }
     public Vector2 startPos;
     public Vector2 direction;
 
     void Update()
     {
+        if (Input.GetMouseButton(1))
+        {
+            // Only Pause if not already paused, menu must have unpause button
+            if (!GameManager.Paused)
+            {
+                GameManager.Pause();
+                // Show the user all their cities
+                GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
+                // Update and fetch data here, to not run loops like this every frame
+            }
+            else if (GameManager.isPickingLocation)
+            {
+                GameManager.isPickingLocation = false;
+                return;
+            }
+        }
         if (GameManager.isPickingLocation)
         {
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit[] hits;
-            hits = Physics.RaycastAll(ray);
-            foreach (RaycastHit hit in hits)
-            {
-                // This hit.point is the point on earth where you clicked
-                if (hit.transform.gameObject == this.gameObject)
-                {
-                    // Get a point directly above the city away from earth
-                    Vector3 awayFromEarth = hit.point - transform.position;
-                    // assign the up vector for the city
-                    GameManager.NewObject.transform.up = awayFromEarth;
-                    GameManager.NewObject.transform.position = hit.point;
-                    if (Input.GetMouseButton(0))
-                    {
-                        GameManager.isPickingLocation = false;
-                    }
-                    return;
-                }
-            }
+            DisplayNewObjectInNorthAmerica();
             return;
         }
-        // Earth rotation
-        // transform.RotateAround(Vector3.zero, Vector3.up, Time.deltaTime * 30);
-
         if (SystemInfo.deviceType == DeviceType.Desktop)
             return;
         // Touch controls for mobile only
@@ -161,133 +158,58 @@ public class Earth : MonoBehaviour
             }
         }
     }
-    // For PC/Mac
-    void OnMouseUp()
-    {
-        // Only Pause if not already paused, menu must have unpause button
-        if (!GameManager.Paused)
-        {
-            GameManager.Pause();
-            // Show the user all their cities
-            GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
-            // Update and fetch data here, to not run loops like this every frame
-        }
-    }
-    
 
-    void OnGUI()
+    void DisplayNewObjectInNorthAmerica()
     {
-        GUI.Label(new Rect(65, 30, 120, 40),
-            "Alien Kill Count: " + AlienSpawner.DeadAlienCount + "\n" +
-            "Earth Cities: " + Cities.Count + "\n" +
-            "Global Wealth: $" + GlobalCurrency + "M", GameManager.HeaderStyle);
-
-        // Only show menus if the game is paused
-        if (GameManager.Paused && !GameManager.isPickingLocation)
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(ray);
+        foreach (RaycastHit hit in hits)
         {
-            switch (GameManager.CurrentScreen)
+            // This hit.point is the point on earth where you clicked
+            if (hit.transform.gameObject == this.gameObject)
             {
-                case MenuManager.MenuScreen.NewGame:
-                    GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), NewGameScreen, "");
-                    break;
-                case MenuManager.MenuScreen.MainMenu:
-                    GUILayout.Window(0, new Rect(GameManager.windowOriginX, GameManager.windowOriginY, GameManager.windowWidth, GameManager.windowHeight), MainEarthMenu, "");
-                    break;
+                if (NorthAmerica.bounds.Contains(hit.point))
+                {
+                    //Debug.Log(hit.point + " is in North America: " + NorthAmerica.bounds.Contains(hit.point));
+                    // Get a point directly above the city away from earth
+                    Vector3 awayFromEarth = hit.point - transform.position;
+                    // assign the up vector for the city
+                    GameManager.NewObject.transform.up = awayFromEarth;
+                    GameManager.NewObject.transform.position = hit.point;
+                }
+                else
+                {
+                    return;
+                }
             }
         }
     }
 
-    void NewGameScreen(int windowID)
+    public void BuildNewCity()
     {
-        if (GlobalCurrency == 0)
-        {
-            GUILayout.Label("Welcome To Earth, you are an exiled alien in disguise and have just taken control of the World!", GameManager.HeaderStyle, GUILayout.Height(75));
-            if (GUILayout.Button("Continue", GameManager.ButtonStyle, GUILayout.Height(75)))
-            {
-                GlobalCurrency = 1000;
-            }
-        }
-        else
-        {
-            GUILayout.Label("You notice something in the sky", GameManager.HeaderStyle, GUILayout.Height(75));
-            if (GUILayout.Button("You've angered the Aliens living in Uranus.\nHere's some money to defend Earth!", GameManager.ButtonStyle, GUILayout.Height(75)))
-            {
-                GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
-            }
-        }
+        GameObject NewObject = Instantiate(CityRef) as GameObject;
+        GameManager.NewObject = NewObject;
+        // Make the new city a child object so it lives inside the earth's coordinate space
+        GameManager.NewObject.transform.SetParent(transform, true);
+        City newCity = GameManager.NewObject.GetComponent<City>();
+        if (newCity != null)
+            Cities.Add(newCity);
+        GameManager.NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
+        SpendGlobalCurrency(100);
     }
 
-    void MainEarthMenu(int windowID)
+    public void BuildNewWeapon()
     {
-        GUILayout.Label("Earth Defense Shop", GameManager.HeaderStyle, GUILayout.Height(40));
-        GUILayout.Label("Global Budget: $" + GlobalCurrency + " Million", GameManager.HeaderStyle, GUILayout.Height(75));
-        GUILayout.BeginHorizontal();
-        BuyCityButton();
-        BuyLaserTurretButton();
-        BuySatelliteButton();
-        GUILayout.EndHorizontal();
-        ResumeGameButton();
+        GameObject NewObject = Instantiate(LaserTurretRef) as GameObject;
+        GameManager.NewObject = NewObject;
+        // Make the new city a child object so it lives inside the earth's coordinate space
+        GameManager.NewObject.transform.SetParent(transform, true);
+        NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
+        SpendGlobalCurrency(75);
     }
 
-    void BuyCityButton()
-    {
-        GUI.enabled = GlobalCurrency > 100;
-        GUILayout.BeginVertical();
-        if (GUILayout.Button("Buy City", GameManager.ButtonStyle, GUILayout.Height(75)))
-        {
-            GameObject NewObject = Instantiate(CityRef) as GameObject;
-            GameManager.NewObject = NewObject;
-            // Make the new city a child object so it lives inside the earth's coordinate space
-            GameManager.NewObject.transform.SetParent(transform, true);
-            City newCity = GameManager.NewObject.GetComponent<City>();
-            if (newCity != null)
-                Cities.Add(newCity);
-            GameManager.Pause();
-            GameManager.NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
-            GameManager.isPickingLocation = true;
-            GlobalCurrency -= 100;
-        }
-        GUILayout.Label("Cost: $100M", GameManager.Header2Style);
-        GUILayout.Label("Generates Money Over Time \nStarting at $5 Million every 5 seconds \nIncreases by $5 Million up to $50 Million per 5 seconds", GameManager.BodyStyle);
-        GUILayout.EndVertical();
-    }
-
-    void BuyLaserTurretButton()
-    {
-        GUI.enabled = GlobalCurrency > 75;
-        GUILayout.BeginVertical();
-        if (GUILayout.Button("Buy Laser Turret", GameManager.ButtonStyle, GUILayout.Height(75)))
-        {
-            GameObject NewObject = Instantiate(LaserTurretRef) as GameObject;
-            GameManager.NewObject = NewObject;
-            // Make the new city a child object so it lives inside the earth's coordinate space
-            GameManager.NewObject.transform.SetParent(transform, true);
-            NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
-            GameManager.isPickingLocation = true;
-            GlobalCurrency -= 75;
-            GameManager.Pause();
-        }
-        GUILayout.Label("Cost: $75M", GameManager.Header2Style);
-        GUILayout.Label("Shoots any Alien Ships above it \nRecharge time of 3 seconds", GameManager.BodyStyle);
-        GUILayout.Label("", GameManager.BodyStyle);
-        GUILayout.EndVertical();
-    }
-
-    void BuySatelliteButton()
-    {
-        GUI.enabled = GlobalCurrency > 75;
-        GUILayout.BeginVertical();
-        if (GUILayout.Button("Buy New Satellite", GameManager.ButtonStyle, GUILayout.Height(75)))
-        {
-            BuildNewEarthSatellite();
-            GlobalCurrency -= 75;
-        }
-        GUILayout.Label("Cost: $75M", GameManager.Header2Style);
-        GUILayout.Label("Orbits Earth, look cool \nDoes Nothing Else Yet", GameManager.BodyStyle);
-        GUILayout.EndVertical();
-    }
-
-    void BuildNewEarthSatellite()
+    public void BuildNewEarthSatellite()
     {
         GameObject NewSatellite = Instantiate(SatelliteRef, new Vector3(RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f)), Quaternion.identity) as GameObject;
         // Make it smaller than the Earth
@@ -298,17 +220,9 @@ public class Earth : MonoBehaviour
         Vector3 awayFromEarth = NewSatellite.transform.position - transform.position;
         // assign the up vector for the city
         NewSatellite.transform.up = awayFromEarth;
+        SpendGlobalCurrency(75);
     }
-
-    void ResumeGameButton()
-    {
-        GUI.enabled = true;
-        if (GUILayout.Button("Resume Game", GameManager.ButtonStyle, GUILayout.Height(75)))
-        {
-            GameManager.Resume();
-        }
-    }
-
+    
     // Returns a random value in the range, 50% change of being negative
     float RandomCoord(float min, float max)
     {

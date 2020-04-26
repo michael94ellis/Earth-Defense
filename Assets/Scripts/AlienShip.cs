@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is declared in LaserTurret right now
+public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declared in LaserTurret right now
 {
     private float moveSpeed = 0.1f;
     private float fireDuration = 0.5f;
@@ -128,7 +128,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
                     return false;
                 if (!humanObject.TakeDamage())
                     currentTarget = null;
-                FireLaserAt(earthObject.transform.position);
+                FireAt(earthObject.transform.position);
                 return true;
             }
         }
@@ -139,7 +139,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
         return false;
     }
 
-    public void FireLaserAt(Vector3 target)
+    public void FireAt(Vector3 target)
     {
         //Debug.Log("City In Sight");
         if (!isFiring)
@@ -147,7 +147,7 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
             // Cancel the orbit changing repeater
             CancelInvoke();
             //Debug.Log("Firing Laser");
-            StartCoroutine(FireLaser());
+            StartCoroutine(Fire());
             LaserSound.Play();
             Laser.enabled = true;
             isFiring = true;
@@ -162,18 +162,18 @@ public class AlienShip : MonoBehaviour, Damageable, LaserGun // LaserGun is decl
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
-    public IEnumerator FireLaser()
+    public IEnumerator Fire()
     {
         yield return new WaitForSeconds(fireDuration);
         if (LaserSound.isPlaying)
             LaserSound.Stop();
         Laser.enabled = false;
         isFiring = false;
-        StartCoroutine(RechargeLaser());
+        StartCoroutine(Recharge());
     }
 
     /// Must be called like so: StartCoroutine(LaserWasFired());
-    public IEnumerator RechargeLaser()
+    public IEnumerator Recharge()
     {
         yield return new WaitForSeconds(rechargeTime);
         isCharged = true;

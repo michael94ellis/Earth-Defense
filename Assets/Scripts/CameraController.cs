@@ -2,7 +2,6 @@
 
 public class CameraController : MonoBehaviour
 {
-
     private Transform _Xform_Camera;
     private Transform _Xform_Parent;
 
@@ -29,7 +28,7 @@ public class CameraController : MonoBehaviour
         
         //if (!CameraDisabled)
         //{
-            if (Input.GetMouseButton(0) || (Input.GetMouseButton(1) && Earth.GameManager.isPickingLocation))
+            if (Input.GetMouseButton(0))
             {
                 if(Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
                 {
@@ -55,6 +54,5 @@ public class CameraController : MonoBehaviour
         if(this._Xform_Camera.localPosition.z != this._CameraDistance * -1f){
             this._Xform_Camera.localPosition = new Vector3(0f, 0f, Mathf.Lerp(this._Xform_Camera.localPosition.z, this._CameraDistance * -1f, ScrollDampening));
         }
-        
     }
 }
