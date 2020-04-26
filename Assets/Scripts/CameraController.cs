@@ -1,54 +1,58 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
 
-    float mainSpeed = 0.5f; //regular speed
-    float zoomSpeed = 0.2f;
-    float boundary = 800.0f;
+    private Transform _Xform_Camera;
+    private Transform _Xform_Parent;
+
+    private Vector3 _LocalRotation;
+    private float _CameraDistance = 10f;
+
+    public float MouseSensitivity = 4f;
+    public float ScrollSensitivity = 2f;
+    public float OrbitDampening = 10f;
+    public float ScrollDampening = 6f;
+
+    public bool CameraDisabled = false;
 
     void Start()
     {
-        this.transform.LookAt(Vector3.zero);
+        this._Xform_Camera = this.transform;
+        this._Xform_Parent = this.transform.parent;
     }
 
-    void Update()
-    {
 
-        // MARK: - Keyboard Controls
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.RotateAround(Vector3.zero, Vector3.up, mainSpeed);
-            transform.RotateAround(Vector3.zero, Vector3.down, -mainSpeed);
+    void LateUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+            CameraDisabled = !CameraDisabled;
+        
+        if (!CameraDisabled){
+            if (Input.GetMouseButton(1)){
+                if(Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0){
+                    _LocalRotation.x += Input.GetAxis("Mouse X") * MouseSensitivity;
+                    _LocalRotation.y -= Input.GetAxis("Mouse Y") * MouseSensitivity;
+                    //To not flip camera over top
+                    _LocalRotation.y = Mathf.Clamp(_LocalRotation.y, -90f, 90f);
+                }
+            }
+            if (Input.GetAxis("Mouse ScrollWheel")!= 0f){
+                float ScrollAmount = Input.GetAxis("Mouse ScrollWheel") * ScrollSensitivity;
+
+                ScrollAmount *= (this._CameraDistance * 0.3f);
+                this._CameraDistance += ScrollAmount * -1f;
+                this._CameraDistance = Mathf.Clamp(this._CameraDistance, 1.75f, 10f);
+            }
         }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.RotateAround(Vector3.zero, Vector3.down, mainSpeed);
-            transform.RotateAround(Vector3.zero, Vector3.up, -mainSpeed);
+        
+
+         //actual camera rig transform
+        Quaternion QT = Quaternion.Euler(_LocalRotation.y, _LocalRotation.x, 0);
+        this._Xform_Parent.rotation = Quaternion.Lerp(this._Xform_Parent.rotation, QT, Time.deltaTime * OrbitDampening);
+        if(this._Xform_Camera.localPosition.z != this._CameraDistance * -1f){
+            this._Xform_Camera.localPosition = new Vector3(0f, 0f, Mathf.Lerp(this._Xform_Camera.localPosition.z, this._CameraDistance * -1f, Time.deltaTime * ScrollDampening));
         }
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.RotateAround(Vector3.zero, Vector3.right, mainSpeed);
-            transform.RotateAround(Vector3.zero, Vector3.left, -mainSpeed);
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.RotateAround(Vector3.zero, Vector3.left, mainSpeed);
-            transform.RotateAround(Vector3.zero, Vector3.right, -mainSpeed);
-        }
-        if (Input.GetKey(KeyCode.E) && transform.position.y < boundary)
-        {
-            transform.Translate(Vector3.forward * zoomSpeed);
-            if (zoomSpeed >= 0.001f)
-                zoomSpeed = 0.01f * Vector3.Distance(Vector3.zero, transform.position);
-        }
-        if (Input.GetKey(KeyCode.Q) && transform.position.y > -boundary)
-        {
-            zoomSpeed = 0.1f;
-            transform.Translate(Vector3.back * mainSpeed);
-        }
-        this.transform.LookAt(Vector3.zero);
+        
     }
 }

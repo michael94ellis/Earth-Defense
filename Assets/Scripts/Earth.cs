@@ -69,7 +69,7 @@ public class Earth : MonoBehaviour
             return;
         }
         // Earth rotation
-        transform.RotateAround(Vector3.zero, Vector3.up, Time.deltaTime * 30);
+        // transform.RotateAround(Vector3.zero, Vector3.up, Time.deltaTime * 30);
 
         if (SystemInfo.deviceType == DeviceType.Desktop)
             return;
@@ -173,6 +173,7 @@ public class Earth : MonoBehaviour
             // Update and fetch data here, to not run loops like this every frame
         }
     }
+    
 
     void OnGUI()
     {
