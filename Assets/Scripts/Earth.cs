@@ -8,14 +8,6 @@ public interface Damageable
     bool TakeDamage();
 }
 
-public class EarthZone
-{
-    public Collider collider;
-    public City city;
-    public Generator generator;
-    public List<Weapon> weapons;
-}
-
 public class Earth : MonoBehaviour
 {
     MenuManager GameManager;
@@ -49,7 +41,7 @@ public class Earth : MonoBehaviour
         LaserTurretRef = Resources.Load("Turret");
        // Generator = Resources.Load("Generator");
         SatelliteRef = Resources.Load("EarthSatellite");
-        NorthAmerica = GameObject.Find("NorthAmerica").GetComponent<Collider>();
+        NorthAmerica = GameObject.Find("NorthAmericanShield").GetComponent<Collider>();
        // SouthAmerica = GameObject.Find("SouthAmerica").GetComponent<Collider>();
         GlobalCurrency = 0;
     }

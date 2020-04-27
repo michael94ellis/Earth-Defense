@@ -12,50 +12,23 @@ public interface Weapon
 public class LaserTurret : MonoBehaviour, Weapon
 {
     private float fireDuration = 0.5f;
-    private int rechargeTime = 3;
+    private int rechargeTime = 1;
     private bool isCharged = true;
     private bool isFiring = false;
     private GameObject currentTarget;
     // Draws the laser
     private LineRenderer Laser;
     public AudioSource LaserSound;
-    public AudioSource ExplosionSound;
-    private Object DestructionEffect;
-    private List<GameObject> Targets = new List<GameObject>();
-    private SightDelegate TurretSightCone;
     public Transform BarrelPivot;
 
     // Start is called before the first frame update
     void Start()
     {
         int explosionNumber = Random.Range(1, 10);
-        DestructionEffect = Resources.Load("Explosion" + explosionNumber);
         // Laser and Explosion Sounds
         Laser = gameObject.GetComponent<LineRenderer>();
-        AudioSource[] soundSources = gameObject.GetComponents<AudioSource>();
-        LaserSound = soundSources[0];
-        ExplosionSound = soundSources[1];
-        // Visibility of Turret
-        TurretSightCone = transform.Find("SightCone").GetComponent<SightDelegate>();
-        if (TurretSightCone != null)
-        {
-            TurretSightCone.EnteredSight += AddTarget;
-            TurretSightCone.ExitedSight += RemoveTarget;
-        }
-        else
-        {
-            Debug.Log("Error: Failed to get Cone Of Sight for LaserTurret");
-        }
-    }
-
-    public void AddTarget(GameObject alienShip)
-    {
-        Targets.Add(alienShip);
-    }
-
-    public void RemoveTarget(GameObject alienShip)
-    {
-        Targets.Remove(alienShip);
+        AudioSource soundSource = gameObject.GetComponent<AudioSource>();
+        LaserSound = soundSource;
     }
 
     // Update is called once per frame
@@ -67,43 +40,43 @@ public class LaserTurret : MonoBehaviour, Weapon
             CheckLineOfSight(currentTarget);
             return;
         }
-        if (LaserSound.isPlaying)
-            LaserSound.Stop();
-        Targets.RemoveAll(item => item == null);
-        foreach (GameObject alienShip in Targets)
+        // If the laser is done firing we have to wait for it to recharge to fire again
+        if (!isCharged)
+            return;
+        if (currentTarget != null && CheckLineOfSight(currentTarget))
+            return;
+        foreach (GameObject alienShip in AlienSpawner.Aliens)
         {
-            // If the laser is done firing we have to wait for it to recharge to fire again
-            if (isCharged)
+            Debug.Log("Laser Turret Beginning Fire Sequence");
+            // Check for any sight obstructions to the alien ship
+            if (alienShip.activeInHierarchy && CheckLineOfSight(alienShip))
             {
-                //Debug.Log("Laser Turret Beginning Fire Sequence");
-                // Set current target in case we can shoot it
-                // Check for any sight obstructions to the alien ship
-                if (CheckLineOfSight(alienShip))
-                    return;
+                Debug.Log("Target was s");
+                return;
             }
         }
     }
 
     public bool CheckLineOfSight(GameObject alienShip)
     {
+        Debug.Log("checking for sight");
         // Determine if there is line of sight to the alien ship
-        RaycastHit hit;
-        Vector3 alienShipDirection = alienShip.transform.position - transform.position;
         Vector3 barrelTip = new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z);
+        Vector3 alienShipDirection = alienShip.transform.position - barrelTip;
         BarrelPivot.up = alienShipDirection;
-        if (Physics.Raycast(barrelTip, alienShipDirection, out hit))
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(barrelTip, alienShipDirection, 100f);
+        foreach (RaycastHit hit in hits)
         {
-            // An object is seen, is it an alien ship?
-            //Debug.Log("Turret Can See Object " + hit.transform.gameObject);
             // Don't shoot other stuff
             if (hit.transform.tag == "Alien")
             {
                 // Begin animating laser
-                //Debug.Log("Aiming Turret at: " + hit.transform.gameObject);
+                Debug.Log("Aiming Turret at: " + hit.transform.gameObject);
                 AlienShip alienScript = hit.transform.gameObject.GetComponent<AlienShip>();
                 if (alienScript != null)
                 {
-                    //Debug.Log("Firing");
+                    Debug.Log("Firing");
                     currentTarget = alienShip;
                     alienScript.TakeDamage();
                     FireAt(alienShip.transform.position);
@@ -113,12 +86,8 @@ public class LaserTurret : MonoBehaviour, Weapon
             else
             {
                 // Something is in the way
-                //Debug.Log("Alien Ship Not In Sight");
+                Debug.Log("Alien Ship Not In Sight");
             }
-        }
-        else
-        {
-            //Debug.Log("Can Not See Alien Ship");
         }
         return false;
     }
@@ -139,8 +108,8 @@ public class LaserTurret : MonoBehaviour, Weapon
             Laser.receiveShadows = false;
             StartCoroutine(Fire());
         }
-        Laser.startWidth = 1f;
-        Laser.endWidth = 1f;
+        Laser.startWidth = 0.0005f;
+        Laser.endWidth = 0.005f;
         Laser.SetPosition(0, transform.position);
         Laser.SetPosition(1, target);
     }

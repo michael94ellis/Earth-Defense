@@ -10,7 +10,7 @@ public class AlienSpawner : MonoBehaviour
 
     static Object shipRef;
     static GameObject earth;
-    static List<GameObject> Aliens = new List<GameObject>();
+    public static List<GameObject> Aliens = new List<GameObject>();
     static List<GameObject> InactiveAliens = new List<GameObject>();
 
     public static void AddAlien(GameObject alien)
@@ -46,8 +46,8 @@ public class AlienSpawner : MonoBehaviour
         {
             GameObject existingAlienShip = InactiveAliens[0];
             existingAlienShip.GetComponent<AlienShip>().Health = 100;
-            existingAlienShip.SetActive(true);
             existingAlienShip.transform.position = randomSpawnPoint;
+            existingAlienShip.SetActive(true);
             return existingAlienShip;
         }
         else

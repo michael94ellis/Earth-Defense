@@ -117,49 +117,42 @@ public class MenuManager: MonoBehaviour
         GUILayout.Label("Global Budget: $" + Earth.GlobalCurrency + " Million", HeaderStyle, GUILayout.Height(75));
         GUILayout.BeginVertical();
         GUILayout.BeginHorizontal();
-        BuyCityButton();
+        //BuyCityButton();
         BuyLaserTurretButton();
-        BuySatelliteButton();
+        //BuySatelliteButton();
         GUILayout.EndHorizontal();
         CityList();
         GUILayout.EndVertical();
-        GUILayout.FlexibleSpace();
+        AlienWaveButton();
         ResumeGameButton();
     }
 
     void CityList()
     {
-        GUILayout.Label("Earth Cities", HeaderStyle);
+        GUILayout.Label("Earth Zones", HeaderStyle);
         GUILayout.BeginVertical();
         foreach (City city in Earth.Cities)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Box("Health: " + city.Health + ", Shield: " + city.ShieldHealth, Header2Style);
-            GUI.enabled = Earth.GlobalCurrency > 250 && city;
-            if (GUILayout.Button("Buy Shield $250M", GUILayout.Height(40)))
-            {
-                city.AddShield();
-                Earth.SpendGlobalCurrency(250f);
-            }
-            GUI.enabled = true;
+            GUILayout.Label("North America: ");
             GUILayout.EndHorizontal();
         }
         GUILayout.EndVertical();
     }
 
-    void BuyCityButton()
-    {
-        GUI.enabled = Earth.GlobalCurrency > 100;
-        GUILayout.BeginVertical();
-        if (GUILayout.Button("Buy City", ButtonStyle, GUILayout.Height(75)))
-        {
-            isPickingLocation = true;
-            earth.BuildNewCity();
-        }
-        GUILayout.Label("Cost: $100M", Header2Style);
-        GUILayout.Label("Generates Money Over Time \nStarting at $5 Million every 5 seconds \nIncreases by $5 Million up to $50 Million per 5 seconds", BodyStyle);
-        GUILayout.EndVertical();
-    }
+    //void BuyCityButton()
+    //{
+    //    GUI.enabled = Earth.GlobalCurrency > 100;
+    //    GUILayout.BeginVertical();
+    //    if (GUILayout.Button("Buy City", ButtonStyle, GUILayout.Height(75)))
+    //    {
+    //        isPickingLocation = true;
+    //        earth.BuildNewCity();
+    //    }
+    //    GUILayout.Label("Cost: $100M", Header2Style);
+    //    GUILayout.Label("Generates Money Over Time \nStarting at $5 Million every 5 seconds \nIncreases by $5 Million up to $50 Million per 5 seconds", BodyStyle);
+    //    GUILayout.EndVertical();
+    //}
 
     void BuyLaserTurretButton()
     {
@@ -177,18 +170,18 @@ public class MenuManager: MonoBehaviour
         GUILayout.EndVertical();
     }
 
-    void BuySatelliteButton()
-    {
-        GUI.enabled = Earth.GlobalCurrency > 75;
-        GUILayout.BeginVertical();
-        if (GUILayout.Button("Buy New Satellite", ButtonStyle, GUILayout.Height(75)))
-        {
-            earth.BuildNewEarthSatellite();
-        }
-        GUILayout.Label("Cost: $75M", Header2Style);
-        GUILayout.Label("Orbits Earth, look cool \nDoes Nothing Else Yet", BodyStyle);
-        GUILayout.EndVertical();
-    }
+    //void BuySatelliteButton()
+    //{
+    //    GUI.enabled = Earth.GlobalCurrency > 75;
+    //    GUILayout.BeginVertical();
+    //    if (GUILayout.Button("Buy New Satellite", ButtonStyle, GUILayout.Height(75)))
+    //    {
+    //        earth.BuildNewEarthSatellite();
+    //    }
+    //    GUILayout.Label("Cost: $75M", Header2Style);
+    //    GUILayout.Label("Orbits Earth, look cool \nDoes Nothing Else Yet", BodyStyle);
+    //    GUILayout.EndVertical();
+    //}
 
     void ResumeGameButton()
     {
@@ -196,6 +189,15 @@ public class MenuManager: MonoBehaviour
         if (GUILayout.Button("Resume Game", ButtonStyle, GUILayout.Height(75)))
         {
             Resume();
+        }
+    }
+
+    void AlienWaveButton()
+    {
+        GUI.enabled = true;
+        if (GUILayout.Button("Send Alien Wave", ButtonStyle, GUILayout.Height(75)))
+        {
+            AlienSpawner.BeginInvasion();
         }
     }
 
