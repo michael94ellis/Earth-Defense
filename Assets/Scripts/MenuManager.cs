@@ -12,8 +12,6 @@ public class MenuManager: MonoBehaviour
     public int windowHeight = Screen.height * 4 / 6;
     public int windowOriginX = Screen.width / 6;
     public int windowOriginY = Screen.height / 6;
-    // This holds an item that was just purchased so it can be placed on the earth
-    public GameObject NewObject;
     Earth earth;
     Rect placementLabelRect;
     private float secondsCount;
@@ -106,7 +104,6 @@ public class MenuManager: MonoBehaviour
         GUILayout.Label("You are the Dictator of the North America", Header2Style, GUILayout.Height(40));
         GUILayout.Label("Aliens are coming to attack", Header2Style, GUILayout.Height(40));
         GUILayout.Label("Scroll/Pinch to zoom, click and drag to move the Earth, right click for actions.", Header2Style, GUILayout.Height(40));
-        GUILayout.FlexibleSpace();
         if (GUILayout.Button("Continue", ButtonStyle, GUILayout.Height(75)))
         {
             CurrentScreen = MenuManager.MenuScreen.MainMenu;

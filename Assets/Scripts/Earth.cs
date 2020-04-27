@@ -12,7 +12,7 @@ public class EarthZone
 {
     public Collider collider;
     public City city;
-    public List<Generator> Generator;
+    public Generator generator;
     public List<Weapon> weapons;
 }
 
@@ -20,13 +20,15 @@ public class Earth : MonoBehaviour
 {
     MenuManager GameManager;
     Object CityRef;
+    Object GeneratorRef;
     Object LaserTurretRef;
     Object SatelliteRef;
     private Touch touchOne;   //First touch position
     private Touch touchTwo;   //Last touch position
     private float minimumDragDistance = 20f;
     float mainSpeed = 0.5f; //regular speed
-
+    // This holds an item that was just purchased so it can be placed on the earth
+    public GameObject NewObject;
     Collider NorthAmerica;
     Collider SouthAmerica;
     public static List<City> Cities = new List<City>();
@@ -45,13 +47,12 @@ public class Earth : MonoBehaviour
         GameManager = GameObject.Find("Earth").GetComponent<MenuManager>();
         CityRef = Resources.Load("City");
         LaserTurretRef = Resources.Load("Turret");
+       // Generator = Resources.Load("Generator");
         SatelliteRef = Resources.Load("EarthSatellite");
-        NorthAmerica = GameObject.Find("NorthAmerica").GetComponent<BoxCollider>();
-        SouthAmerica = GameObject.Find("SouthAmerica").GetComponent<BoxCollider>();
+        NorthAmerica = GameObject.Find("NorthAmerica").GetComponent<Collider>();
+       // SouthAmerica = GameObject.Find("SouthAmerica").GetComponent<Collider>();
         GlobalCurrency = 0;
     }
-    public Vector2 startPos;
-    public Vector2 direction;
 
     void Update()
     {
@@ -183,8 +184,8 @@ public class Earth : MonoBehaviour
                     // Get a point directly above the city away from earth
                     Vector3 awayFromEarth = hit.point - transform.position;
                     // assign the up vector for the city
-                    GameManager.NewObject.transform.up = awayFromEarth;
-                    GameManager.NewObject.transform.position = hit.point;
+                    NewObject.transform.up = awayFromEarth;
+                    NewObject.transform.position = hit.point;
                 }
                 else
                 {
@@ -196,23 +197,23 @@ public class Earth : MonoBehaviour
 
     public void BuildNewCity()
     {
-        GameObject NewObject = Instantiate(CityRef) as GameObject;
-        GameManager.NewObject = NewObject;
+        GameObject newCityObj = Instantiate(CityRef) as GameObject;
+        NewObject = newCityObj;
         // Make the new city a child object so it lives inside the earth's coordinate space
-        GameManager.NewObject.transform.SetParent(transform, true);
-        City newCity = GameManager.NewObject.GetComponent<City>();
+        NewObject.transform.SetParent(transform, true);
+        City newCity = NewObject.GetComponent<City>();
         if (newCity != null)
             Cities.Add(newCity);
-        GameManager.NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
+        NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
         SpendGlobalCurrency(100);
     }
 
     public void BuildNewWeapon()
     {
-        GameObject NewObject = Instantiate(LaserTurretRef) as GameObject;
-        GameManager.NewObject = NewObject;
+        GameObject NewWeapon = Instantiate(LaserTurretRef) as GameObject;
+        NewObject = NewWeapon;
         // Make the new city a child object so it lives inside the earth's coordinate space
-        GameManager.NewObject.transform.SetParent(transform, true);
+        NewObject.transform.SetParent(transform, true);
         NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
         SpendGlobalCurrency(75);
     }

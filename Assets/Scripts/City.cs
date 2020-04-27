@@ -25,7 +25,7 @@ public class City : MonoBehaviour, Damageable
             GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
             DestructionAnimation.transform.localScale = new Vector3(0.0001f, 0.0001f, 0.0001f);
             Destroy(gameObject);
-            Earth.Cities.Remove(this);
+            Earth.Cities.Remove(this); // TODO cities dont die, 0 population means game over
             return false;
         }
         if (ShieldHealth > 0 && Shield.activeInHierarchy)

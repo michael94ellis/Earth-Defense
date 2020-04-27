@@ -75,6 +75,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
                     return;
                 }
             }
+            // TODO needs to orbit above its target
             transform.RotateAround(earth.transform.position, randomOrbit, 30f * Time.deltaTime);
             transform.RotateAround(earth.transform.position, Vector3.up, 30f * Time.deltaTime);
             if (LaserSound.isPlaying)
