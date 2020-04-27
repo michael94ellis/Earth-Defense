@@ -8,6 +8,14 @@ public interface Damageable
     bool TakeDamage();
 }
 
+public class EarthZone
+{
+    public Collider collider;
+    public City city;
+    public List<Generator> Generator;
+    public List<Weapon> weapons;
+}
+
 public class Earth : MonoBehaviour
 {
     MenuManager GameManager;

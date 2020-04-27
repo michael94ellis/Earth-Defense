@@ -10,7 +10,7 @@ public class MenuManager: MonoBehaviour
     public bool isPickingLocation = false;
     public int windowWidth = Screen.width * 4 / 6;
     public int windowHeight = Screen.height * 4 / 6;
-    public int windowOriginX = Screen.width / 3;
+    public int windowOriginX = Screen.width / 6;
     public int windowOriginY = Screen.height / 6;
     // This holds an item that was just purchased so it can be placed on the earth
     public GameObject NewObject;
