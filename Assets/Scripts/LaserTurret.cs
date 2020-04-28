@@ -47,11 +47,10 @@ public class LaserTurret : MonoBehaviour, Weapon
             return;
         foreach (GameObject alienShip in AlienSpawner.Aliens)
         {
-            Debug.Log("Laser Turret Beginning Fire Sequence");
+            //Debug.Log("Laser Turret Beginning Fire Sequence");
             // Check for any sight obstructions to the alien ship
             if (alienShip.activeInHierarchy && CheckLineOfSight(alienShip))
             {
-                Debug.Log("Target was s");
                 return;
             }
         }
@@ -59,7 +58,7 @@ public class LaserTurret : MonoBehaviour, Weapon
 
     public bool CheckLineOfSight(GameObject alienShip)
     {
-        Debug.Log("checking for sight");
+        //Debug.Log("checking for sight");
         // Determine if there is line of sight to the alien ship
         Vector3 barrelTip = new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z);
         Vector3 alienShipDirection = alienShip.transform.position - barrelTip;
@@ -72,11 +71,11 @@ public class LaserTurret : MonoBehaviour, Weapon
             if (hit.transform.tag == "Alien")
             {
                 // Begin animating laser
-                Debug.Log("Aiming Turret at: " + hit.transform.gameObject);
+                //Debug.Log("Aiming Turret at: " + hit.transform.gameObject);
                 AlienShip alienScript = hit.transform.gameObject.GetComponent<AlienShip>();
                 if (alienScript != null)
                 {
-                    Debug.Log("Firing");
+                    //Debug.Log("Firing");
                     currentTarget = alienShip;
                     alienScript.TakeDamage();
                     FireAt(alienShip.transform.position);
@@ -86,7 +85,7 @@ public class LaserTurret : MonoBehaviour, Weapon
             else
             {
                 // Something is in the way
-                Debug.Log("Alien Ship Not In Sight");
+                //Debug.Log("Alien Ship Not In Sight");
             }
         }
         return false;
@@ -108,8 +107,8 @@ public class LaserTurret : MonoBehaviour, Weapon
             Laser.receiveShadows = false;
             StartCoroutine(Fire());
         }
-        Laser.startWidth = 0.0005f;
-        Laser.endWidth = 0.005f;
+        Laser.startWidth = 1f;
+        Laser.endWidth = 1f;
         Laser.SetPosition(0, transform.position);
         Laser.SetPosition(1, target);
     }

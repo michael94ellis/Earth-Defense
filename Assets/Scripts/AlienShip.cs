@@ -17,18 +17,16 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
     private LineRenderer Laser;
     public AudioSource LaserSound;
     public AudioSource ExplosionSound;
-    private Object DestructionEffect;
 
     // Start is called before the first frame update
     void Start()
     {
         Health = 100;
         Laser = gameObject.GetComponent<LineRenderer>();
-        int explosionNumber = Random.Range(1, 10);
-        DestructionEffect = Resources.Load("Explosion" + explosionNumber);
-        currentTarget = GameObject.Find("NorthAmericanShield");
-        // Pick a psuedo random orbit, a point that is nearby a point above the target
-        targetOrbit = currentTarget.transform.position * 2 + RandomVector(0.5f, 0.85f);
+        Laser.receiveShadows = false;
+        Laser.material.color = Color.red;
+        Laser.startWidth = 1f;
+        Laser.endWidth = 1f;
     }
 
     public int Health { get; set; }
@@ -37,8 +35,6 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
         if (Health == 0)
         {
             ExplosionSound.Play();
-            //GameObject DestructionAnimation = Instantiate(DestructionEffect, transform.position, transform.rotation) as GameObject;
-            //DestructionAnimation.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
             AlienSpawner.RemovAlien(gameObject);
             return false;
         }
@@ -52,33 +48,70 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
         // Determine how far earth's center(0,0,0) is
         if (currentTarget != null && currentlyAboveTarget && Time.timeScale > 0)
         {
-            // Orbit around a point above the target
-            transform.RotateAround(currentTarget.transform.position, currentTarget.transform.position * 2, 30f * Time.deltaTime);
-            // Animation for the laser while its being fired
-            if (isFiring && currentTarget != null)
-            {
-                // If the target can be seen then rotate above it
-                if (CheckLineOfSight())
-                    return;
-            }
-            if (LaserSound.isPlaying)
-                LaserSound.Stop();
-            if (isCharged && currentTarget != null)
-            {
-                if (CheckLineOfSight())
-                    return;
-            }
-            Debug.Log("Looking for new Enemy ");
-            // TODO Look for a new target to shoot at
+            PerformAttackManuevers();
+        }
+        else if (currentTarget == null && Time.timeScale > 0)
+        {
+            SelectNewTarget();
         }
         else if (Time.timeScale > 0)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetOrbit, moveSpeed * Time.deltaTime);
-            if (Vector3.Distance(targetOrbit, transform.position) == 0)
-            {
-                currentlyAboveTarget = true;
-            }
+            MoveTowardsTarget();
         }
+    }
+
+    void SelectNewTarget()
+    {
+        // This is for when multiple zones exist, just to serve as a reminder
+        //foreach (EarthZone zone in Earth.zones)
+        //{
+        if (Earth.Zone1.ShieldHealth > 0)
+        {
+            currentTarget = Earth.Zone1.gameObject;
+        }
+        else if (Earth.Zone1.Population > 0)
+        {
+            currentTarget = Earth.Zone1.Capitol.gameObject;
+        }
+        //}
+
+        // Pick a psuedo random orbit, a point that is nearby a point above the target
+        targetOrbit = Vector3.Scale(currentTarget.transform.position * 2, currentTarget.transform.up);
+        Debug.Log(currentTarget.transform.position * 2);
+        Debug.Log(targetOrbit);
+    }
+
+    void MoveTowardsTarget()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, targetOrbit, moveSpeed * Time.deltaTime);
+        if (Vector3.Distance(targetOrbit, transform.position) == 0)
+        {
+            currentlyAboveTarget = true;
+        }
+    }
+
+    void PerformAttackManuevers()
+    {
+        // Orbit around a point above the target
+        transform.RotateAround(currentTarget.transform.position, currentTarget.transform.position * 2, 30f * Time.deltaTime);
+        // Animation for the laser while its being fired
+        if (isFiring && currentTarget != null)
+        {
+            // If the target can be seen then rotate above it
+            if (CheckLineOfSight())
+                return;
+        }
+        if (LaserSound.isPlaying)
+            LaserSound.Stop();
+        if (isCharged && currentTarget != null)
+        {
+            if (CheckLineOfSight())
+                return;
+            else
+                SelectNewTarget();
+        }
+        //Debug.Log("Looking for new Enemy ");
+        // TODO Look for a new target to shoot at
     }
 
     public bool CheckLineOfSight()
@@ -95,7 +128,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
                 return false;
             if (hit.collider.gameObject == currentTarget)
             {
-                Damageable attackTarget = currentTarget.GetComponent<Damageable>();
+                Damageable attackTarget = currentTarget.gameObject.GetComponent<Damageable>();
                 if (attackTarget == null)
                     return false;
                 if (!attackTarget.TakeDamage())
@@ -132,10 +165,6 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
             isFiring = true;
             isCharged = false;
         }
-        Laser.receiveShadows = false;
-        Laser.material.color = Color.red;
-        Laser.startWidth = 0.005f;
-        Laser.endWidth = 0.005f;
         Laser.SetPosition(0, transform.position);
         Laser.SetPosition(1, target);
     }

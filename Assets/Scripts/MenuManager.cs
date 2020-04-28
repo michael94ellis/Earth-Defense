@@ -76,7 +76,7 @@ public class MenuManager: MonoBehaviour
         GUI.Label(new Rect(Screen.width - 120, 20, 80, 40), hourCount + ":" + minuteCount + ":" + (int)secondsCount, InfoStyle);
         GUI.Label(new Rect(65, 30, 120, 40),
             "Alien Kill Count: " + AlienSpawner.DeadAlienCount + "\n" +
-            "Earth Cities: " + Earth.Cities.Count + "\n" +
+            "Earth Shield: " + Earth.Zone1.ShieldHealth + "Pop. " + Earth.Zone1.Population + "\n" +
             "Global Wealth: $" + Earth.GlobalCurrency + "M", HeaderStyle);
         if (isPickingLocation)
         {
@@ -131,12 +131,12 @@ public class MenuManager: MonoBehaviour
     {
         GUILayout.Label("Earth Zones", HeaderStyle);
         GUILayout.BeginVertical();
-        foreach (City city in Earth.Cities)
-        {
+        //foreach (City city in Earth.Zones)
+        //{
             GUILayout.BeginHorizontal();
-            GUILayout.Label("North America: ");
+            GUILayout.Label("Earth Shield: " + Earth.Zone1.ShieldHealth + "Pop. " + Earth.Zone1.Population);
             GUILayout.EndHorizontal();
-        }
+        //}
         GUILayout.EndVertical();
     }
 

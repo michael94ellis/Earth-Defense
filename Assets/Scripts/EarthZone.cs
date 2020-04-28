@@ -6,6 +6,8 @@ public class EarthZone : MonoBehaviour, Damageable
 {
     private MeshRenderer shield;
     public City Capitol;
+    public List<City> MinorCities = new List<City>();
+    public List<Weapon> Weapons = new List<Weapon>();
     public int ShieldHealth { get; private set; } = 500;
     public int Population { get; private set; } = 500;
     public bool TakeDamage()

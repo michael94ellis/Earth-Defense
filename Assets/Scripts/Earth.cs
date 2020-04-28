@@ -15,15 +15,11 @@ public class Earth : MonoBehaviour
     Object GeneratorRef;
     Object LaserTurretRef;
     Object SatelliteRef;
-    private Touch touchOne;   //First touch position
-    private Touch touchTwo;   //Last touch position
-    private float minimumDragDistance = 20f;
     float mainSpeed = 0.5f; //regular speed
     // This holds an item that was just purchased so it can be placed on the earth
     public GameObject NewObject;
-    Collider NorthAmerica;
-    Collider SouthAmerica;
-    public static List<City> Cities = new List<City>();
+    //public static List<EarthZone> Zones = new List<EarthZone>();
+    public static EarthZone Zone1;
     public static float GlobalCurrency { get; private set; }
     public static void AddGlobalCurrency(float money)
     {
@@ -41,7 +37,8 @@ public class Earth : MonoBehaviour
         LaserTurretRef = Resources.Load("Turret");
        // Generator = Resources.Load("Generator");
         SatelliteRef = Resources.Load("EarthSatellite");
-        NorthAmerica = GameObject.Find("NorthAmericanShield").GetComponent<Collider>();
+        //Zones.Add(GameObject.Find("NorthAmericanShield").GetComponent<EarthZone>());
+        Zone1 = GameObject.Find("NorthAmericanShield").GetComponent<EarthZone>();
        // SouthAmerica = GameObject.Find("SouthAmerica").GetComponent<Collider>();
         GlobalCurrency = 0;
     }
@@ -69,95 +66,6 @@ public class Earth : MonoBehaviour
             DisplayNewObjectInNorthAmerica();
             return;
         }
-        if (SystemInfo.deviceType == DeviceType.Desktop)
-            return;
-        // Touch controls for mobile only
-        if (Input.touchCount == 2)
-        {
-            Debug.Log("Pinch");
-            touchOne = Input.GetTouch(0);
-            touchTwo = Input.GetTouch(1);
-            float previousMagnitude = ((touchOne.position - touchOne.deltaPosition) - (touchTwo.position - touchTwo.deltaPosition)).magnitude; // pop pop
-            float currentMagnitude = (touchOne.position - touchTwo.position).magnitude;
-            Vector3 Direction = currentMagnitude > previousMagnitude ? Vector3.zero : Camera.main.transform.position * 2;
-            Camera.main.transform.position = Vector3.MoveTowards(Camera.main.transform.position, Direction, mainSpeed * Time.deltaTime);
-        }
-        else if (Input.touchCount == 1) // user is touching the screen with a single touch
-        {
-            Touch currentTouch = Input.GetTouch(0);
-            if (currentTouch.phase == TouchPhase.Began)
-            {
-                //Debug.Log("Begin Touches");
-                touchOne = currentTouch;
-            }
-            else if (currentTouch.deltaPosition.magnitude > 0)
-            {
-                if (currentTouch.phase == TouchPhase.Moved)
-                {
-                    //Debug.Log("Swiping");
-                    touchTwo = currentTouch;  //last touch position. Ommitted if you use list
-
-                    if (Mathf.Abs(touchTwo.position.x - touchOne.position.x) > minimumDragDistance || Mathf.Abs(touchTwo.position.y - touchOne.position.y) > minimumDragDistance)
-                    {//It's a drag
-                     //check if the drag is vertical or horizontal
-                        if (Mathf.Abs(touchTwo.position.x - touchOne.position.x) > Mathf.Abs(touchTwo.position.y - touchOne.position.y))
-                        {   //If the horizontal movement is greater than the vertical movement...
-                            if ((touchTwo.position.x > touchOne.position.x))  //If the movement was to the right)
-                            {   //Right swipe
-                                //Debug.Log("Right Swipe");
-                                Camera.main.transform.RotateAround(Vector3.zero, Vector3.down, mainSpeed);
-                            }
-                            else
-                            {   //Left swipe
-                                //Debug.Log("Left Swipe");
-                                Camera.main.transform.RotateAround(Vector3.zero, Vector3.up, mainSpeed);
-                            }
-                        }
-                        else
-                        {   //the vertical movement is greater than the horizontal movement
-                            if (touchTwo.position.y > touchOne.position.y)  //If the movement was up
-                            {   //Up swipe
-                                //Debug.Log("Up Swipe");
-                                Camera.main.transform.RotateAround(Vector3.zero, Vector3.left, mainSpeed);
-                            }
-                            else
-                            {   //Down swipe
-                                //Debug.Log("Down Swipe");
-                                Camera.main.transform.RotateAround(Vector3.zero, Vector3.right, mainSpeed);
-                            }
-                        }
-                    }
-                }
-            }
-            else if (currentTouch.phase == TouchPhase.Ended) 
-            {
-                //Debug.Log("Tap");
-                //Only Pause if not already paused, menu must have unpause button
-                if (!GameManager.Paused)
-                {
-                    GameManager.Pause();
-                    // Show the user all their cities
-                    GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
-                    // Update and fetch data here, to not run loops like this every frame
-                }
-                else if (GameManager.isPickingLocation)
-                {
-                    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    RaycastHit[] hits;
-                    hits = Physics.RaycastAll(ray);
-                    foreach (RaycastHit hit in hits)
-                    {
-                        GameManager.isPickingLocation = false;
-                        // This hit.point is the point on earth where you clicked
-                        if (hit.transform.gameObject == this.gameObject)
-                        {
-                            Debug.Log(hit.point);
-                            //DisplayNewObjectOnEarth(hit.point);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     void DisplayNewObjectInNorthAmerica()
@@ -170,9 +78,9 @@ public class Earth : MonoBehaviour
             // This hit.point is the point on earth where you clicked
             if (hit.transform.gameObject == this.gameObject)
             {
-                if (NorthAmerica.bounds.Contains(hit.point))
+                if (Zone1.GetComponent<Collider>().bounds.Contains(hit.point))
                 {
-                    //Debug.Log(hit.point + " is in North America: " + NorthAmerica.bounds.Contains(hit.point));
+                    Debug.Log(hit.point + " is in North America: ");
                     // Get a point directly above the city away from earth
                     Vector3 awayFromEarth = hit.point - transform.position;
                     // assign the up vector for the city
@@ -195,7 +103,7 @@ public class Earth : MonoBehaviour
         NewObject.transform.SetParent(transform, true);
         City newCity = NewObject.GetComponent<City>();
         if (newCity != null)
-            Cities.Add(newCity);
+            Zone1.MinorCities.Add(newCity);
         NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
         SpendGlobalCurrency(100);
     }
@@ -206,6 +114,9 @@ public class Earth : MonoBehaviour
         NewObject = NewWeapon;
         // Make the new city a child object so it lives inside the earth's coordinate space
         NewObject.transform.SetParent(transform, true);
+        Weapon newWeapon = NewObject.GetComponent<Weapon>();
+        if (newWeapon != null)
+            Zone1.Weapons.Add(newWeapon);
         NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
         SpendGlobalCurrency(75);
     }
