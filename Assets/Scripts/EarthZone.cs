@@ -8,8 +8,8 @@ public class EarthZone : MonoBehaviour, Damageable
     public City Capitol;
     public List<City> MinorCities = new List<City>();
     public List<Weapon> Weapons = new List<Weapon>();
-    public float ShieldHealth { get; private set; } = 500;
-    public float Population { get; private set; } = 10;
+    public int ShieldHealth { get; private set; } = 10000;
+    public float Population { get; private set; } = 500000;
     public bool TakeDamage()
     {
         //Debug.Log("Damage");

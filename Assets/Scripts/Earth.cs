@@ -68,7 +68,7 @@ public class Earth : MonoBehaviour
             if (hit.collider == Zone1.GetComponent<Collider>())
             {
                 isInAllowedSpace = true;
-                Debug.Log(hit.point + " is in the Zone: ");
+                //Debug.Log(hit.point + " is in the Zone: ");
             }
             else if (hit.transform.gameObject == this.gameObject && Zone1.GetComponent<Collider>().bounds.Contains(hit.point))
             {

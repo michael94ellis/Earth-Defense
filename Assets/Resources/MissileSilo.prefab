@@ -282,6 +282,7 @@ MonoBehaviour:
   LeftDoor: {fileID: 8872613409801280036}
   RightDoor: {fileID: 4062559203328665118}
   MissileSpawnPoint: {x: 0, y: 0, z: 0}
+  Missile: {fileID: 5097515564447989199, guid: cd914c51249f5e84584b304d0a374ff8, type: 3}
 --- !u!1 &4062559203328665118
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,7 +308,7 @@ Transform:
   m_GameObject: {fileID: 4062559203328665118}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -4.872813e-10, y: -0.000000009738974, z: -0.000000007663455}
-  m_LocalScale: {x: 1.0000001, y: 0.99999994, z: 1}
+  m_LocalScale: {x: 1.0000001, y: 1, z: 1}
   m_Children:
   - {fileID: 6221030238316440168}
   m_Father: {fileID: 5075241574915120725}
