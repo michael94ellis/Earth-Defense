@@ -145,7 +145,6 @@ public class MenuManager: MonoBehaviour
                 BuyLaserTurretButton();
                 BuyShieldGeneratorButton();
             GUILayout.EndHorizontal();
-            GUILayout.Label("Controlled Zones", HeaderStyle, GUILayout.Height(40));
             GUILayout.BeginHorizontal();
                 CityList();
             GUILayout.EndHorizontal();
@@ -156,13 +155,26 @@ public class MenuManager: MonoBehaviour
 
     void CityList()
     {
-        GUILayout.Label("Earth Zones", HeaderStyle);
         GUILayout.BeginVertical();
+        GUILayout.Label("Earth Zones", HeaderStyle);
         //foreach (City city in Earth.Zones)
         //{
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Earth Shield: " + Earth.Zone1.ShieldHealth + " Pop. " + Earth.Zone1.Population);
-            GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();
+        GUILayout.Label("North American Zone", Header2Style);
+        GUILayout.Label("Shield: " + Earth.Zone1.ShieldHealth + "  Pop. " + Earth.Zone1.Population, Header2Style);
+        if (GUILayout.Button("Shield Generator: " + (Earth.Zone1.ShieldGenerator != null), ButtonStyle))
+        {
+            // Upgrade Shield Generator
+        }
+        if (GUILayout.Button("Cities: " + Earth.Zone1.MinorCities.Count, ButtonStyle))
+        {
+            // Upgrade Cities
+        }
+        if (GUILayout.Button("Weapons: " + Earth.Zone1.Weapons.Count, ButtonStyle))
+        {
+            // Upgrade Laser Turrets and Missile Silos
+        }
+        GUILayout.EndHorizontal();
         //}
         GUILayout.EndVertical();
     }

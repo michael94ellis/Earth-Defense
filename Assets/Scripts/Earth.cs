@@ -117,9 +117,9 @@ public class Earth : MonoBehaviour
         NewObject = NewWeapon;
         // Make the new city a child object so it lives inside the earth's coordinate space
         NewObject.transform.SetParent(transform, true);
-        //Weapon newWeapon = NewObject.GetComponent<Weapon>();
-        //if (newWeapon != null)
-        //    Zone1.Weapons.Add(newWeapon);
+        Weapon newWeapon = NewObject.GetComponent<Weapon>();
+        if (newWeapon != null)
+            Zone1.Weapons.Add(newWeapon);
         NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         //SpendGlobalCurrency(75);
     }

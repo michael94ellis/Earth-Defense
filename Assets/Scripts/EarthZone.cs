@@ -6,13 +6,36 @@ public class EarthZone : MonoBehaviour, Damageable
 {
     public MeshRenderer Shield;
     public City Capitol;
-    public List<City> MinorCities = new List<City>();
     public ShieldGenerator ShieldGenerator;
     public List<Weapon> Weapons = new List<Weapon>();
+    public List<City> MinorCities = new List<City>();
+
     public float MaxShieldHealth = 10000;
-    public float ShieldHealth { get; private set; } = 10000;
     public float MaxPopulation = 500000;
+    public float PopulationRegenRate = 1.000001f;
     public float Population { get; private set; } = 50000;
+    public float ShieldHealth { get; private set; } = 10000;
+
+    void Update()
+    {
+        if (Time.timeScale > 0)
+        {
+            if (Population < MaxPopulation)
+                Population *= PopulationRegenRate;
+        }
+    }
+
+    public void AddShieldHealth(float amount)
+    {
+        if (ShieldHealth <= MaxShieldHealth)
+        {
+            if (ShieldHealth <= 0)
+                ShieldHealth = amount;
+            else
+                ShieldHealth += amount;
+        }
+    }
+
     public bool TakeDamage(int amount = 1)
     {
         //Debug.Log("Damage");
@@ -41,69 +64,47 @@ public class EarthZone : MonoBehaviour, Damageable
         }
         return true;
     }
-
-    public void AddShieldHealth(float amount)
-    {
-        if (ShieldHealth <= MaxShieldHealth)
-        {
-            if (ShieldHealth <= 0)
-                ShieldHealth = amount;
-            else
-                ShieldHealth += amount;
-        }
-    }
-
-    void Start()
-    {
-        Shield = GetComponent<MeshRenderer>();
-    }
-
-    void Update()
-    {
-        if (Time.timeScale > 0)
-        {
-            if (Population < MaxPopulation)
-                Population *= 1.000001f;
-        }
-    }
 }
 
 /*
- * Earth Zone
- *
- * Player starts with 10 Million Population
- * Population grows by 0.5% Time.deltaTime
- *
- * Non-Weapon Buildings:
- * Capitol City - Base Population 1 Billion
- *      Upgrades:
- *          Population Capacity
- *          Population Regen
- * Additional City - Base Population 500 Million
- *      Upgrades:
- *          Population Capacity
- *          Population Regen
- * Private Sector - Generates Money Quickly, kills a few people in the process
- *      Upgrades:
- *          Generate More Money, Kill More People
- *          Kill Less People, Generate Same Money
- * Public Sector - Generates Money Slowly, boosts population regeneration rate and cap
- *      Upgrades:
- *          Generate More Moeny, Some People Die in a "revolution" or "purge", it can be both(think about dialog boxes)
- * Shield Booster - Grows the size and strength of the shield for the EarthZone
- *      No Upgrades
- *
- * Weapon Buildings:
- * Laser Turret - Shoots a laser beam at the target
- *      Upgrades:
- *          Firing Range
- *          Recharge Time
- *          Damage
- * Ballistic Missiles - Missile must reach target location before dealing damage
- *      Upgrades:
- *          Firing Range
- *          Recharge Time
- *          Damage
- *          Speed
- *          Cost Per Missile
+ Earth Zone
+The player must keep at least 1 million people alive, or enough to fight off the aliens
+
+The Zones have a Capitol city in the center that provides an initial 50K people and a shield at the beginning of each wave of aliens
+     *      Upgrades:
+     *          Population Regen Rate
+     *          Maximum Population
+     *          Maximum Shield Health
+     *          Government
+     *              Upgrades:
+     *                  Cost to build things
+     *                  Initial stats of buildings/weapons
+     *                  Building speed
+     *                  Unlock level for buildings/weapons
+
+Zones can have weapons to fight off the aliens
+     * Laser Turret - Shoots a laser beam at the target
+     *      Upgrades:
+     *          Firing Range
+     *          Recharge Time
+     *          Damage
+     * Ballistic Missiles - Missile must reach target location before dealing damage
+     *      Upgrades:
+     *          Firing Range
+     *          Recharge Time
+     *          Damage
+     *          Speed
+
+Zones can build their population
+    * Minor Cities can be built to increase the Zone's Maximum Population
+     *      Upgrades:
+     *          Population Regen Rate
+     *          Population Capacity(added to max pop. for zone)
+     *          Wealth Generation
+
+Zones can have one Additional Shield Generator that will recharge the zone shield when it goes down
+     *      Upgrades:
+     *          Shield Health Regen Rate(while shield is up)
+     *          Max Shield Health(added to max shield health for zone)
+     *          Shield recharge time when shield goes down
  */
