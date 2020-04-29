@@ -2,46 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface Weapon
+public class MissileSilo : MonoBehaviour, Weapon
 {
-    void FireAt(Vector3 target);
-    IEnumerator Fire();
-    IEnumerator Recharge();
-}
 
-public class LaserTurret : MonoBehaviour, Weapon
-{
-    private float fireDuration = 0.5f;
-    private int rechargeTime = 1;
-    private bool isCharged = true;
-    private bool isFiring = false;
+    public GameObject LeftDoor;
+    public GameObject RightDoor;
+    private int fireDuration = 3;
+    private int reloadTime = 1;
+    private bool isLoaded = true;
     private GameObject currentTarget;
-    // Draws the laser
-    private LineRenderer Laser;
-    public AudioSource LaserSound;
-    public Transform BarrelPivot;
+    public Vector3 MissileSpawnPoint;
 
     // Start is called before the first frame update
     void Start()
     {
-        int explosionNumber = Random.Range(1, 10);
-        // Laser and Explosion Sounds
-        Laser = gameObject.GetComponent<LineRenderer>();
-        AudioSource soundSource = gameObject.GetComponent<AudioSource>();
-        LaserSound = soundSource;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Animation for the laser while its bein fired
-        if (isFiring && currentTarget != null)
-        {
-            CheckLineOfSight(currentTarget);
-            return;
-        }
-        // If the laser is done firing we have to wait for it to recharge to fire again
-        if (!isCharged)
+        // If the missile launcher is done firing we have to wait for it to reload to fire again
+        if (!isLoaded)
             return;
         if (currentTarget != null && CheckLineOfSight(currentTarget))
             return;
@@ -62,9 +44,8 @@ public class LaserTurret : MonoBehaviour, Weapon
         // Determine if there is line of sight to the alien ship
         Vector3 barrelTip = new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z);
         Vector3 alienShipDirection = alienShip.transform.position - barrelTip;
-        BarrelPivot.up = alienShipDirection;
         RaycastHit[] hits;
-        hits = Physics.RaycastAll(barrelTip, alienShipDirection, 100f);
+        hits = Physics.RaycastAll(barrelTip, alienShipDirection, 500f);
         foreach (RaycastHit hit in hits)
         {
             // Don't shoot other stuff
@@ -91,40 +72,20 @@ public class LaserTurret : MonoBehaviour, Weapon
         return false;
     }
 
-    /// This animates the laser firing
     public void FireAt(Vector3 target)
     {
-        //Debug.Log("Alien Ship In Sight");
-        // This begins the laser, the FireLaser() method disables when its done firing
-        if (!isFiring)
-        {
-            //Debug.Log("Firing Laser");
-            LaserSound.Play();
-            isFiring = true;
-            isCharged = false;
-            Laser.enabled = true;
-            StartCoroutine(Fire());
-        }
-        Laser.SetPosition(0, transform.position);
-        Laser.SetPosition(1, target);
+        isLoaded = false;
+        StartCoroutine(Fire());
     }
 
-    /// Must be called like so: StartCoroutine(LaserWasFired());
     public IEnumerator Fire()
     {
         yield return new WaitForSeconds(fireDuration);
-        if (LaserSound.isPlaying)
-            LaserSound.Stop();
-        currentTarget = null;
-        Laser.enabled = false;
-        isFiring = false;
-        StartCoroutine(Recharge());
     }
 
-    /// Must be called like so: StartCoroutine(LaserWasFired());
     public IEnumerator Recharge()
     {
-        yield return new WaitForSeconds(rechargeTime);
-        isCharged = true;
+        yield return new WaitForSeconds(reloadTime);
+        isLoaded = true;
     }
 }

@@ -33,6 +33,26 @@ public class MenuManager: MonoBehaviour
         // Pause the game so the player starts in the Menu Screen - OnGUI() method
     }
 
+    void Update()
+    {
+        if (Input.GetMouseButton(1))
+        {
+            // Only Pause if not already paused, menu must have unpause button
+            if (!Paused)
+            {
+                Pause();
+                // Show the user all their cities
+                CurrentScreen = MenuManager.MenuScreen.MainMenu;
+                // Update and fetch data here, to not run loops like this every frame
+            }
+            else if (isPickingLocation)
+            {
+                isPickingLocation = false;
+                return;
+            }
+        }
+    }
+
     /// MARK: - Pause/Resume
 
     public void Pause()
@@ -77,7 +97,7 @@ public class MenuManager: MonoBehaviour
         GUI.Label(new Rect(65, 30, 120, 40),
             "Alien Kill Count: " + AlienSpawner.DeadAlienCount + "\n" +
             "Earth Shield: " + Earth.Zone1.ShieldHealth + "Pop. " + Earth.Zone1.Population + "\n" +
-            "Global Wealth: $" + Earth.GlobalCurrency + "M", HeaderStyle);
+            "Global Wealth: $" + Earth.GlobalCurrency + "M", TopLeftInfoStyle);
         if (isPickingLocation)
         {
             GUI.Label(GetTopLabelRect("Right Click to Place"), "Right Click to Place", HeaderStyle);
@@ -89,10 +109,10 @@ public class MenuManager: MonoBehaviour
             switch (CurrentScreen)
             {
                 case MenuManager.MenuScreen.NewGame:
-                    GUILayout.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), NewGameScreen, "");
+                    GUILayout.Window(0, new Rect(50, 50, Screen.width - 100, Screen.height - 100), NewGameScreen, "");
                     break;
                 case MenuManager.MenuScreen.MainMenu:
-                    GUILayout.Window(0, new Rect(windowOriginX, windowOriginY, windowWidth, windowHeight), MainEarthMenu, "");
+                    GUILayout.Window(0, new Rect(50, 50, Screen.width - 100, Screen.height - 100), MainEarthMenu, "");
                     break;
             }
         }
@@ -100,9 +120,9 @@ public class MenuManager: MonoBehaviour
 
     void NewGameScreen(int windowID)
     {
-        GUILayout.Label("Welcome to Earth in the distant future, the year is 2029.", HeaderStyle, GUILayout.Height(75));
-        GUILayout.Label("You are the Dictator of the North America", Header2Style, GUILayout.Height(40));
-        GUILayout.Label("Aliens are coming to attack", Header2Style, GUILayout.Height(40));
+        GUILayout.Label("The year is 2021", HeaderStyle, GUILayout.Height(75));
+        GUILayout.Label("Aliens have destroyed everything, you command whats left of humanity", Header2Style, GUILayout.Height(40));
+        GUILayout.Label("They'll attack again, prepare to defend", Header2Style, GUILayout.Height(40));
         GUILayout.Label("Scroll/Pinch to zoom, click and drag to move the Earth, right click for actions.", Header2Style, GUILayout.Height(40));
         if (GUILayout.Button("Continue", ButtonStyle, GUILayout.Height(75)))
         {
@@ -116,12 +136,22 @@ public class MenuManager: MonoBehaviour
         GUILayout.Label("Earth Defense Shop", HeaderStyle, GUILayout.Height(40));
         GUILayout.Label("Global Budget: $" + Earth.GlobalCurrency + " Million", HeaderStyle, GUILayout.Height(75));
         GUILayout.BeginVertical();
-        GUILayout.BeginHorizontal();
-        //BuyCityButton();
-        BuyLaserTurretButton();
-        //BuySatelliteButton();
-        GUILayout.EndHorizontal();
-        CityList();
+            GUILayout.Label("Assets", HeaderStyle, GUILayout.Height(40));
+            GUILayout.BeginHorizontal();
+                BuyCityButton();
+                BuyGovernmentSectorButton();
+                BuyIndustrialSectorButton();
+            GUILayout.EndHorizontal();
+            GUILayout.Label("Defenses", HeaderStyle, GUILayout.Height(40));
+            GUILayout.BeginHorizontal();
+                BuyMissileSiloButton();
+                BuyLaserTurretButton();
+                BuyShieldGeneratorButton();
+            GUILayout.EndHorizontal();
+            GUILayout.Label("Controlled Zones", HeaderStyle, GUILayout.Height(40));
+            GUILayout.BeginHorizontal();
+                CityList();
+            GUILayout.EndHorizontal();
         GUILayout.EndVertical();
         AlienWaveButton();
         ResumeGameButton();
@@ -134,25 +164,71 @@ public class MenuManager: MonoBehaviour
         //foreach (City city in Earth.Zones)
         //{
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Earth Shield: " + Earth.Zone1.ShieldHealth + "Pop. " + Earth.Zone1.Population);
+            GUILayout.Label("Earth Shield: " + Earth.Zone1.ShieldHealth + " Pop. " + Earth.Zone1.Population);
             GUILayout.EndHorizontal();
         //}
         GUILayout.EndVertical();
     }
 
-    //void BuyCityButton()
-    //{
-    //    GUI.enabled = Earth.GlobalCurrency > 100;
-    //    GUILayout.BeginVertical();
-    //    if (GUILayout.Button("Buy City", ButtonStyle, GUILayout.Height(75)))
-    //    {
-    //        isPickingLocation = true;
-    //        earth.BuildNewCity();
-    //    }
-    //    GUILayout.Label("Cost: $100M", Header2Style);
-    //    GUILayout.Label("Generates Money Over Time \nStarting at $5 Million every 5 seconds \nIncreases by $5 Million up to $50 Million per 5 seconds", BodyStyle);
-    //    GUILayout.EndVertical();
-    //}
+    void BuyCityButton()
+    {
+        GUI.enabled = Earth.GlobalCurrency > 100;
+        GUILayout.BeginVertical();
+        if (GUILayout.Button("Buy City", ButtonStyle, GUILayout.Height(75)))
+        {
+            isPickingLocation = true;
+            placementLabelRect = GetTopLabelRect("Right Click to Place Residential Sector");
+            earth.BuildNewCity();
+        }
+        GUILayout.Label("Cost: $100M", Header2Style);
+        GUILayout.Label("Population Capacity: 100Million", BodyStyle);
+        GUILayout.EndVertical();
+    }
+
+    void BuyIndustrialSectorButton()
+    {
+        GUI.enabled = Earth.GlobalCurrency > 300;
+        GUILayout.BeginVertical();
+        if (GUILayout.Button("Buy Industrial Center", ButtonStyle, GUILayout.Height(75)))
+        {
+            isPickingLocation = true;
+            placementLabelRect = GetTopLabelRect("Right Click to Place Industrial Sector");
+            earth.BuildNewCity();
+        }
+        GUILayout.Label("Cost: $300M", Header2Style);
+        GUILayout.Label("Generates Money Over Time \nStarting at $5 Million every 5 seconds \nIncreases by $5 Million up to $50 Million per 5 seconds\n Population is negatively impacted", BodyStyle);
+        GUILayout.EndVertical();
+    }
+
+    void BuyGovernmentSectorButton()
+    {
+        GUI.enabled = Earth.GlobalCurrency > 300;
+        GUILayout.BeginVertical();
+        if (GUILayout.Button("Buy Industrial Center", ButtonStyle, GUILayout.Height(75)))
+        {
+            isPickingLocation = true;
+            placementLabelRect = GetTopLabelRect("Right Click to Place Government Sector");
+            earth.BuildNewCity();
+        }
+        GUILayout.Label("Cost: $100M", Header2Style);
+        GUILayout.Label("Regenerates Population Over Time \n \n Population is positively impacted", BodyStyle);
+        GUILayout.EndVertical();
+    }
+
+    void BuyShieldGeneratorButton()
+    {
+        GUI.enabled = Earth.GlobalCurrency > 300;
+        GUILayout.BeginVertical();
+        if (GUILayout.Button("Buy Shield Generator", ButtonStyle, GUILayout.Height(75)))
+        {
+            isPickingLocation = true;
+            placementLabelRect = GetTopLabelRect("Right Click to Place Shield Generator");
+            earth.BuildNewCity();
+        }
+        GUILayout.Label("Cost: $800M", Header2Style);
+        GUILayout.Label("Shield Regenerates at all times and is stronger", BodyStyle);
+        GUILayout.EndVertical();
+    }
 
     void BuyLaserTurretButton()
     {
@@ -161,11 +237,27 @@ public class MenuManager: MonoBehaviour
         if (GUILayout.Button("Buy Laser Turret", ButtonStyle, GUILayout.Height(75)))
         {
             isPickingLocation = true;
-            placementLabelRect = GetTopLabelRect("Right Click to Place Turret");
-            earth.BuildNewWeapon();
+            placementLabelRect = GetTopLabelRect("Right Click to Place Laser Turret");
+            earth.BuildNewLaserWeapon();
         }
-        GUILayout.Label("Cost: $75M", Header2Style);
-        GUILayout.Label("Shoots any Alien Ships above it \nRecharge time of 3 seconds", BodyStyle);
+        GUILayout.Label("Cost: $200M", Header2Style);
+        GUILayout.Label("Shoots a laser beam \nRecharge time of 3 seconds\n No additional costs", BodyStyle);
+        GUILayout.Label("", BodyStyle);
+        GUILayout.EndVertical();
+    }
+
+    void BuyMissileSiloButton()
+    {
+        GUI.enabled = Earth.GlobalCurrency > 30;
+        GUILayout.BeginVertical();
+        if (GUILayout.Button("Buy Missile Silo", ButtonStyle, GUILayout.Height(75)))
+        {
+            isPickingLocation = true;
+            placementLabelRect = GetTopLabelRect("Right Click to Place Missile Silo");
+            earth.BuildNewMissileSilo();
+        }
+        GUILayout.Label("Cost: $50M", Header2Style);
+        GUILayout.Label("Shoots a powerful missile \nRecharge time of 3 seconds \nMissiles cost $1Million each", BodyStyle);
         GUILayout.Label("", BodyStyle);
         GUILayout.EndVertical();
     }
@@ -203,6 +295,25 @@ public class MenuManager: MonoBehaviour
 
 
     /// MARK: - UI Elements
+
+    private GUIStyle _TopLeftInfoStyle;
+    public GUIStyle TopLeftInfoStyle
+    {
+        get
+        {
+            if (_TopLeftInfoStyle == null)
+            {
+                GUIStyle newStyle = new GUIStyle
+                {
+                    alignment = TextAnchor.MiddleLeft,
+                    fontSize = 30
+                };
+                newStyle.normal.textColor = Color.white;
+                _TopLeftInfoStyle = newStyle;
+            }
+            return _TopLeftInfoStyle;
+        }
+    }
 
     private GUIStyle _HeaderStyle;
     public GUIStyle HeaderStyle

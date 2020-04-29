@@ -15,6 +15,8 @@ public class Earth : MonoBehaviour
     Object GeneratorRef;
     Object LaserTurretRef;
     Object SatelliteRef;
+    Object MissileSiloRef;
+
     float mainSpeed = 0.5f; //regular speed
     // This holds an item that was just purchased so it can be placed on the earth
     public GameObject NewObject;
@@ -35,7 +37,8 @@ public class Earth : MonoBehaviour
         GameManager = GameObject.Find("Earth").GetComponent<MenuManager>();
         CityRef = Resources.Load("City");
         LaserTurretRef = Resources.Load("Turret");
-       // Generator = Resources.Load("Generator");
+        MissileSiloRef = Resources.Load("MissileSilo");
+        // Generator = Resources.Load("Generator");
         SatelliteRef = Resources.Load("EarthSatellite");
         //Zones.Add(GameObject.Find("NorthAmericanShield").GetComponent<EarthZone>());
         Zone1 = GameObject.Find("NorthAmericanShield").GetComponent<EarthZone>();
@@ -45,22 +48,6 @@ public class Earth : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(1))
-        {
-            // Only Pause if not already paused, menu must have unpause button
-            if (!GameManager.Paused)
-            {
-                GameManager.Pause();
-                // Show the user all their cities
-                GameManager.CurrentScreen = MenuManager.MenuScreen.MainMenu;
-                // Update and fetch data here, to not run loops like this every frame
-            }
-            else if (GameManager.isPickingLocation)
-            {
-                GameManager.isPickingLocation = false;
-                return;
-            }
-        }
         if (GameManager.isPickingLocation)
         {
             DisplayNewObjectInNorthAmerica();
@@ -73,25 +60,28 @@ public class Earth : MonoBehaviour
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits;
         hits = Physics.RaycastAll(ray);
+        bool isInAllowedSpace = false;
+        Vector3 earthHit = Vector3.zero;
         foreach (RaycastHit hit in hits)
         {
             // This hit.point is the point on earth where you clicked
-            if (hit.transform.gameObject == this.gameObject)
+            if (hit.collider == Zone1.GetComponent<Collider>())
             {
-                if (Zone1.GetComponent<Collider>().bounds.Contains(hit.point))
-                {
-                    Debug.Log(hit.point + " is in North America: ");
-                    // Get a point directly above the city away from earth
-                    Vector3 awayFromEarth = hit.point - transform.position;
-                    // assign the up vector for the city
-                    NewObject.transform.up = awayFromEarth;
-                    NewObject.transform.position = hit.point;
-                }
-                else
-                {
-                    return;
-                }
+                isInAllowedSpace = true;
+                Debug.Log(hit.point + " is in the Zone: ");
             }
+            else if (hit.transform.gameObject == this.gameObject && Zone1.GetComponent<Collider>().bounds.Contains(hit.point))
+            {
+                earthHit = hit.point;
+            }
+        }
+        if (isInAllowedSpace && earthHit != Vector3.zero)
+        {
+            // Get a point directly above the city away from earth
+            Vector3 awayFromEarth = earthHit - transform.position;
+            // assign the up vector for the city
+            NewObject.transform.up = awayFromEarth;
+            NewObject.transform.position = earthHit;
         }
     }
 
@@ -108,7 +98,7 @@ public class Earth : MonoBehaviour
         SpendGlobalCurrency(100);
     }
 
-    public void BuildNewWeapon()
+    public void BuildNewLaserWeapon()
     {
         GameObject NewWeapon = Instantiate(LaserTurretRef) as GameObject;
         NewObject = NewWeapon;
@@ -119,6 +109,19 @@ public class Earth : MonoBehaviour
             Zone1.Weapons.Add(newWeapon);
         NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
         SpendGlobalCurrency(75);
+    }
+
+    public void BuildNewMissileSilo()
+    {
+        GameObject NewWeapon = Instantiate(MissileSiloRef) as GameObject;
+        NewObject = NewWeapon;
+        // Make the new city a child object so it lives inside the earth's coordinate space
+        NewObject.transform.SetParent(transform, true);
+        //Weapon newWeapon = NewObject.GetComponent<Weapon>();
+        //if (newWeapon != null)
+        //    Zone1.Weapons.Add(newWeapon);
+        NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
+        //SpendGlobalCurrency(75);
     }
 
     public void BuildNewEarthSatellite()

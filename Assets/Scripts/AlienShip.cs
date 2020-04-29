@@ -23,10 +23,6 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
     {
         Health = 100;
         Laser = gameObject.GetComponent<LineRenderer>();
-        Laser.receiveShadows = false;
-        Laser.material.color = Color.red;
-        Laser.startWidth = 1f;
-        Laser.endWidth = 1f;
     }
 
     public int Health { get; set; }
