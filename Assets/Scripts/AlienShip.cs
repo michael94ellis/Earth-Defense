@@ -79,8 +79,8 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
 
     void MoveTowardsTarget()
     {
-        transform.position = Vector3.MoveTowards(transform.position, targetOrbit, moveSpeed * Time.deltaTime);
-        if (Vector3.Distance(targetOrbit, transform.position) == 0)
+        transform.position = Vector3.Slerp(transform.position, targetOrbit, Time.deltaTime);
+        if (Vector3.Distance(targetOrbit, transform.position) < 15)
         {
             currentlyAboveTarget = true;
         }
