@@ -34,6 +34,8 @@ public class LaserTurret : MonoBehaviour, Weapon
     // Update is called once per frame
     void Update()
     {
+        if (currentTarget != null)
+            BarrelPivot.up = currentTarget.transform.position - BarrelPivot.transform.position;
         // Animation for the laser while its bein fired
         if (isFiring && currentTarget != null)
         {
@@ -60,34 +62,25 @@ public class LaserTurret : MonoBehaviour, Weapon
     {
         //Debug.Log("checking for sight");
         // Determine if there is line of sight to the alien ship
-        Vector3 barrelTip = new Vector3(transform.position.x, transform.position.y + 0.3f, transform.position.z);
-        Vector3 alienShipDirection = alienShip.transform.position - barrelTip;
-        BarrelPivot.up = alienShipDirection;
+        Vector3 alienShipDirection = alienShip.transform.position - BarrelPivot.transform.position;
+        bool hitEarth = false;
+        AlienShip alienScript = null;
         RaycastHit[] hits;
-        hits = Physics.RaycastAll(barrelTip, alienShipDirection, 100f);
+        hits = Physics.RaycastAll(BarrelPivot.transform.position, alienShipDirection, 100f);
         foreach (RaycastHit hit in hits)
         {
-            // Don't shoot other stuff
+            if (hit.transform.tag == "Earth")
+                hitEarth = true;
             if (hit.transform.tag == "Alien")
-            {
-                // Begin animating laser
-                //Debug.Log("Aiming Turret at: " + hit.transform.gameObject);
-                AlienShip alienScript = hit.transform.gameObject.GetComponent<AlienShip>();
-                if (alienScript != null)
-                {
-                    //Debug.Log("Firing");
-                    currentTarget = alienShip;
-                    alienScript.TakeDamage();
-                    FireAt(alienShip.transform.position);
-                    return true;
-                }
-            }
-            else
-            {
-                // Something is in the way
-                //Debug.Log("Alien Ship Not In Sight");
-            }
+                alienScript = hit.transform.gameObject.GetComponent<AlienShip>();
         }
+        if (!hitEarth)
+        {
+            currentTarget = alienShip;
+            if (alienScript != null && alienScript.TakeDamage())
+                FireAt(alienShip.transform.position);
+        }
+
         return false;
     }
 

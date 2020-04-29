@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8952418255456557607}
   - component: {fileID: 2458641410770560984}
   - component: {fileID: 4082223210895108528}
-  - component: {fileID: 8052792270740573280}
   m_Layer: 0
   m_Name: Ship
   m_TagString: Alien
@@ -81,20 +80,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!136 &8052792270740573280
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1725752657153346303}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1866810453155813578
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,10 +125,10 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1866810453155813578}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!120 &3476935787413281784
 LineRenderer:
@@ -476,7 +461,6 @@ GameObject:
   - component: {fileID: 8480312042763806630}
   - component: {fileID: 9090032154287793139}
   - component: {fileID: 2594154664705147037}
-  - component: {fileID: 2163641168148338789}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Alien
@@ -545,16 +529,3 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &2163641168148338789
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3679454413246660284}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}

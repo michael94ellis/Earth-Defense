@@ -26,15 +26,15 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
     }
 
     public int Health { get; set; }
-    public bool TakeDamage()
+    public bool TakeDamage(int amount = 1)
     {
-        if (Health == 0)
+        if (Health <= 0)
         {
             ExplosionSound.Play();
             AlienSpawner.RemovAlien(gameObject);
             return false;
         }
-        Health--;
+        Health = Health - amount;
         return true;
     }
 
@@ -127,7 +127,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
                 Damageable attackTarget = currentTarget.gameObject.GetComponent<Damageable>();
                 if (attackTarget == null)
                     return false;
-                if (!attackTarget.TakeDamage())
+                if (!attackTarget.TakeDamage(1))
                 {
                     FireAt(currentTarget.transform.position);
                     currentTarget = null;

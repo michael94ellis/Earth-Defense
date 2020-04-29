@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 
 public interface Damageable
 {
-    bool TakeDamage();
+    bool TakeDamage(int amount);
 }
 
 public class Earth : MonoBehaviour
@@ -38,12 +38,12 @@ public class Earth : MonoBehaviour
         CityRef = Resources.Load("City");
         LaserTurretRef = Resources.Load("Turret");
         MissileSiloRef = Resources.Load("MissileSilo");
-        // Generator = Resources.Load("Generator");
+        GeneratorRef = Resources.Load("Generator");
         SatelliteRef = Resources.Load("EarthSatellite");
         //Zones.Add(GameObject.Find("NorthAmericanShield").GetComponent<EarthZone>());
         Zone1 = GameObject.Find("NorthAmericanShield").GetComponent<EarthZone>();
        // SouthAmerica = GameObject.Find("SouthAmerica").GetComponent<Collider>();
-        GlobalCurrency = 0;
+        GlobalCurrency = 99990;
     }
 
     void Update()
@@ -94,7 +94,7 @@ public class Earth : MonoBehaviour
         City newCity = NewObject.GetComponent<City>();
         if (newCity != null)
             Zone1.MinorCities.Add(newCity);
-        NewObject.transform.localScale = new Vector3(0.005f, 0.005f, 0.005f);
+        NewObject.transform.localScale = new Vector3(0.0025f, 0.0025f, 0.0025f);
         SpendGlobalCurrency(100);
     }
 
@@ -107,7 +107,7 @@ public class Earth : MonoBehaviour
         Weapon newWeapon = NewObject.GetComponent<Weapon>();
         if (newWeapon != null)
             Zone1.Weapons.Add(newWeapon);
-        NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
+        NewObject.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
         SpendGlobalCurrency(75);
     }
 
@@ -120,7 +120,20 @@ public class Earth : MonoBehaviour
         //Weapon newWeapon = NewObject.GetComponent<Weapon>();
         //if (newWeapon != null)
         //    Zone1.Weapons.Add(newWeapon);
-        NewObject.transform.localScale = new Vector3(0.025f, 0.025f, 0.025f);
+        NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        //SpendGlobalCurrency(75);
+    }
+
+    public void BuildNewShieldGenerator()
+    {
+        GameObject NewBuilding = Instantiate(GeneratorRef) as GameObject;
+        NewObject = NewBuilding;
+        // Make the new city a child object so it lives inside the earth's coordinate space
+        NewObject.transform.SetParent(transform, true);
+        //Weapon newWeapon = NewObject.GetComponent<Weapon>();
+        //if (newWeapon != null)
+        //    Zone1.Weapons.Add(newWeapon);
+        NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         //SpendGlobalCurrency(75);
     }
 

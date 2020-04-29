@@ -139,11 +139,8 @@ public class MenuManager: MonoBehaviour
             GUILayout.Label("Assets", HeaderStyle, GUILayout.Height(40));
             GUILayout.BeginHorizontal();
                 BuyCityButton();
-                BuyGovernmentSectorButton();
-                BuyIndustrialSectorButton();
-            GUILayout.EndHorizontal();
-            GUILayout.Label("Defenses", HeaderStyle, GUILayout.Height(40));
-            GUILayout.BeginHorizontal();
+                //BuyGovernmentSectorButton();
+                //BuyIndustrialSectorButton();
                 BuyMissileSiloButton();
                 BuyLaserTurretButton();
                 BuyShieldGeneratorButton();
@@ -185,35 +182,35 @@ public class MenuManager: MonoBehaviour
         GUILayout.EndVertical();
     }
 
-    void BuyIndustrialSectorButton()
-    {
-        GUI.enabled = Earth.GlobalCurrency > 300;
-        GUILayout.BeginVertical();
-        if (GUILayout.Button("Buy Industrial Center", ButtonStyle, GUILayout.Height(75)))
-        {
-            isPickingLocation = true;
-            placementLabelRect = GetTopLabelRect("Right Click to Place Industrial Sector");
-            earth.BuildNewCity();
-        }
-        GUILayout.Label("Cost: $300M", Header2Style);
-        GUILayout.Label("Generates Money Over Time \nStarting at $5 Million every 5 seconds \nIncreases by $5 Million up to $50 Million per 5 seconds\n Population is negatively impacted", BodyStyle);
-        GUILayout.EndVertical();
-    }
+    //void BuyIndustrialSectorButton()
+    //{
+    //    GUI.enabled = Earth.GlobalCurrency > 300;
+    //    GUILayout.BeginVertical();
+    //    if (GUILayout.Button("Buy Industrial Center", ButtonStyle, GUILayout.Height(75)))
+    //    {
+    //        isPickingLocation = true;
+    //        placementLabelRect = GetTopLabelRect("Right Click to Place Industrial Sector");
+    //        earth.BuildNewCity();
+    //    }
+    //    GUILayout.Label("Cost: $300M", Header2Style);
+    //    GUILayout.Label("Generates Money Over Time \nStarting at $5 Million every 5 seconds \nIncreases by $5 Million up to $50 Million per 5 seconds\n Population is negatively impacted", BodyStyle);
+    //    GUILayout.EndVertical();
+    //}
 
-    void BuyGovernmentSectorButton()
-    {
-        GUI.enabled = Earth.GlobalCurrency > 300;
-        GUILayout.BeginVertical();
-        if (GUILayout.Button("Buy Industrial Center", ButtonStyle, GUILayout.Height(75)))
-        {
-            isPickingLocation = true;
-            placementLabelRect = GetTopLabelRect("Right Click to Place Government Sector");
-            earth.BuildNewCity();
-        }
-        GUILayout.Label("Cost: $100M", Header2Style);
-        GUILayout.Label("Regenerates Population Over Time \n \n Population is positively impacted", BodyStyle);
-        GUILayout.EndVertical();
-    }
+    //void BuyGovernmentSectorButton()
+    //{
+    //    GUI.enabled = Earth.GlobalCurrency > 300;
+    //    GUILayout.BeginVertical();
+    //    if (GUILayout.Button("Buy Industrial Center", ButtonStyle, GUILayout.Height(75)))
+    //    {
+    //        isPickingLocation = true;
+    //        placementLabelRect = GetTopLabelRect("Right Click to Place Government Sector");
+    //        earth.BuildNewCity();
+    //    }
+    //    GUILayout.Label("Cost: $100M", Header2Style);
+    //    GUILayout.Label("Regenerates Population Over Time \n \n Population is positively impacted", BodyStyle);
+    //    GUILayout.EndVertical();
+    //}
 
     void BuyShieldGeneratorButton()
     {
@@ -223,7 +220,7 @@ public class MenuManager: MonoBehaviour
         {
             isPickingLocation = true;
             placementLabelRect = GetTopLabelRect("Right Click to Place Shield Generator");
-            earth.BuildNewCity();
+            earth.BuildNewShieldGenerator();
         }
         GUILayout.Label("Cost: $800M", Header2Style);
         GUILayout.Label("Shield Regenerates at all times and is stronger", BodyStyle);

@@ -10,10 +10,10 @@ public class EarthZone : MonoBehaviour, Damageable
     public List<Weapon> Weapons = new List<Weapon>();
     public int ShieldHealth { get; private set; } = 10000;
     public float Population { get; private set; } = 500000;
-    public bool TakeDamage()
+    public bool TakeDamage(int amount = 1)
     {
         //Debug.Log("Damage");
-        if (ShieldHealth == 0)
+        if (ShieldHealth <= 0)
         {
             if (Population > 0)
             {
@@ -25,8 +25,8 @@ public class EarthZone : MonoBehaviour, Damageable
                 return false;
             }
         }
-        ShieldHealth--;
-        if (ShieldHealth == 0)
+        ShieldHealth = ShieldHealth - amount;
+        if (ShieldHealth <= 0)
             shield.enabled = false;
         return true;
     }

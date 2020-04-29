@@ -29,7 +29,7 @@ public class MissileSilo : MonoBehaviour, Weapon
         // If the missile launcher is done firing we have to wait for it to reload to fire again
         if (!isLoaded)
             return;
-        if (currentTarget != null && CheckLineOfSight(currentTarget))
+        if (currentTarget != null && CheckLineOfSight(currentTarget) && currentTarget.activeInHierarchy)
             return;
         foreach (GameObject alienShip in AlienSpawner.Aliens)
         {
@@ -79,24 +79,24 @@ public class MissileSilo : MonoBehaviour, Weapon
     public IEnumerator Fire()
     {
         isLoaded = false;
+        yield return new WaitForSeconds(fireDuration);
         // Fire Missile 
-        GameObject newMissile = Instantiate(Missile);
+        GameObject newMissile = Instantiate(Missile, earth.transform);
+        newMissile.transform.localScale = new Vector3(0.1f, 0.25f, 0.1f);
         Missile missileScript = newMissile.GetComponent<Missile>();
         if (missileScript != null)
         {
-            newMissile.transform.SetParent(earth.transform, true);
-            newMissile.transform.position = new Vector3(0, -newMissile.transform.localScale.y, 0);
             missileScript.target = currentTarget;
+            newMissile.transform.position = transform.position;
         }
-        yield return new WaitForSeconds(fireDuration);
-        // Close doors
-        StartCoroutine(RotateDoor(RightDoor.transform, new Vector3(90, 0, 0), 1f));
-        StartCoroutine(RotateDoor(LeftDoor.transform, new Vector3(-90, 0, 0), 1f));
         StartCoroutine(Recharge());
     }
 
     public IEnumerator Recharge()
     {
+        // Close doors
+        StartCoroutine(RotateDoor(RightDoor.transform, new Vector3(90, 0, 0), 1f));
+        StartCoroutine(RotateDoor(LeftDoor.transform, new Vector3(-90, 0, 0), 1f));
         yield return new WaitForSeconds(reloadTime);
         isLoaded = true;
         // Load new missile(or reuse from pool)
