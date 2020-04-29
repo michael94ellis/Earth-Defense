@@ -162,21 +162,48 @@ public class MenuManager: MonoBehaviour
         GUILayout.BeginHorizontal();
         GUILayout.Label("North American Zone", Header2Style);
         GUILayout.Label("Shield: " + Earth.Zone1.ShieldHealth + "  Pop. " + Earth.Zone1.Population, Header2Style);
-        if (GUILayout.Button("Shield Generator: " + (Earth.Zone1.ShieldGenerator != null), ButtonStyle))
-        {
-            // Upgrade Shield Generator
-        }
-        if (GUILayout.Button("Cities: " + Earth.Zone1.MinorCities.Count, ButtonStyle))
-        {
-            // Upgrade Cities
-        }
-        if (GUILayout.Button("Weapons: " + Earth.Zone1.Weapons.Count, ButtonStyle))
-        {
-            // Upgrade Laser Turrets and Missile Silos
-        }
         GUILayout.EndHorizontal();
+        if (Earth.Zone1.ShieldGenerator != null)
+        {
+            GUILayout.BeginHorizontal();
+            DisplayShieldGeneratorUpgrades();
+            GUILayout.EndHorizontal();
+        }
+        if (Earth.Zone1.MinorCities.Count > 0)
+        {
+            if (GUILayout.Button("Cities: " + Earth.Zone1.MinorCities.Count, ButtonStyle))
+            {
+                // Upgrade Cities
+            }
+        }
+        if (Earth.Zone1.Weapons.Count > 0)
+        {
+            if (GUILayout.Button("Weapons: " + Earth.Zone1.Weapons.Count, ButtonStyle))
+            {
+                // Upgrade Laser Turrets and Missile Silos
+            }
+        }
         //}
         GUILayout.EndVertical();
+    }
+
+    void DisplayShieldGeneratorUpgrades()
+    {
+        GUI.enabled = Earth.Zone1.ShieldGenerator.rechargeTime > 1;
+        if (GUILayout.Button("Decrease Shield Recharge Time", ButtonStyle))
+        {
+            Earth.Zone1.ShieldGenerator.ReduceRechargeTime();
+        }
+        GUI.enabled = Earth.Zone1.ShieldGenerator.ShieldBoost < (Earth.Zone1.MaxShieldHealth / 2);
+        if (GUILayout.Button("Boost Shield Strength", ButtonStyle))
+        {
+            Earth.Zone1.ShieldGenerator.BoostStrength();
+        }
+        GUI.enabled = Earth.Zone1.ShieldGenerator.shieldRegenRate <= 16;
+        if (GUILayout.Button("Double Shield Regen Rate", ButtonStyle))
+        {
+            Earth.Zone1.ShieldGenerator.DoubleShieldRegenRate();
+        }
     }
 
     void BuyCityButton()
