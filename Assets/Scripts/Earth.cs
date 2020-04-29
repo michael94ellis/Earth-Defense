@@ -126,14 +126,12 @@ public class Earth : MonoBehaviour
 
     public void BuildNewShieldGenerator()
     {
-        GameObject NewBuilding = Instantiate(GeneratorRef) as GameObject;
-        NewObject = NewBuilding;
+        GameObject NewShieldGenerator = Instantiate(GeneratorRef) as GameObject;
+        NewObject = NewShieldGenerator;
         // Make the new city a child object so it lives inside the earth's coordinate space
         NewObject.transform.SetParent(transform, true);
-        //Weapon newWeapon = NewObject.GetComponent<Weapon>();
-        //if (newWeapon != null)
-        //    Zone1.Weapons.Add(newWeapon);
         NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        Zone1.ShieldGenerator = NewShieldGenerator.GetComponent<ShieldGenerator>();
         //SpendGlobalCurrency(75);
     }
 
