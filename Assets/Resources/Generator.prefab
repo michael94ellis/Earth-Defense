@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2930946866882402348}
+  - component: {fileID: -6987096908691212137}
   m_Layer: 0
   m_Name: Generator
   m_TagString: Untagged
@@ -31,6 +32,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-6987096908691212137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2930946866882402349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33d07dceca327f34e8a070eb21bbffc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentZone: {fileID: 0}
+  shieldIsUp: 1
+  rechargeTime: 5
+  ShieldBoost: 3000
 --- !u!1001 &2930946867741066465
 PrefabInstance:
   m_ObjectHideFlags: 0

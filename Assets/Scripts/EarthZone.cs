@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class EarthZone : MonoBehaviour, Damageable
 {
-    private MeshRenderer Shield;
+    public MeshRenderer Shield;
     public City Capitol;
     public List<City> MinorCities = new List<City>();
     public ShieldGenerator ShieldGenerator;
     public List<Weapon> Weapons = new List<Weapon>();
     public float MaxShieldHealth = 10000;
     public float ShieldHealth { get; private set; } = 10000;
-    public float Population { get; private set; } = 500000;
+    public float MaxPopulation = 500000;
+    public float Population { get; private set; } = 50000;
     public bool TakeDamage(int amount = 1)
     {
         //Debug.Log("Damage");
@@ -30,10 +31,12 @@ public class EarthZone : MonoBehaviour, Damageable
         ShieldHealth = ShieldHealth - amount;
         if (ShieldHealth <= 0)
         {
+            Debug.Log("Disable shield");
             Shield.enabled = false;
             if (ShieldGenerator != null)
             {
-                ShieldGenerator.Recharge();
+                Debug.Log("Trying to recharge shield");
+                StartCoroutine(ShieldGenerator.Recharge());
             }
         }
         return true;
@@ -41,7 +44,6 @@ public class EarthZone : MonoBehaviour, Damageable
 
     public void AddShieldHealth(float amount)
     {
-        Shield.enabled = true;
         if (ShieldHealth <= MaxShieldHealth)
         {
             if (ShieldHealth <= 0)
@@ -60,8 +62,8 @@ public class EarthZone : MonoBehaviour, Damageable
     {
         if (Time.timeScale > 0)
         {
-            Population *= 1.000001f;
-            AddShieldHealth(Time.deltaTime);
+            if (Population < MaxPopulation)
+                Population *= 1.000001f;
         }
     }
 }

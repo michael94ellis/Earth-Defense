@@ -127,7 +127,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
                 Damageable attackTarget = currentTarget.gameObject.GetComponent<Damageable>();
                 if (attackTarget == null)
                     return false;
-                if (!attackTarget.TakeDamage(1))
+                if (!attackTarget.TakeDamage(1000))
                 {
                     FireAt(currentTarget.transform.position);
                     currentTarget = null;

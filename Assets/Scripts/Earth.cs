@@ -107,7 +107,7 @@ public class Earth : MonoBehaviour
         Weapon newWeapon = NewObject.GetComponent<Weapon>();
         if (newWeapon != null)
             Zone1.Weapons.Add(newWeapon);
-        NewObject.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
+        NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         SpendGlobalCurrency(75);
     }
 
@@ -132,6 +132,7 @@ public class Earth : MonoBehaviour
         NewObject.transform.SetParent(transform, true);
         NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
         Zone1.ShieldGenerator = NewShieldGenerator.GetComponent<ShieldGenerator>();
+        Zone1.ShieldGenerator.parentZone = Zone1;
         //SpendGlobalCurrency(75);
     }
 

@@ -20,6 +20,7 @@ public class LaserTurret : MonoBehaviour, Weapon
     private LineRenderer Laser;
     public AudioSource LaserSound;
     public Transform BarrelPivot;
+    public Transform BarrelTip;
 
     // Start is called before the first frame update
     void Start()
@@ -98,7 +99,7 @@ public class LaserTurret : MonoBehaviour, Weapon
             Laser.enabled = true;
             StartCoroutine(Fire());
         }
-        Laser.SetPosition(0, transform.position);
+        Laser.SetPosition(0, BarrelTip.position);
         Laser.SetPosition(1, target);
     }
 
