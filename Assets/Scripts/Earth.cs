@@ -94,6 +94,9 @@ public class Earth : MonoBehaviour
         City newCity = NewObject.GetComponent<City>();
         if (newCity != null)
             Zone1.MinorCities.Add(newCity);
+        Zone1.MaxPopulation += 100000;
+        Zone1.AddPeople(10000);
+        Zone1.PopulationRegenRate *= 2;
         NewObject.transform.localScale = new Vector3(0.0025f, 0.0025f, 0.0025f);
         SpendGlobalCurrency(100);
     }
@@ -136,33 +139,33 @@ public class Earth : MonoBehaviour
         //SpendGlobalCurrency(75);
     }
 
-    public void BuildNewEarthSatellite()
-    {
-        GameObject NewSatellite = Instantiate(SatelliteRef, new Vector3(RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f)), Quaternion.identity) as GameObject;
-        // Make it smaller than the Earth
-        NewSatellite.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        NewSatellite.transform.SetParent(transform, false);
-        // Get a point directly above the city away from earth
-        Vector3 awayFromEarth = NewSatellite.transform.position - transform.position;
-        // assign the up vector for the city
-        NewSatellite.transform.up = awayFromEarth;
-        SpendGlobalCurrency(75);
-    }
+    //public void BuildNewEarthSatellite()
+    //{
+    //    GameObject NewSatellite = Instantiate(SatelliteRef, new Vector3(RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f), RandomCoord(0.4f, 0.7f)), Quaternion.identity) as GameObject;
+    //    // Make it smaller than the Earth
+    //    NewSatellite.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+    //    // Make the new city a child object so it lives inside the earth's coordinate space
+    //    NewSatellite.transform.SetParent(transform, false);
+    //    // Get a point directly above the city away from earth
+    //    Vector3 awayFromEarth = NewSatellite.transform.position - transform.position;
+    //    // assign the up vector for the city
+    //    NewSatellite.transform.up = awayFromEarth;
+    //    SpendGlobalCurrency(75);
+    //}
     
-    // Returns a random value in the range, 50% change of being negative
-    float RandomCoord(float min, float max)
-    {
-        // Sign(+/-): 1 is plus, 2 is minus
-        var sign = Random.Range(1, 3);
-        var value = Random.Range(min, max);
-        if (sign == 2)
-        {
-            return value * -1;
-        }
-        else
-        {
-            return value;
-        }
-    }
+    //// Returns a random value in the range, 50% change of being negative
+    //float RandomCoord(float min, float max)
+    //{
+    //    // Sign(+/-): 1 is plus, 2 is minus
+    //    var sign = Random.Range(1, 3);
+    //    var value = Random.Range(min, max);
+    //    if (sign == 2)
+    //    {
+    //        return value * -1;
+    //    }
+    //    else
+    //    {
+    //        return value;
+    //    }
+    //}
 }

@@ -36,6 +36,11 @@ public class EarthZone : MonoBehaviour, Damageable
         }
     }
 
+    public void AddPeople(float amount)
+    {
+        Population += amount;
+    }
+
     public bool TakeDamage(int amount = 1)
     {
         //Debug.Log("Damage");
@@ -86,14 +91,20 @@ Zones can have weapons to fight off the aliens
      * Laser Turret - Shoots a laser beam at the target
      *      Upgrades:
      *          Firing Range
+     *          Firing Duration
      *          Recharge Time
      *          Damage
+     *          MultipleTargets
+     *          Choosing how it targets enemies
+     *          
      * Ballistic Missiles - Missile must reach target location before dealing damage
      *      Upgrades:
      *          Firing Range
-     *          Recharge Time
-     *          Damage
      *          Speed
+     *          Reload Time
+     *          Damage
+     *          Area of damage effect
+     *          Choosing how it targets enemies
 
 Zones can build their population
     * Minor Cities can be built to increase the Zone's Maximum Population
