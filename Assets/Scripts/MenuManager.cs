@@ -14,9 +14,6 @@ public class MenuManager: MonoBehaviour
     public int windowOriginY = Screen.height / 6;
     Earth earth;
     Rect placementLabelRect;
-    private float secondsCount;
-    private int minuteCount;
-    private int hourCount;
 
     public enum MenuScreen
     {
@@ -37,6 +34,17 @@ public class MenuManager: MonoBehaviour
     {
         if (Input.GetMouseButton(1))
         {
+            RaycastHit[] hits;
+            hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
+            foreach (RaycastHit hit in hits)
+            {
+                Debug.Log(hit.transform.gameObject);
+                EarthZone zoneClicked = hit.transform.gameObject.GetComponent<EarthZone>();
+                if (zoneClicked != null)
+                {
+                    Debug.Log(hit.transform.gameObject);
+                }
+            }
             // Only Pause if not already paused, menu must have unpause button
             if (!Paused)
             {
@@ -74,29 +82,11 @@ public class MenuManager: MonoBehaviour
         return new Rect(Screen.width / 2 - ((labelSize.x + padding) / 2), 20 + padding, labelSize.x + padding, labelSize.y + padding);
     }
 
-    public void UpdateTimer()
-    {
-        //set timer UI
-        secondsCount += Time.deltaTime;
-        if (secondsCount >= 60)
-        {
-            minuteCount++;
-            secondsCount = 0;
-        }
-        else if (minuteCount >= 60)
-        {
-            hourCount++;
-            minuteCount = 0;
-        }
-    }
-
     void OnGUI()
     {
-        UpdateTimer();
-        GUI.Label(new Rect(Screen.width - 120, 20, 80, 40), hourCount + ":" + minuteCount + ":" + (int)secondsCount, InfoStyle);
+        GUI.Label(new Rect(Screen.width - 120, 20, 80, 40), "Time: " + Time.time, InfoStyle);
         GUI.Label(new Rect(65, 30, 120, 40),
             "Alien Kill Count: " + AlienSpawner.DeadAlienCount + "\n" +
-            "Earth Shield: " + Earth.Zone1.ShieldHealth + "Pop. " + Earth.Zone1.Population + "\n" +
             "Global Wealth: $" + Earth.GlobalCurrency + "M", TopLeftInfoStyle);
         if (isPickingLocation)
         {
@@ -157,74 +147,80 @@ public class MenuManager: MonoBehaviour
     {
         GUILayout.BeginVertical();
         GUILayout.Label("Earth Zones", HeaderStyle);
-        //foreach (City city in Earth.Zones)
-        //{
-        GUILayout.BeginHorizontal();
-        GUILayout.Label("North American Zone", Header2Style);
-        GUILayout.Label("Shield: " + Earth.Zone1.ShieldHealth + "  Pop. " + Earth.Zone1.Population, Header2Style);
-        GUILayout.EndHorizontal();
-        if (Earth.Zone1.ShieldGenerator != null)
+        foreach (EarthZone zone in Earth.ControlledZones)
         {
             GUILayout.BeginHorizontal();
-            DisplayShieldGeneratorUpgrades();
+            GUILayout.Label("North American Zone", Header2Style);
+            GUILayout.Label("Population " + zone.Population + " / " + zone.MaxPopulation, Header2Style);
             GUILayout.EndHorizontal();
-        }
-        if (Earth.Zone1.MinorCities.Count > 0)
-        {
-            if (GUILayout.Button("Cities: " + Earth.Zone1.MinorCities.Count, ButtonStyle))
+            if (zone.ShieldGenerator != null)
             {
-                foreach (City city in Earth.Zone1.MinorCities)
-                {
-
-                }
+                GUILayout.BeginHorizontal();
+                DisplayShieldGeneratorUpgrades(zone);
+                GUILayout.EndHorizontal();
             }
-        }
-        if (Earth.Zone1.Weapons.Count > 0)
-        {
-            if (GUILayout.Button("Weapons: " + Earth.Zone1.Weapons.Count, ButtonStyle))
+            foreach (GameObject building in zone.ZoneBuildings)
             {
-                // Upgrade Laser Turrets and Missile Silos
+                Weapon weapon = building.GetComponent<Weapon>();
+                City city = building.GetComponent<City>();
+                if (city != null)
+                    DisplayMinorCityUpgrades(zone, city);
+                if (weapon != null)
+                    DisplayWeaponUpgrades(zone, weapon);
             }
+            //if (GUILayout.Button("Weapons: " + zone.Weapons.Count, ButtonStyle))
+            //{
+            // Upgrade Laser Turrets and Missile Silos
         }
-        //}
         GUILayout.EndVertical();
     }
 
-    void DisplayShieldGeneratorUpgrades()
+    void DisplayShieldGeneratorUpgrades(EarthZone zone)
     {
-        GUI.enabled = Earth.Zone1.ShieldGenerator.rechargeTime > 1;
+        GUI.enabled = zone.ShieldGenerator.rechargeTime > 1;
         if (GUILayout.Button("Decrease Shield Recharge Time", ButtonStyle))
         {
-            Earth.Zone1.ShieldGenerator.ReduceRechargeTime();
+            zone.ShieldGenerator.ReduceRechargeTime();
         }
-        GUI.enabled = Earth.Zone1.ShieldGenerator.ShieldBoost < (Earth.Zone1.MaxShieldHealth / 2);
+        GUI.enabled = zone.ShieldGenerator.ShieldBoost < (zone.MaxShieldHealth / 2);
         if (GUILayout.Button("Boost Shield Strength", ButtonStyle))
         {
-            Earth.Zone1.ShieldGenerator.BoostStrength();
+            zone.ShieldGenerator.BoostStrength();
         }
-        GUI.enabled = Earth.Zone1.ShieldGenerator.shieldRegenRate <= 16;
+        GUI.enabled = zone.ShieldGenerator.shieldRegenRate <= 16;
         if (GUILayout.Button("Double Shield Regen Rate", ButtonStyle))
         {
-            Earth.Zone1.ShieldGenerator.DoubleShieldRegenRate();
+            zone.ShieldGenerator.DoubleShieldRegenRate();
         }
     }
 
-    void DisplayMinorCityUpgrades(City city)
+    void DisplayMinorCityUpgrades(EarthZone zone, City city)
     {
-        GUI.enabled = Earth.Zone1.MaxPopulation < 1000000;
+        GUI.enabled = zone.MaxPopulation < 1000000;
         if (GUILayout.Button("Increase Max Population by 50,000", ButtonStyle))
         {
-            Earth.Zone1.MaxPopulation += 50000;
+            zone.MaxPopulation += 50000;
         }
-        GUI.enabled = Earth.Zone1.ShieldGenerator.ShieldBoost < (Earth.Zone1.MaxShieldHealth / 2);
-        if (GUILayout.Button("Boost Shield Strength", ButtonStyle))
-        {
-            Earth.Zone1.ShieldGenerator.BoostStrength();
-        }
-        GUI.enabled = Earth.Zone1.ShieldGenerator.shieldRegenRate <= 16;
+        GUI.enabled = true;
         if (GUILayout.Button("Double Population Regen Rate", ButtonStyle))
         {
             city.PopulationRegenRate *= 2;
+        }
+    }
+
+    void DisplayWeaponUpgrades(EarthZone zone, Weapon weapon)
+    {
+        GUI.enabled = true;
+        if (GUILayout.Button("Increase Weapon Damage", ButtonStyle))
+        {
+        }
+        GUI.enabled = true;
+        if (GUILayout.Button("Decrease Recharge/Reload", ButtonStyle))
+        {
+        }
+        GUI.enabled = true;
+        if (GUILayout.Button("Boost Firing Range", ButtonStyle))
+        {
         }
     }
 

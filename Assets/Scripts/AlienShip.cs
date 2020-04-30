@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -59,22 +60,21 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
     void SelectNewTarget()
     {
         // This is for when multiple zones exist, just to serve as a reminder
-        //foreach (EarthZone zone in Earth.zones)
-        //{
-        if (Earth.Zone1.ShieldHealth > 0)
+        foreach (EarthZone zone in Earth.ControlledZones.OrderBy(a => Random.value).ToList())
         {
-            currentTarget = Earth.Zone1.gameObject;
+            if (zone.ShieldHealth > 0)
+            {
+                currentTarget = zone.gameObject;
+                return;
+            }
+            else if (zone.Population > 0)
+            {
+                currentTarget = zone.Capitol.gameObject;
+                return;
+            }
         }
-        else if (Earth.Zone1.Population > 0)
-        {
-            currentTarget = Earth.Zone1.Capitol.gameObject;
-        }
-        //}
-
         // Pick a psuedo random orbit, a point that is nearby a point above the target
         targetOrbit = Vector3.Scale(currentTarget.transform.position * 2, currentTarget.transform.up);
-        Debug.Log(currentTarget.transform.position * 2);
-        Debug.Log(targetOrbit);
     }
 
     void MoveTowardsTarget()
@@ -106,8 +106,6 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
             else
                 SelectNewTarget();
         }
-        //Debug.Log("Looking for new Enemy ");
-        // TODO Look for a new target to shoot at
     }
 
     public bool CheckLineOfSight()
@@ -127,17 +125,11 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
                 Damageable attackTarget = currentTarget.gameObject.GetComponent<Damageable>();
                 if (attackTarget == null)
                     return false;
-                if (!attackTarget.TakeDamage(1000))
-                {
-                    FireAt(currentTarget.transform.position);
+                bool attackSuccess = attackTarget.TakeDamage(1000);
+                AimAt(currentTarget.transform.position);
+                if (!attackSuccess)
                     currentTarget = null;
-                    return false;
-                }
-                else
-                {
-                    FireAt(currentTarget.transform.position);
-                    return true;
-                }
+                return attackSuccess;
             }
         }
         else
@@ -147,7 +139,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
         return false;
     }
 
-    public void FireAt(Vector3 target)
+    public void AimAt(Vector3 target)
     {
         //Debug.Log("City In Sight");
         if (!isFiring)

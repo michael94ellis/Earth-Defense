@@ -7,8 +7,7 @@ public class EarthZone : MonoBehaviour, Damageable
     public MeshRenderer Shield;
     public City Capitol;
     public ShieldGenerator ShieldGenerator;
-    public List<Weapon> Weapons = new List<Weapon>();
-    public List<City> MinorCities = new List<City>();
+    public List<GameObject> ZoneBuildings = new List<GameObject>();
 
     public float MaxShieldHealth = 10000;
     public float MaxPopulation = 500000;

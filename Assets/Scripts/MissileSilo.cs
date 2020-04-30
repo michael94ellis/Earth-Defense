@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using UnityEngine;
 
@@ -12,7 +13,6 @@ public class MissileSilo : MonoBehaviour, Weapon
     private int reloadTime = 2;
     private bool isLoaded = true;
     private GameObject currentTarget;
-    bool doorsOpen = false;
 
     public GameObject Missile;
     public GameObject earth;
@@ -31,7 +31,7 @@ public class MissileSilo : MonoBehaviour, Weapon
             return;
         if (currentTarget != null && CheckLineOfSight(currentTarget) && currentTarget.activeInHierarchy)
             return;
-        foreach (GameObject alienShip in AlienSpawner.Aliens)
+        foreach (GameObject alienShip in AlienSpawner.Aliens.OrderBy(a => Random.value).ToList())
         {
             //Debug.Log("Laser Turret Beginning Fire Sequence");
             // Check for any sight obstructions to the alien ship
@@ -49,9 +49,9 @@ public class MissileSilo : MonoBehaviour, Weapon
         // Determine if there is line of sight to the alien ship
         if ((alienShip.transform.position - transform.position).magnitude < 1000f) // pop pop
         {
-                // Begin animating laser
-                //Debug.Log("Aiming Turret at: " + hit.transform.gameObject);
-                FireAt(alienShip.transform.position);
+            // Begin animating laser
+            //Debug.Log("Aiming Turret at: " + hit.transform.gameObject);
+            AimAt(alienShip.transform.position);
                 return true;
         }
         return false;
@@ -68,7 +68,7 @@ public class MissileSilo : MonoBehaviour, Weapon
         }
     }
 
-    public void FireAt(Vector3 target)
+    public void AimAt(Vector3 target)
     {
         // Open Doors
         StartCoroutine(RotateDoor(RightDoor.transform, new Vector3(-90, 0, 0), 1f));

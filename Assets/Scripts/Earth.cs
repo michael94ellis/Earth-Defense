@@ -14,14 +14,14 @@ public class Earth : MonoBehaviour
     Object CityRef;
     Object GeneratorRef;
     Object LaserTurretRef;
-    Object SatelliteRef;
+    //Object SatelliteRef;
     Object MissileSiloRef;
 
-    float mainSpeed = 0.5f; //regular speed
     // This holds an item that was just purchased so it can be placed on the earth
     public GameObject NewObject;
-    //public static List<EarthZone> Zones = new List<EarthZone>();
-    public static EarthZone Zone1;
+    public EarthZone NewObjectZone;
+    public static List<EarthZone> AllZones = new List<EarthZone>();
+    public static List<EarthZone> ControlledZones = new List<EarthZone>();
     public static float GlobalCurrency { get; private set; }
     public static void AddGlobalCurrency(float money)
     {
@@ -39,11 +39,13 @@ public class Earth : MonoBehaviour
         LaserTurretRef = Resources.Load("Turret");
         MissileSiloRef = Resources.Load("MissileSilo");
         GeneratorRef = Resources.Load("Generator");
-        SatelliteRef = Resources.Load("EarthSatellite");
-        //Zones.Add(GameObject.Find("NorthAmericanShield").GetComponent<EarthZone>());
-        Zone1 = GameObject.Find("NorthAmericanZone").GetComponent<EarthZone>();
-       // SouthAmerica = GameObject.Find("SouthAmerica").GetComponent<Collider>();
-        GlobalCurrency = 99990;
+        //SatelliteRef = Resources.Load("EarthSatellite");
+        foreach (GameObject earthZone in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            EarthZone zone = earthZone.GetComponent<EarthZone>();
+            if (zone != null)
+                ControlledZones.Add(zone);
+        }
     }
 
     void Update()
@@ -65,14 +67,18 @@ public class Earth : MonoBehaviour
         foreach (RaycastHit hit in hits)
         {
             // This hit.point is the point on earth where you clicked
-            if (hit.collider == Zone1.GetComponent<Collider>())
+            foreach (EarthZone controlledZone in ControlledZones)
             {
-                isInAllowedSpace = true;
-                //Debug.Log(hit.point + " is in the Zone: ");
-            }
-            else if (hit.transform.gameObject == this.gameObject && Zone1.GetComponent<Collider>().bounds.Contains(hit.point))
-            {
-                earthHit = hit.point;
+                if (hit.collider == controlledZone.GetComponent<Collider>())
+                {
+                    isInAllowedSpace = true;
+                    NewObjectZone = controlledZone;
+                    //Debug.Log(hit.point + " is in the Zone: ");
+                }
+                else if (hit.transform.gameObject == this.gameObject && controlledZone.GetComponent<Collider>().bounds.Contains(hit.point))
+                {
+                    earthHit = hit.point;
+                }
             }
         }
         if (isInAllowedSpace && earthHit != Vector3.zero)
@@ -85,46 +91,38 @@ public class Earth : MonoBehaviour
         }
     }
 
-    public void BuildNewCity()
+    public GameObject BuildNewCity()
     {
         GameObject newCityObj = Instantiate(CityRef) as GameObject;
         NewObject = newCityObj;
         // Make the new city a child object so it lives inside the earth's coordinate space
         NewObject.transform.SetParent(transform, true);
-        City newCity = NewObject.GetComponent<City>();
-        if (newCity != null)
-            Zone1.MinorCities.Add(newCity);
-        Zone1.MaxPopulation += 100000;
-        Zone1.AddPeople(10000);
-        Zone1.PopulationRegenRate *= 2;
         NewObject.transform.localScale = new Vector3(0.0025f, 0.0025f, 0.0025f);
-        SpendGlobalCurrency(100);
+        return NewObject;
     }
 
-    public void BuildNewLaserWeapon()
+    public GameObject BuildNewLaserWeapon()
     {
         GameObject NewWeapon = Instantiate(LaserTurretRef) as GameObject;
-        NewObject = NewWeapon;
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        NewObject.transform.SetParent(transform, true);
-        Weapon newWeapon = NewObject.GetComponent<Weapon>();
-        if (newWeapon != null)
-            Zone1.Weapons.Add(newWeapon);
-        NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        HandleNewWeapon(NewWeapon);
         SpendGlobalCurrency(75);
+        return NewWeapon;
     }
 
-    public void BuildNewMissileSilo()
+    public GameObject BuildNewMissileSilo()
     {
         GameObject NewWeapon = Instantiate(MissileSiloRef) as GameObject;
+        HandleNewWeapon(NewWeapon);
+        return NewWeapon;
+        //SpendGlobalCurrency(75);
+    }
+
+    private void HandleNewWeapon(GameObject NewWeapon)
+    {
         NewObject = NewWeapon;
         // Make the new city a child object so it lives inside the earth's coordinate space
         NewObject.transform.SetParent(transform, true);
-        Weapon newWeapon = NewObject.GetComponent<Weapon>();
-        if (newWeapon != null)
-            Zone1.Weapons.Add(newWeapon);
         NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        //SpendGlobalCurrency(75);
     }
 
     public void BuildNewShieldGenerator()
@@ -134,8 +132,8 @@ public class Earth : MonoBehaviour
         // Make the new city a child object so it lives inside the earth's coordinate space
         NewObject.transform.SetParent(transform, true);
         NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        Zone1.ShieldGenerator = NewShieldGenerator.GetComponent<ShieldGenerator>();
-        Zone1.ShieldGenerator.parentZone = Zone1;
+        NewObjectZone.ShieldGenerator = NewShieldGenerator.GetComponent<ShieldGenerator>();
+        NewObjectZone.ShieldGenerator.parentZone = NewObjectZone;
         //SpendGlobalCurrency(75);
     }
 

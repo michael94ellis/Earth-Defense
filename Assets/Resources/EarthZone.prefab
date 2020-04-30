@@ -58,6 +58,7 @@ MonoBehaviour:
   Shield: {fileID: 5735961895824936166}
   Capitol: {fileID: 7573250458052271846}
   ShieldGenerator: {fileID: 0}
+  ZoneBuildings: []
   MaxShieldHealth: 10000
   MaxPopulation: 500000
   PopulationRegenRate: 1.000001
@@ -1274,6 +1275,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38754addb9ade2e4991893183a4f72e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MaxPopulation: 500000
+  PopulationRegenRate: 1.000001
 --- !u!65 &7573250458052271841
 BoxCollider:
   m_ObjectHideFlags: 0

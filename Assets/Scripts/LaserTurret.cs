@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public interface Weapon
 {
-    void FireAt(Vector3 target);
+    void AimAt(Vector3 target);
     IEnumerator Fire();
     IEnumerator Recharge();
 }
@@ -48,7 +49,7 @@ public class LaserTurret : MonoBehaviour, Weapon
             return;
         if (currentTarget != null && CheckLineOfSight(currentTarget))
             return;
-        foreach (GameObject alienShip in AlienSpawner.Aliens)
+        foreach (GameObject alienShip in AlienSpawner.Aliens.OrderBy(a => Random.value).ToList())
         {
             //Debug.Log("Laser Turret Beginning Fire Sequence");
             // Check for any sight obstructions to the alien ship
@@ -79,14 +80,13 @@ public class LaserTurret : MonoBehaviour, Weapon
         {
             currentTarget = alienShip;
             if (alienScript != null && alienScript.TakeDamage())
-                FireAt(alienShip.transform.position);
+                AimAt(alienShip.transform.position);
         }
-
         return false;
     }
 
     /// This animates the laser firing
-    public void FireAt(Vector3 target)
+    public void AimAt(Vector3 target)
     {
         //Debug.Log("Alien Ship In Sight");
         // This begins the laser, the FireLaser() method disables when its done firing
