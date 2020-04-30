@@ -41,7 +41,7 @@ public class Earth : MonoBehaviour
         GeneratorRef = Resources.Load("Generator");
         SatelliteRef = Resources.Load("EarthSatellite");
         //Zones.Add(GameObject.Find("NorthAmericanShield").GetComponent<EarthZone>());
-        Zone1 = GameObject.Find("NorthAmericanShield").GetComponent<EarthZone>();
+        Zone1 = GameObject.Find("NorthAmericanZone").GetComponent<EarthZone>();
        // SouthAmerica = GameObject.Find("SouthAmerica").GetComponent<Collider>();
         GlobalCurrency = 99990;
     }
