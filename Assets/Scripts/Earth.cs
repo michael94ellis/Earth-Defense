@@ -57,7 +57,7 @@ public class Earth : MonoBehaviour
         }
     }
 
-    void DisplayNewObjectInNorthAmerica()
+    public void DisplayNewObjectInNorthAmerica()
     {
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit[] hits;
