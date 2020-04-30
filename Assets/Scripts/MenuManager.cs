@@ -173,7 +173,10 @@ public class MenuManager: MonoBehaviour
         {
             if (GUILayout.Button("Cities: " + Earth.Zone1.MinorCities.Count, ButtonStyle))
             {
-                // Upgrade Cities
+                foreach (City city in Earth.Zone1.MinorCities)
+                {
+
+                }
             }
         }
         if (Earth.Zone1.Weapons.Count > 0)
@@ -203,6 +206,25 @@ public class MenuManager: MonoBehaviour
         if (GUILayout.Button("Double Shield Regen Rate", ButtonStyle))
         {
             Earth.Zone1.ShieldGenerator.DoubleShieldRegenRate();
+        }
+    }
+
+    void DisplayMinorCityUpgrades(City city)
+    {
+        GUI.enabled = Earth.Zone1.MaxPopulation < 1000000;
+        if (GUILayout.Button("Increase Max Population by 50,000", ButtonStyle))
+        {
+            Earth.Zone1.MaxPopulation += 50000;
+        }
+        GUI.enabled = Earth.Zone1.ShieldGenerator.ShieldBoost < (Earth.Zone1.MaxShieldHealth / 2);
+        if (GUILayout.Button("Boost Shield Strength", ButtonStyle))
+        {
+            Earth.Zone1.ShieldGenerator.BoostStrength();
+        }
+        GUI.enabled = Earth.Zone1.ShieldGenerator.shieldRegenRate <= 16;
+        if (GUILayout.Button("Double Population Regen Rate", ButtonStyle))
+        {
+            city.PopulationRegenRate *= 2;
         }
     }
 
