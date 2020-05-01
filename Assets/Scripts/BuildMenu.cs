@@ -17,7 +17,7 @@ public class BuildMenu : MonoBehaviour
     {
         if (isPickingLocation)
         {
-            earth.DisplayNewObjectInNorthAmerica();
+            earth.DisplayNewObject();
             if (Input.GetMouseButton(0))
             {
                 isPickingLocation = false;
