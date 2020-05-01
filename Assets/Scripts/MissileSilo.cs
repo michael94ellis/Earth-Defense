@@ -13,9 +13,9 @@ public class MissileSilo : MonoBehaviour, Weapon
     private int reloadTime = 2;
     private bool isLoaded = true;
     private GameObject currentTarget;
-
     public GameObject Missile;
     public GameObject earth;
+    public EarthZone ParentZone;
 
     // Start is called before the first frame update
     void Start()
@@ -31,13 +31,17 @@ public class MissileSilo : MonoBehaviour, Weapon
             return;
         if (currentTarget != null && CheckLineOfSight(currentTarget) && currentTarget.activeInHierarchy)
             return;
-        foreach (GameObject alienShip in AlienSpawner.Aliens.OrderBy(a => Random.value).ToList())
+        foreach (GameObject alienShip in AlienSpawner.ActiveAliens.OrderBy(a => Random.value).ToList())
         {
             //Debug.Log("Laser Turret Beginning Fire Sequence");
             // Check for any sight obstructions to the alien ship
             if (alienShip.activeInHierarchy && CheckLineOfSight(alienShip))
             {
-                currentTarget = alienShip;
+                if (!ParentZone.ActiveTargets.Contains(alienShip))
+                {
+                    currentTarget = alienShip;
+                    ParentZone.ActiveTargets.Add(alienShip);
+                }
                 return;
             }
         }
@@ -51,7 +55,7 @@ public class MissileSilo : MonoBehaviour, Weapon
         {
             // Begin animating laser
             //Debug.Log("Aiming Turret at: " + hit.transform.gameObject);
-            AimAt(alienShip.transform.position);
+            FireAt(alienShip.transform.position);
                 return true;
         }
         return false;
@@ -68,7 +72,7 @@ public class MissileSilo : MonoBehaviour, Weapon
         }
     }
 
-    public void AimAt(Vector3 target)
+    public void FireAt(Vector3 target)
     {
         // Open Doors
         StartCoroutine(RotateDoor(RightDoor.transform, new Vector3(-90, 0, 0), 1f));
@@ -89,6 +93,8 @@ public class MissileSilo : MonoBehaviour, Weapon
             missileScript.target = currentTarget;
             newMissile.transform.position = transform.position;
         }
+        ParentZone.ActiveTargets.Remove(currentTarget);
+        currentTarget = null;
         StartCoroutine(Recharge());
     }
 

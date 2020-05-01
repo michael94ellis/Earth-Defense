@@ -147,7 +147,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
                 if (attackTarget == null)
                     return false;
                 bool attackSuccess = attackTarget.TakeDamage(AttackDamage);
-                AimAt(currentTarget.transform.position);
+                FireAt(currentTarget.transform.position);
                 if (!attackSuccess)
                     currentTarget = null;
                 return attackSuccess;
@@ -160,7 +160,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
         return false;
     }
 
-    public void AimAt(Vector3 target)
+    public void FireAt(Vector3 target)
     {
         //Debug.Log("City In Sight");
         if (!isFiring)
