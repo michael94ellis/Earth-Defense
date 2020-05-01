@@ -6,7 +6,7 @@ using UnityEngine;
 // It holds important vars for the menu separate from the earth object
 public class MenuManager: MonoBehaviour
 {
-    public bool Paused = true;
+    public bool Paused = false;
     public bool isPickingLocation = false;
     public int windowWidth = Screen.width * 4 / 6;
     public int windowHeight = Screen.height * 4 / 6;
@@ -30,7 +30,7 @@ public class MenuManager: MonoBehaviour
         // Pause the game so the player starts in the Menu Screen - OnGUI() method
     }
 
-    void Update()
+    /*void Update()
     {
         if (Input.GetMouseButton(1))
         {
@@ -59,7 +59,7 @@ public class MenuManager: MonoBehaviour
                 return;
             }
         }
-    }
+    }*/
 
     /// MARK: - Pause/Resume
 
