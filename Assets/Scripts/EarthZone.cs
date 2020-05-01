@@ -84,6 +84,10 @@ public class EarthZone : MonoBehaviour, Damageable
         shieldBarRect.anchoredPosition = new Vector3(-1 * populationPercentage, shieldBarRect.anchoredPosition.y);
     }
 
+    void Start()
+    {
+        UpdateHealthbar();
+    }
     void Update()
     {
         if (Time.timeScale > 0)
