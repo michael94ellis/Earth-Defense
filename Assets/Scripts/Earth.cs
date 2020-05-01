@@ -33,7 +33,7 @@ public class Earth : MonoBehaviour
 
     void Start()
     {
-        GameManager = GameObject.Find("Earth").GetComponent<MenuManager>();
+        GameManager = gameObject.GetComponent<MenuManager>();
         CityRef = Resources.Load("City");
         LaserTurretRef = Resources.Load("Turret");
         MissileSiloRef = Resources.Load("MissileSilo");
@@ -51,16 +51,14 @@ public class Earth : MonoBehaviour
     {
         if (GameManager.isPickingLocation)
         {
-            DisplayNewObjectInNorthAmerica();
+            DisplayNewObject();
             return;
         }
     }
 
-    void DisplayNewObjectInNorthAmerica()
+    void DisplayNewObject()
     {
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit[] hits;
-        hits = Physics.RaycastAll(ray);
+        RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
         bool isInAllowedSpace = false;
         Vector3 earthHit = Vector3.zero;
         foreach (RaycastHit hit in hits)
@@ -99,46 +97,35 @@ public class Earth : MonoBehaviour
 
     public GameObject BuildNewCity()
     {
-        GameObject newCityObj = Instantiate(CityRef) as GameObject;
-        NewObject = newCityObj;
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        NewObject.transform.SetParent(transform, true);
-        NewObject.transform.localScale = new Vector3(0.0025f, 0.0025f, 0.0025f);
-        return NewObject;
+        GameObject newCity = Instantiate(CityRef) as GameObject;
+        return HandleNewObject(newCity, new Vector3(0.0025f, 0.0025f, 0.0025f));
     }
 
     public GameObject BuildNewLaserWeapon()
     {
         GameObject NewWeapon = Instantiate(LaserTurretRef) as GameObject;
-        HandleNewWeapon(NewWeapon);
-        SpendGlobalCurrency(75);
-        return NewWeapon;
+        return HandleNewObject(NewWeapon, new Vector3(0.01f, 0.01f, 0.01f));
     }
 
     public GameObject BuildNewMissileSilo()
     {
         GameObject NewWeapon = Instantiate(MissileSiloRef) as GameObject;
-        HandleNewWeapon(NewWeapon);
-        return NewWeapon;
-        //SpendGlobalCurrency(75);
-    } 
-
-    private void HandleNewWeapon(GameObject NewWeapon)
-    {
-        NewObject = NewWeapon;
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        NewObject.transform.SetParent(transform, true);
-        NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
+        return HandleNewObject(NewWeapon, new Vector3(0.01f, 0.01f, 0.01f));
     }
 
-    public void BuildNewShieldGenerator()
+    public GameObject BuildNewShieldGenerator()
     {
         GameObject NewShieldGenerator = Instantiate(GeneratorRef) as GameObject;
-        NewObject = NewShieldGenerator;
+        return HandleNewObject(NewShieldGenerator, new Vector3(0.01f, 0.01f, 0.01f));
+    }
+
+    private GameObject HandleNewObject(GameObject newObj, Vector3 scale)
+    {
+        NewObject = newObj;
         // Make the new city a child object so it lives inside the earth's coordinate space
         NewObject.transform.SetParent(transform, true);
-        NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        //SpendGlobalCurrency(75);
+        NewObject.transform.localScale = scale;
+        return NewObject;
     }
 
     //public void BuildNewEarthSatellite()
@@ -154,7 +141,7 @@ public class Earth : MonoBehaviour
     //    NewSatellite.transform.up = awayFromEarth;
     //    SpendGlobalCurrency(75);
     //}
-    
+
     //// Returns a random value in the range, 50% change of being negative
     //float RandomCoord(float min, float max)
     //{

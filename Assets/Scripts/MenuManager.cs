@@ -34,17 +34,17 @@ public class MenuManager: MonoBehaviour
     {
         if (Input.GetMouseButton(1))
         {
-            RaycastHit[] hits;
-            hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
-            foreach (RaycastHit hit in hits)
-            {
-                Debug.Log(hit.transform.gameObject);
-                EarthZone zoneClicked = hit.transform.gameObject.GetComponent<EarthZone>();
-                if (zoneClicked != null)
-                {
-                    Debug.Log(hit.transform.gameObject);
-                }
-            }
+            //RaycastHit[] hits;
+            //hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
+            //foreach (RaycastHit hit in hits)
+            //{
+            //    Debug.Log(hit.transform.gameObject);
+            //    EarthZone zoneClicked = hit.transform.gameObject.GetComponent<EarthZone>();
+            //    if (zoneClicked != null)
+            //    {
+            //        Debug.Log(hit.transform.gameObject);
+            //    }
+            //}
             // Only Pause if not already paused, menu must have unpause button
             if (!Paused)
             {
@@ -84,10 +84,6 @@ public class MenuManager: MonoBehaviour
 
     void OnGUI()
     {
-        GUI.Label(new Rect(Screen.width - 120, 20, 80, 40), "Time: " + Time.time, InfoStyle);
-        GUI.Label(new Rect(65, 30, 120, 40),
-            "Alien Kill Count: " + AlienSpawner.DeadAlienCount + "\n" +
-            "Global Wealth: $" + Earth.GlobalCurrency + "M", TopLeftInfoStyle);
         if (isPickingLocation)
         {
             GUI.Label(GetTopLabelRect("Right Click to Place"), "Right Click to Place", HeaderStyle);

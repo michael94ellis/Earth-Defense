@@ -19,6 +19,8 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
     public AudioSource LaserSound;
     public AudioSource ExplosionSound;
 
+    public GameObject HealthBar;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -125,7 +127,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
                 Damageable attackTarget = currentTarget.gameObject.GetComponent<Damageable>();
                 if (attackTarget == null)
                     return false;
-                bool attackSuccess = attackTarget.TakeDamage(1000);
+                bool attackSuccess = attackTarget.TakeDamage(100);
                 AimAt(currentTarget.transform.position);
                 if (!attackSuccess)
                     currentTarget = null;
