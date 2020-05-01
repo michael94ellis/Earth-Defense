@@ -63,17 +63,19 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
 
     void Update()
     {
+        if (Time.timeScale <= 0)
+            return;
         transform.LookAt(Vector3.zero);
         // Determine how far earth's center(0,0,0) is
-        if (currentTarget != null && currentlyAboveTarget && Time.timeScale > 0)
+        if (currentTarget != null && currentlyAboveTarget)
         {
             PerformAttackManuevers();
         }
-        else if (currentTarget == null && Time.timeScale > 0)
+        else if (currentTarget == null )
         {
             SelectNewTarget();
         }
-        else if (Time.timeScale > 0)
+        else
         {
             MoveTowardsTarget();
         }

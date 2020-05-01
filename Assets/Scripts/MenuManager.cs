@@ -82,7 +82,7 @@ public class MenuManager: MonoBehaviour
         return new Rect(Screen.width / 2 - ((labelSize.x + padding) / 2), 20 + padding, labelSize.x + padding, labelSize.y + padding);
     }
 
-    void OnGUI()
+    /*void OnGUI()
     {
         if (isPickingLocation)
         {
@@ -102,7 +102,7 @@ public class MenuManager: MonoBehaviour
                     break;
             }
         }
-    }
+    }*/
 
     void NewGameScreen(int windowID)
     {
@@ -226,6 +226,7 @@ public class MenuManager: MonoBehaviour
             isPickingLocation = true;
             placementLabelRect = GetTopLabelRect("Right Click to Place Residential Sector");
             earth.BuildNewCity();
+            Earth.SpendGlobalCurrency(100);
         }
         GUILayout.Label("Cost: $100M", Header2Style);
         GUILayout.Label("Population Capacity: 100Million", BodyStyle);
@@ -264,13 +265,14 @@ public class MenuManager: MonoBehaviour
 
     void BuyShieldGeneratorButton()
     {
-        GUI.enabled = Earth.GlobalCurrency > 300;
+        GUI.enabled = Earth.GlobalCurrency > 800;
         GUILayout.BeginVertical();
         if (GUILayout.Button("Buy Shield Generator", ButtonStyle, GUILayout.Height(75)))
         {
             isPickingLocation = true;
             placementLabelRect = GetTopLabelRect("Right Click to Place Shield Generator");
             earth.BuildNewShieldGenerator();
+            Earth.SpendGlobalCurrency(800);
         }
         GUILayout.Label("Cost: $800M", Header2Style);
         GUILayout.Label("Shield Regenerates at all times and is stronger", BodyStyle);
@@ -295,15 +297,16 @@ public class MenuManager: MonoBehaviour
 
     void BuyMissileSiloButton()
     {
-        GUI.enabled = Earth.GlobalCurrency > 30;
+        GUI.enabled = Earth.GlobalCurrency > 100;
         GUILayout.BeginVertical();
         if (GUILayout.Button("Buy Missile Silo", ButtonStyle, GUILayout.Height(75)))
         {
             isPickingLocation = true;
             placementLabelRect = GetTopLabelRect("Right Click to Place Missile Silo");
             earth.BuildNewMissileSilo();
+            Earth.SpendGlobalCurrency(100);
         }
-        GUILayout.Label("Cost: $50M", Header2Style);
+        GUILayout.Label("Cost: $100M", Header2Style);
         GUILayout.Label("Shoots a powerful missile \nRecharge time of 3 seconds \nMissiles cost $1Million each", BodyStyle);
         GUILayout.Label("", BodyStyle);
         GUILayout.EndVertical();

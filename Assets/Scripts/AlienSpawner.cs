@@ -20,6 +20,7 @@ public class AlienSpawner : MonoBehaviour
     public static void RemovAlien(GameObject alien)
     {
         DeadAlienCount++;
+        Earth.AddGlobalCurrency(50);
         alien.SetActive(false);
         InactiveAliens.Add(alien);
     }
