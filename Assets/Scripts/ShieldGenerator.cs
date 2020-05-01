@@ -9,16 +9,15 @@ public class ShieldGenerator : MonoBehaviour
     public float shieldRegenRate = 1f;
     public float ShieldBoost = 3000;
 
-    void Start()
+    void Update()
+    {
+        if (parentZone != null && parentZone.Shield.enabled)
+            parentZone.AddShieldHealth(shieldRegenRate * Time.deltaTime);
+    }
+    public void ResetShield()
     {
         parentZone.Shield.enabled = true;
         parentZone.AddShieldHealth(ShieldBoost);
-    }
-
-    void Update()
-    {
-        if (parentZone.Shield.enabled)
-            parentZone.AddShieldHealth(shieldRegenRate * Time.deltaTime);
     }
     public void DoubleShieldRegenRate()
     {

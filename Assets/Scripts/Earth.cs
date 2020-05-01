@@ -19,7 +19,6 @@ public class Earth : MonoBehaviour
 
     // This holds an item that was just purchased so it can be placed on the earth
     public GameObject NewObject;
-    public EarthZone NewObjectZone;
     public static List<EarthZone> AllZones = new List<EarthZone>();
     public static List<EarthZone> ControlledZones = new List<EarthZone>();
     public static float GlobalCurrency { get; private set; }
@@ -71,9 +70,16 @@ public class Earth : MonoBehaviour
             {
                 if (hit.collider == controlledZone.GetComponent<Collider>())
                 {
-                    isInAllowedSpace = true;
-                    NewObjectZone = controlledZone;
-                    //Debug.Log(hit.point + " is in the Zone: ");
+                    if (NewObject.GetComponent<ShieldGenerator>() != null && controlledZone.ShieldGenerator != null)
+                    {
+                        isInAllowedSpace = false;
+                        earthHit = Vector3.zero;
+                    }
+                    else
+                    {
+                        isInAllowedSpace = true;
+                        NewObject.transform.SetParent(controlledZone.transform, true);
+                    }
                 }
                 else if (hit.transform.gameObject == this.gameObject && controlledZone.GetComponent<Collider>().bounds.Contains(hit.point))
                 {
@@ -115,7 +121,7 @@ public class Earth : MonoBehaviour
         HandleNewWeapon(NewWeapon);
         return NewWeapon;
         //SpendGlobalCurrency(75);
-    }
+    } 
 
     private void HandleNewWeapon(GameObject NewWeapon)
     {
@@ -132,8 +138,6 @@ public class Earth : MonoBehaviour
         // Make the new city a child object so it lives inside the earth's coordinate space
         NewObject.transform.SetParent(transform, true);
         NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        NewObjectZone.ShieldGenerator = NewShieldGenerator.GetComponent<ShieldGenerator>();
-        NewObjectZone.ShieldGenerator.parentZone = NewObjectZone;
         //SpendGlobalCurrency(75);
     }
 

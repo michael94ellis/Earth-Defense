@@ -168,9 +168,6 @@ public class MenuManager: MonoBehaviour
                 if (weapon != null)
                     DisplayWeaponUpgrades(zone, weapon);
             }
-            //if (GUILayout.Button("Weapons: " + zone.Weapons.Count, ButtonStyle))
-            //{
-            // Upgrade Laser Turrets and Missile Silos
         }
         GUILayout.EndVertical();
     }
