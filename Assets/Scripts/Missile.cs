@@ -11,7 +11,6 @@ public class Missile : MonoBehaviour
     public float moveSpeed = 10;
 
     private Vector3 origin;
-
     void Start()
     {
         origin = transform.position;

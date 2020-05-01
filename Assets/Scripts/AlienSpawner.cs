@@ -10,19 +10,20 @@ public class AlienSpawner : MonoBehaviour
 
     static Object shipRef;
     static GameObject earth;
-    public static List<GameObject> Aliens = new List<GameObject>();
     static List<GameObject> InactiveAliens = new List<GameObject>();
+    public static List<GameObject> ActiveAliens = new List<GameObject>();
 
-    public static void AddAlien(GameObject alien)
-    {
-        AlienSpawner.Aliens.Add(alien);
-    }
     public static void RemovAlien(GameObject alien)
     {
         DeadAlienCount++;
         Earth.AddGlobalCurrency(50);
         alien.SetActive(false);
+        ActiveAliens.Remove(alien);
         InactiveAliens.Add(alien);
+        foreach (EarthZone zone in Earth.ControlledZones)
+        {
+            zone.ActiveTargets.Remove(alien);
+        }
     }
 
     void Start()
@@ -35,7 +36,7 @@ public class AlienSpawner : MonoBehaviour
     {
         for (int i = 0; i < waveSize; i++)
         {
-            AddAlien(NewAlienShip());
+            AlienSpawner.ActiveAliens.Add(NewAlienShip());
         }
     }
 
