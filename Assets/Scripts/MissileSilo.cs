@@ -4,8 +4,10 @@ using System.Linq;
 using System.Security.Cryptography;
 using UnityEngine;
 
-public class MissileSilo : MonoBehaviour, Weapon
+public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding
 {
+    private EarthZone _ParentZone;
+    public EarthZone ParentZone { get { return _ParentZone; } set { _ParentZone = value; } }
     public GameObject LeftDoor;
     public GameObject RightDoor;
     public Vector3 MissileSpawnPoint;
@@ -15,7 +17,6 @@ public class MissileSilo : MonoBehaviour, Weapon
     private GameObject currentTarget;
     public GameObject Missile;
     public GameObject earth;
-    public EarthZone ParentZone;
 
     // Start is called before the first frame update
     void Start()
