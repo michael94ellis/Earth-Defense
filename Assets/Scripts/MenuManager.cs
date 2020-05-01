@@ -34,17 +34,17 @@ public class MenuManager: MonoBehaviour
     {
         if (Input.GetMouseButton(1))
         {
-            RaycastHit[] hits;
-            hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
-            foreach (RaycastHit hit in hits)
-            {
-                Debug.Log(hit.transform.gameObject);
-                EarthZone zoneClicked = hit.transform.gameObject.GetComponent<EarthZone>();
-                if (zoneClicked != null)
-                {
-                    Debug.Log(hit.transform.gameObject);
-                }
-            }
+            //RaycastHit[] hits;
+            //hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
+            //foreach (RaycastHit hit in hits)
+            //{
+            //    Debug.Log(hit.transform.gameObject);
+            //    EarthZone zoneClicked = hit.transform.gameObject.GetComponent<EarthZone>();
+            //    if (zoneClicked != null)
+            //    {
+            //        Debug.Log(hit.transform.gameObject);
+            //    }
+            //}
             // Only Pause if not already paused, menu must have unpause button
             if (!Paused)
             {
@@ -84,10 +84,6 @@ public class MenuManager: MonoBehaviour
 
     void OnGUI()
     {
-        GUI.Label(new Rect(Screen.width - 120, 20, 80, 40), "Time: " + Time.time, InfoStyle);
-        GUI.Label(new Rect(65, 30, 120, 40),
-            "Alien Kill Count: " + AlienSpawner.DeadAlienCount + "\n" +
-            "Global Wealth: $" + Earth.GlobalCurrency + "M", TopLeftInfoStyle);
         if (isPickingLocation)
         {
             GUI.Label(GetTopLabelRect("Right Click to Place"), "Right Click to Place", HeaderStyle);
@@ -132,7 +128,7 @@ public class MenuManager: MonoBehaviour
                 //BuyGovernmentSectorButton();
                 //BuyIndustrialSectorButton();
                 BuyMissileSiloButton();
-                BuyLaserTurretButton();
+                //BuyLaserTurretButton();
                 BuyShieldGeneratorButton();
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
@@ -151,7 +147,7 @@ public class MenuManager: MonoBehaviour
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label("North American Zone", Header2Style);
-            GUILayout.Label("Population " + zone.Population + " / " + zone.MaxPopulation, Header2Style);
+            //GUILayout.Label("Population " + zone.Population + " / " + zone.MaxPopulation, Header2Style);
             GUILayout.EndHorizontal();
             if (zone.ShieldGenerator != null)
             {
@@ -168,9 +164,6 @@ public class MenuManager: MonoBehaviour
                 if (weapon != null)
                     DisplayWeaponUpgrades(zone, weapon);
             }
-            //if (GUILayout.Button("Weapons: " + zone.Weapons.Count, ButtonStyle))
-            //{
-            // Upgrade Laser Turrets and Missile Silos
         }
         GUILayout.EndVertical();
     }
@@ -196,11 +189,11 @@ public class MenuManager: MonoBehaviour
 
     void DisplayMinorCityUpgrades(EarthZone zone, City city)
     {
-        GUI.enabled = zone.MaxPopulation < 1000000;
-        if (GUILayout.Button("Increase Max Population by 50,000", ButtonStyle))
-        {
-            zone.MaxPopulation += 50000;
-        }
+        //GUI.enabled = zone.MaxPopulation < 1000000;
+        //if (GUILayout.Button("Increase Max Population by 50,000", ButtonStyle))
+        //{
+        //    zone.MaxPopulation += 50000;
+        //}
         GUI.enabled = true;
         if (GUILayout.Button("Double Population Regen Rate", ButtonStyle))
         {

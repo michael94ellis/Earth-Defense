@@ -6,37 +6,59 @@ using Random = UnityEngine.Random;
 public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declared in LaserTurret right now
 {
     private float moveSpeed = 80f;
+    public int AttackDamage = 100;
     private float fireDuration = 0.5f;
     private int rechargeTime = 4;
     private bool isCharged = true;
     private bool isFiring = false;
     private GameObject currentTarget;
     private bool currentlyAboveTarget = false;
-    // A point on the path of the circular orbit the alien will use which determines the radius of the orbit over the target
-    public Vector3 targetOrbit;
-    // Draws the laser
-    private LineRenderer Laser;
+    public LineRenderer Laser;
     public AudioSource LaserSound;
     public AudioSource ExplosionSound;
+    public GameObject HealthBar;
 
-    // Start is called before the first frame update
-    void Start()
+    public float MaxHealth { get; private set; } = 100;
+    private float _Health = 100;
+    public float Health
     {
-        Health = 100;
-        Laser = gameObject.GetComponent<LineRenderer>();
+        get
+        {
+            return _Health;
+        }
+        private set
+        {
+            if (value <= 0)
+                _Health = 0;
+            else if (value > _Health)
+                _Health = MaxHealth;
+            else
+                _Health = value;
+        }
     }
 
-    public int Health { get; set; }
     public bool TakeDamage(int amount = 1)
     {
+        Health -= amount;
         if (Health <= 0)
         {
             ExplosionSound.Play();
             AlienSpawner.RemovAlien(gameObject);
             return false;
         }
-        Health = Health - amount;
+        UpdateHealthbar();
         return true;
+    }
+
+    void UpdateHealthbar()
+    {
+        RectTransform healthBarRect = HealthBar.GetComponent<RectTransform>();
+        healthBarRect.sizeDelta = new Vector2((Health / MaxHealth) * 5, healthBarRect.rect.height);
+    }
+
+    void Start()
+    {
+        UpdateHealthbar();
     }
 
     void Update()
@@ -73,14 +95,12 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
                 return;
             }
         }
-        // Pick a psuedo random orbit, a point that is nearby a point above the target
-        targetOrbit = Vector3.Scale(currentTarget.transform.position * 2, currentTarget.transform.up);
     }
 
     void MoveTowardsTarget()
     {
-        transform.position = Vector3.Slerp(transform.position, targetOrbit, Time.deltaTime);
-        if (Vector3.Distance(targetOrbit, transform.position) < 100)
+        transform.position = Vector3.Slerp(transform.position, currentTarget.transform.position * 2, Time.deltaTime);
+        if (Vector3.Distance(currentTarget.transform.position * 2, transform.position) < 40)
         {
             currentlyAboveTarget = true;
         }
@@ -117,7 +137,6 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
         {
             // An object is seen, is it what we want?
             //Debug.Log("Can See Object " + hit.collider.gameObject);
-            // Don't shoot other stuff
             if (currentTarget == null)
                 return false;
             if (hit.collider.gameObject == currentTarget)
@@ -125,7 +144,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
                 Damageable attackTarget = currentTarget.gameObject.GetComponent<Damageable>();
                 if (attackTarget == null)
                     return false;
-                bool attackSuccess = attackTarget.TakeDamage(1000);
+                bool attackSuccess = attackTarget.TakeDamage(AttackDamage);
                 AimAt(currentTarget.transform.position);
                 if (!attackSuccess)
                     currentTarget = null;
@@ -175,11 +194,12 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
         isCharged = true;
     }
 
-    private Vector3 RandomVector(float min, float max)
+    public void Reset()
     {
-        var x = Random.Range(min, max);
-        var y = Random.Range(min, max);
-        var z = Random.Range(min, max);
-        return new Vector3(x, y, z);
+        Health = MaxHealth;
+        isCharged = true;
+        isFiring = false;
+        currentTarget = null;
+        currentlyAboveTarget = false;
     }
 }

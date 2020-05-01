@@ -45,7 +45,7 @@ public class AlienSpawner : MonoBehaviour
         if (InactiveAliens.Count > 0)
         {
             GameObject existingAlienShip = InactiveAliens[0];
-            existingAlienShip.GetComponent<AlienShip>().Health = 100;
+            existingAlienShip.GetComponent<AlienShip>().Reset();
             existingAlienShip.transform.position = randomSpawnPoint;
             existingAlienShip.SetActive(true);
             InactiveAliens.RemoveAt(0);

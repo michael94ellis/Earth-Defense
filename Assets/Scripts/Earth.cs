@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,7 +20,6 @@ public class Earth : MonoBehaviour
 
     // This holds an item that was just purchased so it can be placed on the earth
     public GameObject NewObject;
-    public EarthZone NewObjectZone;
     public static List<EarthZone> AllZones = new List<EarthZone>();
     public static List<EarthZone> ControlledZones = new List<EarthZone>();
     public static float GlobalCurrency { get; private set; }
@@ -34,7 +34,7 @@ public class Earth : MonoBehaviour
 
     void Start()
     {
-        GameManager = GameObject.Find("Earth").GetComponent<MenuManager>();
+        GameManager = gameObject.GetComponent<MenuManager>();
         CityRef = Resources.Load("City");
         LaserTurretRef = Resources.Load("Turret");
         MissileSiloRef = Resources.Load("MissileSilo");
@@ -52,89 +52,72 @@ public class Earth : MonoBehaviour
     {
         if (GameManager.isPickingLocation)
         {
-            DisplayNewObjectInNorthAmerica();
+            DisplayNewObject();
             return;
         }
     }
 
-    public void DisplayNewObjectInNorthAmerica()
+    public void DisplayNewObject()
     {
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit[] hits;
-        hits = Physics.RaycastAll(ray);
-        bool isInAllowedSpace = false;
-        Vector3 earthHit = Vector3.zero;
-        foreach (RaycastHit hit in hits)
+        RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
+        EarthZone selectedZone = null;
+        foreach (RaycastHit hit in hitsInOrder)
         {
             // This hit.point is the point on earth where you clicked
             foreach (EarthZone controlledZone in ControlledZones)
             {
-                if (hit.collider == controlledZone.GetComponent<Collider>())
+                if (selectedZone == null && hit.collider == controlledZone.GetComponent<Collider>())
                 {
-                    isInAllowedSpace = true;
-                    NewObjectZone = controlledZone;
-                    //Debug.Log(hit.point + " is in the Zone: ");
+                    if (NewObject.GetComponent<ShieldGenerator>() != null && controlledZone.ShieldGenerator != null)
+                        return;
+                    else
+                        selectedZone = controlledZone;
                 }
-                else if (hit.transform.gameObject == this.gameObject && controlledZone.GetComponent<Collider>().bounds.Contains(hit.point))
+                else if (selectedZone != null && hit.transform.gameObject == this.gameObject && controlledZone.GetComponent<Collider>().bounds.Contains(hit.point))
                 {
-                    earthHit = hit.point;
+                    NewObject.transform.SetParent(controlledZone.transform, true);
+                    // Get a point directly above the city away from earth
+                    Vector3 awayFromEarth = hit.point - transform.position;
+                    // assign the up vector for the city
+                    NewObject.transform.up = awayFromEarth;
+                    NewObject.transform.position = hit.point;
+                    return;
                 }
             }
-        }
-        if (isInAllowedSpace && earthHit != Vector3.zero)
-        {
-            // Get a point directly above the city away from earth
-            Vector3 awayFromEarth = earthHit - transform.position;
-            // assign the up vector for the city
-            NewObject.transform.up = awayFromEarth;
-            NewObject.transform.position = earthHit;
         }
     }
 
     public GameObject BuildNewCity()
     {
-        GameObject newCityObj = Instantiate(CityRef) as GameObject;
-        NewObject = newCityObj;
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        NewObject.transform.SetParent(transform, true);
-        NewObject.transform.localScale = new Vector3(0.0025f, 0.0025f, 0.0025f);
-        return NewObject;
+        GameObject newCity = Instantiate(CityRef) as GameObject;
+        return HandleNewObject(newCity, new Vector3(0.0025f, 0.0025f, 0.0025f));
     }
 
     public GameObject BuildNewLaserWeapon()
     {
         GameObject NewWeapon = Instantiate(LaserTurretRef) as GameObject;
-        HandleNewWeapon(NewWeapon);
-        SpendGlobalCurrency(75);
-        return NewWeapon;
+        return HandleNewObject(NewWeapon, new Vector3(0.01f, 0.01f, 0.01f));
     }
 
     public GameObject BuildNewMissileSilo()
     {
         GameObject NewWeapon = Instantiate(MissileSiloRef) as GameObject;
-        HandleNewWeapon(NewWeapon);
-        return NewWeapon;
-        //SpendGlobalCurrency(75);
+        return HandleNewObject(NewWeapon, new Vector3(0.01f, 0.01f, 0.01f));
     }
 
-    private void HandleNewWeapon(GameObject NewWeapon)
-    {
-        NewObject = NewWeapon;
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        NewObject.transform.SetParent(transform, true);
-        NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-    }
-
-    public void BuildNewShieldGenerator()
+    public GameObject BuildNewShieldGenerator()
     {
         GameObject NewShieldGenerator = Instantiate(GeneratorRef) as GameObject;
-        NewObject = NewShieldGenerator;
+        return HandleNewObject(NewShieldGenerator, new Vector3(0.01f, 0.01f, 0.01f));
+    }
+
+    private GameObject HandleNewObject(GameObject newObj, Vector3 scale)
+    {
+        NewObject = newObj;
         // Make the new city a child object so it lives inside the earth's coordinate space
         NewObject.transform.SetParent(transform, true);
-        NewObject.transform.localScale = new Vector3(0.01f, 0.01f, 0.01f);
-        NewObjectZone.ShieldGenerator = NewShieldGenerator.GetComponent<ShieldGenerator>();
-        NewObjectZone.ShieldGenerator.parentZone = NewObjectZone;
-        //SpendGlobalCurrency(75);
+        NewObject.transform.localScale = scale;
+        return NewObject;
     }
 
     //public void BuildNewEarthSatellite()
@@ -150,7 +133,7 @@ public class Earth : MonoBehaviour
     //    NewSatellite.transform.up = awayFromEarth;
     //    SpendGlobalCurrency(75);
     //}
-    
+
     //// Returns a random value in the range, 50% change of being negative
     //float RandomCoord(float min, float max)
     //{
