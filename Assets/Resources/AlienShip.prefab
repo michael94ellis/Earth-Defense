@@ -258,6 +258,7 @@ MonoBehaviour:
   targetOrbit: {x: 0, y: 0, z: 0}
   LaserSound: {fileID: 6310398502535148757}
   ExplosionSound: {fileID: 7468001040183204674}
+  HealthBar: {fileID: 0}
 --- !u!82 &6310398502535148757
 AudioSource:
   m_ObjectHideFlags: 0
@@ -268,9 +269,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: e6b19a294f95742889a8ac326d19c8c1, type: 3}
+  m_audioClip: {fileID: 8300000, guid: e4b971150e0184f8985d9d1e8aaf1b13, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 1
   Loop: 0
   Mute: 0

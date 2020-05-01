@@ -12,12 +12,12 @@ public class ShieldGenerator : MonoBehaviour
     void Update()
     {
         if (parentZone != null && parentZone.Shield.enabled)
-            parentZone.AddShieldHealth(shieldRegenRate * Time.deltaTime);
+            parentZone.ShieldHealth += shieldRegenRate * Time.deltaTime;
     }
     public void ResetShield()
     {
         parentZone.Shield.enabled = true;
-        parentZone.AddShieldHealth(ShieldBoost);
+        parentZone.ShieldHealth += ShieldBoost;
     }
     public void DoubleShieldRegenRate()
     {
@@ -32,12 +32,12 @@ public class ShieldGenerator : MonoBehaviour
         if (rechargeTime > 1)
             rechargeTime -= 1;
     }
-    /// Must be called like so: StartCoroutine(LaserWasFired());
+    /// Must be called like so: StartCoroutine(Recharge());
     public IEnumerator Recharge()
     {
         yield return new WaitForSeconds(rechargeTime);
         Debug.Log("Restore shield");
         parentZone.Shield.enabled = true;
-        parentZone.AddShieldHealth(ShieldBoost);
+        parentZone.ShieldHealth += ShieldBoost;
     }
 }

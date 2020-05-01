@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OverheadCanvas : MonoBehaviour
+public class HealthBar : MonoBehaviour
 {
     void Update()
     {

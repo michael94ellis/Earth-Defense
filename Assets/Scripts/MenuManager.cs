@@ -147,7 +147,7 @@ public class MenuManager: MonoBehaviour
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label("North American Zone", Header2Style);
-            GUILayout.Label("Population " + zone.Population + " / " + zone.MaxPopulation, Header2Style);
+            //GUILayout.Label("Population " + zone.Population + " / " + zone.MaxPopulation, Header2Style);
             GUILayout.EndHorizontal();
             if (zone.ShieldGenerator != null)
             {
@@ -189,11 +189,11 @@ public class MenuManager: MonoBehaviour
 
     void DisplayMinorCityUpgrades(EarthZone zone, City city)
     {
-        GUI.enabled = zone.MaxPopulation < 1000000;
-        if (GUILayout.Button("Increase Max Population by 50,000", ButtonStyle))
-        {
-            zone.MaxPopulation += 50000;
-        }
+        //GUI.enabled = zone.MaxPopulation < 1000000;
+        //if (GUILayout.Button("Increase Max Population by 50,000", ButtonStyle))
+        //{
+        //    zone.MaxPopulation += 50000;
+        //}
         GUI.enabled = true;
         if (GUILayout.Button("Double Population Regen Rate", ButtonStyle))
         {

@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.5, y: 0}
-  m_SizeDelta: {x: 1, y: 0.1}
+  m_SizeDelta: {x: 0.6, y: 0.1}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &8633528427592252166
 CanvasRenderer:
@@ -106,10 +106,10 @@ RectTransform:
   m_Father: {fileID: 8547823439652593850}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0.1}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -0.6, y: 0}
+  m_SizeDelta: {x: 0.4, y: 0.1}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &3816407618730793006
 CanvasRenderer:
@@ -320,6 +320,7 @@ MonoBehaviour:
   ShieldGenerator: {fileID: 0}
   ZoneBuildings: []
   HealthBar: {fileID: 353261538370133269}
+  ShieldBar: {fileID: 3865974974929233327}
   MaxShieldHealth: 10000
   MaxPopulation: 500000
   PopulationRegenRate: 1.000001

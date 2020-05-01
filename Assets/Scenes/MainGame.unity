@@ -282,6 +282,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EarthZone
       objectReference: {fileID: 0}
+    - target: {fileID: 7573250458052271846, guid: 295c474ce683d46019aca6261b194f39,
+        type: 3}
+      propertyPath: MaxPopulation
+      value: 5000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 295c474ce683d46019aca6261b194f39, type: 3}
 --- !u!4 &564650256 stripped
@@ -730,77 +735,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3d2330669376a433ba9354faf5bdc6a0, type: 3}
---- !u!1001 &2843827662910734696
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4011145138885500195, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_Name
-      value: MissileSilo
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5264078471345537743, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7653587985919920380, guid: 633a71b3a24654cb8bd4cc7133231019,
-        type: 3}
-      propertyPath: m_Camera
-      value: 
-      objectReference: {fileID: 963194227}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 633a71b3a24654cb8bd4cc7133231019, type: 3}

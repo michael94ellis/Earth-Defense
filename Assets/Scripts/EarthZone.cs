@@ -10,10 +10,27 @@ public class EarthZone : MonoBehaviour, Damageable
     public List<GameObject> ZoneBuildings = new List<GameObject>();
 
     public GameObject HealthBar;
+    public GameObject ShieldBar;
+    private float PopulationRegenRate = 1.000001f;
+    private float MaxPopulation = 5000;
+    private float _Population = 5000;
+    public float Population
+    {
+        get
+        {
+            return _Population;
+        }
+        private set
+        {
+            if (value <= 0)
+                _Population = 0;
+            else if (value > MaxPopulation)
+                _Population = MaxPopulation;
+            else
+                _Population = value;
+        }
+    }
     public float MaxShieldHealth = 100000;
-    public float MaxPopulation = 500000;
-    public float PopulationRegenRate = 1.000001f;
-    public float Population { get; private set; } = 500000;
     private float _ShieldHealth = 10000;
     public float ShieldHealth
     {
@@ -21,15 +38,50 @@ public class EarthZone : MonoBehaviour, Damageable
         {
             return _ShieldHealth;
         }
-        private set
+        set
         {
             if (value <= 0)
                 _ShieldHealth = 0;
+            else if (value > MaxShieldHealth)
+                _ShieldHealth = MaxShieldHealth;
             else
                 _ShieldHealth = value;
-            var theBarRectTransform = HealthBar.transform as RectTransform;
-            theBarRectTransform.sizeDelta = new Vector2(value / MaxShieldHealth, 0.1f);
         }
+    }
+
+    public bool TakeDamage(int amount = 1)
+    {
+        //Debug.Log("Damage");
+        if (ShieldHealth <= 0)
+        {
+            if (Population > 0)
+                Population--;
+            else
+                return false;
+        }
+        else
+        {
+            ShieldHealth -= amount;
+            if (ShieldHealth <= 0)
+            {
+                //Debug.Log("Disable shield");
+                Shield.enabled = false;
+                if (ShieldGenerator != null)
+                    StartCoroutine(ShieldGenerator.Recharge());
+            }
+        }
+        UpdateHealthbar();
+        return true;
+    }
+
+    void UpdateHealthbar()
+    {
+        float populationPercentage = Population / (ShieldHealth + MaxPopulation);
+        RectTransform healthBarRect = HealthBar.GetComponent<RectTransform>();
+        healthBarRect.sizeDelta = new Vector2(populationPercentage, healthBarRect.rect.height);
+        RectTransform shieldBarRect = ShieldBar.GetComponent<RectTransform>();
+        shieldBarRect.sizeDelta = new Vector2(ShieldHealth / (ShieldHealth + MaxPopulation), healthBarRect.rect.height);
+        shieldBarRect.anchoredPosition = new Vector3(-1 * populationPercentage, shieldBarRect.anchoredPosition.y);
     }
 
     void Update()
@@ -39,50 +91,5 @@ public class EarthZone : MonoBehaviour, Damageable
             if (Population < MaxPopulation)
                 Population *= PopulationRegenRate;
         }
-    }
-
-    public void AddShieldHealth(float amount)
-    {
-        if (ShieldHealth <= MaxShieldHealth)
-        {
-            if (ShieldHealth <= 0)
-                ShieldHealth = amount;
-            else
-                ShieldHealth += amount;
-        }
-    }
-
-    public void AddPeople(float amount)
-    {
-        Population += amount;
-    }
-
-    public bool TakeDamage(int amount = 1)
-    {
-        //Debug.Log("Damage");
-        if (ShieldHealth <= 0)
-        {
-            if (Population > 0)
-            {
-                Population--;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        ShieldHealth = ShieldHealth - amount;
-        if (ShieldHealth <= 0)
-        {
-            Debug.Log("Disable shield");
-            Shield.enabled = false;
-            if (ShieldGenerator != null)
-            {
-                Debug.Log("Trying to recharge shield");
-                StartCoroutine(ShieldGenerator.Recharge());
-            }
-        }
-        return true;
     }
 }
