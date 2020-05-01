@@ -76,7 +76,7 @@ public class Earth : MonoBehaviour
                 }
                 else if (selectedZone != null && hit.transform.gameObject == this.gameObject && controlledZone.GetComponent<Collider>().bounds.Contains(hit.point))
                 {
-                    NewObject.GetComponent<MissileSilo>().ParentZone = selectedZone;
+                    NewObject.GetComponent<ZoneBuilding>().ParentZone = selectedZone;
                     NewObject.transform.SetParent(controlledZone.transform, true);
                     // Get a point directly above the city away from earth
                     Vector3 awayFromEarth = hit.point - transform.position;

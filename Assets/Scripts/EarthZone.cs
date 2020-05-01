@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+interface ZoneBuilding
+{
+    EarthZone ParentZone { get; set; }
+}
+
 public class EarthZone : MonoBehaviour, Damageable
 {
     public MeshRenderer Shield;
