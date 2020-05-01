@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -58,40 +59,31 @@ public class Earth : MonoBehaviour
 
     void DisplayNewObject()
     {
-        RaycastHit[] hits = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition));
-        bool isInAllowedSpace = false;
-        Vector3 earthHit = Vector3.zero;
-        foreach (RaycastHit hit in hits)
+        RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
+        EarthZone selectedZone = null;
+        foreach (RaycastHit hit in hitsInOrder)
         {
             // This hit.point is the point on earth where you clicked
             foreach (EarthZone controlledZone in ControlledZones)
             {
-                if (hit.collider == controlledZone.GetComponent<Collider>())
+                if (selectedZone == null && hit.collider == controlledZone.GetComponent<Collider>())
                 {
                     if (NewObject.GetComponent<ShieldGenerator>() != null && controlledZone.ShieldGenerator != null)
-                    {
-                        isInAllowedSpace = false;
-                        earthHit = Vector3.zero;
-                    }
+                        return;
                     else
-                    {
-                        isInAllowedSpace = true;
-                        NewObject.transform.SetParent(controlledZone.transform, true);
-                    }
+                        selectedZone = controlledZone;
                 }
-                else if (hit.transform.gameObject == this.gameObject && controlledZone.GetComponent<Collider>().bounds.Contains(hit.point))
+                else if (selectedZone != null && hit.transform.gameObject == this.gameObject && controlledZone.GetComponent<Collider>().bounds.Contains(hit.point))
                 {
-                    earthHit = hit.point;
+                    NewObject.transform.SetParent(controlledZone.transform, true);
+                    // Get a point directly above the city away from earth
+                    Vector3 awayFromEarth = hit.point - transform.position;
+                    // assign the up vector for the city
+                    NewObject.transform.up = awayFromEarth;
+                    NewObject.transform.position = hit.point;
+                    return;
                 }
             }
-        }
-        if (isInAllowedSpace && earthHit != Vector3.zero)
-        {
-            // Get a point directly above the city away from earth
-            Vector3 awayFromEarth = earthHit - transform.position;
-            // assign the up vector for the city
-            NewObject.transform.up = awayFromEarth;
-            NewObject.transform.position = earthHit;
         }
     }
 

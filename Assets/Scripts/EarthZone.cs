@@ -7,7 +7,7 @@ public class EarthZone : MonoBehaviour, Damageable
     public MeshRenderer Shield;
     public City Capitol;
     public ShieldGenerator ShieldGenerator;
-    public List<GameObject> ZoneBuildings = new List<GameObject>();
+    public List<GameObject> ZoneBuildings = new List<GameObject>();         
 
     public GameObject HealthBar;
     public GameObject ShieldBar;
@@ -31,7 +31,7 @@ public class EarthZone : MonoBehaviour, Damageable
         }
     }
     public float MaxShieldHealth = 100000;
-    private float _ShieldHealth = 10000;
+    private float _ShieldHealth = 0;
     public float ShieldHealth
     {
         get
@@ -51,7 +51,7 @@ public class EarthZone : MonoBehaviour, Damageable
 
     public bool TakeDamage(int amount = 1)
     {
-        //Debug.Log("Damage");
+        //Debug.Log("Damage Taken");
         if (ShieldHealth <= 0)
         {
             if (Population > 0)
@@ -76,24 +76,17 @@ public class EarthZone : MonoBehaviour, Damageable
 
     void UpdateHealthbar()
     {
-        float populationPercentage = Population / (ShieldHealth + MaxPopulation);
+        float populationPercentage = Population / (ShieldHealth + MaxPopulation) / 2;
+        float shieldHealthPercentage = ShieldHealth / (ShieldHealth + MaxPopulation) / 2;
         RectTransform healthBarRect = HealthBar.GetComponent<RectTransform>();
         healthBarRect.sizeDelta = new Vector2(populationPercentage, healthBarRect.rect.height);
         RectTransform shieldBarRect = ShieldBar.GetComponent<RectTransform>();
-        shieldBarRect.sizeDelta = new Vector2(ShieldHealth / (ShieldHealth + MaxPopulation), healthBarRect.rect.height);
+        shieldBarRect.sizeDelta = new Vector2(shieldHealthPercentage, healthBarRect.rect.height);
         shieldBarRect.anchoredPosition = new Vector3(-1 * populationPercentage, shieldBarRect.anchoredPosition.y);
     }
 
     void Start()
     {
         UpdateHealthbar();
-    }
-    void Update()
-    {
-        if (Time.timeScale > 0)
-        {
-            if (Population < MaxPopulation)
-                Population *= PopulationRegenRate;
-        }
     }
 }

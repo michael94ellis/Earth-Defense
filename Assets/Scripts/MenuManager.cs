@@ -128,7 +128,7 @@ public class MenuManager: MonoBehaviour
                 //BuyGovernmentSectorButton();
                 //BuyIndustrialSectorButton();
                 BuyMissileSiloButton();
-                BuyLaserTurretButton();
+                //BuyLaserTurretButton();
                 BuyShieldGeneratorButton();
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
