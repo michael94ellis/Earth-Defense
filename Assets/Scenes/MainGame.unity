@@ -198,6 +198,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 103004526}
   m_CullTransparentMesh: 0
+--- !u!1 &175295073 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5735961895824936167, guid: 295c474ce683d46019aca6261b194f39,
+    type: 3}
+  m_PrefabInstance: {fileID: 505725863}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &175295079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 175295073}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02375b3bd6c48564ca4b34c1d8afdc7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &205517901
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,6 +790,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: EarthZone
       objectReference: {fileID: 0}
+    - target: {fileID: 7573250458052271841, guid: 295c474ce683d46019aca6261b194f39,
+        type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573250458052271841, guid: 295c474ce683d46019aca6261b194f39,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573250458052271841, guid: 295c474ce683d46019aca6261b194f39,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 7573250458052271841, guid: 295c474ce683d46019aca6261b194f39,
+        type: 3}
+      propertyPath: m_Size.z
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 7573250458052271846, guid: 295c474ce683d46019aca6261b194f39,
         type: 3}
       propertyPath: MaxPopulation
@@ -1185,25 +1223,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 702195908562371009}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1381371418
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1381371411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5594419715c304988afce0e94d11178f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Paused: 1
-  isPickingLocation: 0
-  windowWidth: 269
-  windowHeight: 677
-  windowOriginX: 67
-  windowOriginY: 169
-  CurrentScreen: 0
 --- !u!114 &1381371419
 MonoBehaviour:
   m_ObjectHideFlags: 0

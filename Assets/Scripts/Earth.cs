@@ -51,11 +51,11 @@ public class Earth : MonoBehaviour
 
     void Update()
     {
-        if (GameManager.isPickingLocation)
+        /*if (GameManager.isPickingLocation)
         {
             DisplayNewObject();
             return;
-        }
+        }*/
     }
 
     public void DisplayNewObject()

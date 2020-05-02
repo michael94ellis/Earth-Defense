@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,22 +11,30 @@ public class BuildMenu : MonoBehaviour
 
     void Start()
     {
+        //needed to initialize earth at start
         earth = GameObject.Find("Earth").GetComponent<Earth>();
     }
 
     void Update()
     {
+        //previews placement of new building until clicked
+        //TO DO: need a check for if the click is an approved placement
         if (isPickingLocation)
         {
             earth.DisplayNewObject();
             if (Input.GetMouseButton(0))
             {
                 isPickingLocation = false;
+                //turns colliders back off
+                foreach (EarthZone zone in Earth.ControlledZones)
+                {
+                    zone.GetComponent<Collider>().enabled = false;
+                }
             }
-            return;
         }
     }
 
+    //opens build menu
     public void OpenMenu()
     {
         if (Panel != null)
@@ -35,20 +44,34 @@ public class BuildMenu : MonoBehaviour
         }
     }
 
+    //-----New Buildings-----
     public void BuyLaserTurret()
     {
         isPickingLocation = true;
         earth.BuildNewLaserWeapon();
     }
 
-    public void SendAlienWave()
-    {
-        AlienSpawner.BeginInvasion();
-    }
 
     public void BuyMissileSiloButton()
     {
+        ActivateZoneColliders();
         isPickingLocation = true;
         earth.BuildNewMissileSilo();
+    }
+    //----------------------
+
+    //turn colliders on for zones
+    public void ActivateZoneColliders()
+    {
+        foreach (EarthZone zone in Earth.ControlledZones)
+        {
+            zone.GetComponent<Collider>().enabled = true;
+        }
+    }
+
+    //sends new aliens
+    public void SendAlienWave()
+    {
+        AlienSpawner.BeginInvasion();
     }
 }
