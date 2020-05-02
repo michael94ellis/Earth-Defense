@@ -1,17 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class OnClickMenu : MonoBehaviour
 {
+    public GameObject Panel;
+    public Text header;
     // Start is called before the first frame update
     // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-
-        
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -20,13 +22,23 @@ public class OnClickMenu : MonoBehaviour
         {
             if (hit.transform != null)
             {
-                PrintInfo(hit.transform.gameObject);
+                if(hit.transform.name != "Earth" && hit.transform.name != "EarthZone")
+                    {
+                    Debug.Log("HIT");
+                    header.text = hit.transform.name;
+                    DisplayPanel();
+                    }
             }
         }
     }
     }
-    private void PrintInfo (GameObject clicked)
+    //TODO Fix display
+    public void DisplayPanel()
     {
-        print(clicked.name);
+        if (Panel != null)
+        {
+            bool isActive = Panel.activeSelf;
+            Panel.SetActive(!isActive);
+        }
     }
 }

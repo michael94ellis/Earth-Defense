@@ -6,7 +6,7 @@ using UnityEngine;
 public class BuildMenu : MonoBehaviour
 {
     public GameObject Panel;
-    public bool isPickingLocation = false;
+    private bool isPickingLocation = false;
     Earth earth;
 
     void Start()
