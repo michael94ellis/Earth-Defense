@@ -37,25 +37,29 @@ public class BuildMenu : MonoBehaviour
             RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
             foreach (RaycastHit hit in hitsInOrder)
             {
-                // This hit.point is the point on earth where you clicked
+                // This hit.point is the point on earth where the mouse hovers
                 if (selectedZone == null && ControlledZoneColliders.Keys.Contains(hit.collider))
                 {
+                    // This should only be reached once each time the user hovers over a zone
                     if (PurchasedZoneBuilding.GetComponent<ShieldGenerator>() != null && ControlledZoneColliders[hit.collider].ShieldGenerator != null)
                     {
+                        // Only 1 shield generator per zone
+                        selectedZone = null;
                         return;
                     }
                     else
                     {
-                        Debug.Log("selected zone");
+                        //Debug.Log("selected zone");
                         selectedZone = ControlledZoneColliders[hit.collider];
                         PurchasedZoneBuilding.GetComponent<ZoneBuilding>().ParentZone = selectedZone;
                         // Put it in the coord space of the earthzone
                         PurchasedZoneBuilding.transform.SetParent(selectedZone.transform, true);
                     }
                 }
-                else if (selectedZone != null && hit.transform.tag == "Earth" && selectedZone.GetComponent<Collider>().bounds.Contains(hit.point))
+                else if (selectedZone != null && hit.transform.tag == "Earth" // user is hovering over controlled zone on earth
+                    && ControlledZoneColliders.FirstOrDefault(key => key.Value == selectedZone).Key.bounds.Contains(hit.point)) // get the collider(key) based on the value(earthzone)
                 {
-                    Debug.Log("selecting spot");
+                    //Debug.Log("selecting spot");
                     // assign the up vector for the city so it the top of it faces away from earth and the bottom sits on the planet
                     PurchasedZoneBuilding.transform.up = hit.point * 2;
                     // set the position of this newly purchased building to the place where the mouse is
