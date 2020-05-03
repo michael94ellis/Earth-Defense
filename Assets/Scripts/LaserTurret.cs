@@ -9,8 +9,10 @@ public interface Weapon
     IEnumerator Recharge(); 
 }
 
-public class LaserTurret : MonoBehaviour, Weapon
+public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
 {
+    private EarthZone _ParentZone;
+    public EarthZone ParentZone { get { return _ParentZone; } set { _ParentZone = value; } }
     private float fireDuration = 0.5f;
     private int rechargeTime = 1;
     private bool isCharged = true;

@@ -14,6 +14,9 @@ public class BuildMenu : MonoBehaviour
     Object LaserTurretRef;
     //Object SatelliteRef;
     GameObject PurchasedZoneBuilding;
+    EarthZone selectedZone;
+    // Cached list of colliders fetched/reset every time a ZoneBuilding is bought
+    Dictionary<Collider, EarthZone> ControlledZoneColliders = new Dictionary<Collider, EarthZone>();
 
     void Start()
     {
@@ -29,49 +32,48 @@ public class BuildMenu : MonoBehaviour
     void Update()
     {
         //previews placement of new building until clicked
-        //TO DO: need a check for if the click is an approved placement
         if (isPickingLocation)
         {
             RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
-            EarthZone selectedZone = null;
             foreach (RaycastHit hit in hitsInOrder)
             {
                 // This hit.point is the point on earth where you clicked
-                foreach (EarthZone controlledZone in Earth.ControlledZones)
+                if (selectedZone == null && ControlledZoneColliders.Keys.Contains(hit.collider))
                 {
-                    if (selectedZone == null && hit.collider == controlledZone.GetComponent<Collider>())
+                    if (PurchasedZoneBuilding.GetComponent<ShieldGenerator>() != null && ControlledZoneColliders[hit.collider].ShieldGenerator != null)
                     {
-                        if (PurchasedZoneBuilding.GetComponent<ShieldGenerator>() != null && controlledZone.ShieldGenerator != null)
-                            return;
-                        else
-                            selectedZone = controlledZone;
-                    }
-                    else if (selectedZone != null && hit.transform.gameObject == this.gameObject && controlledZone.GetComponent<Collider>().bounds.Contains(hit.point))
-                    {
-                        PurchasedZoneBuilding.GetComponent<ZoneBuilding>().ParentZone = selectedZone;
-                        PurchasedZoneBuilding.transform.SetParent(controlledZone.transform, true);
-                        // Get a point directly above the city away from earth
-                        Vector3 awayFromEarth = hit.point - transform.position;
-                        // assign the up vector for the city
-                        PurchasedZoneBuilding.transform.up = awayFromEarth;
-                        PurchasedZoneBuilding.transform.position = hit.point;
-                        if (Input.GetMouseButton(0))
-                        {
-                            isPickingLocation = false;
-                            //turns colliders back off
-                            foreach (EarthZone zone in Earth.ControlledZones)
-                            {
-                                zone.GetComponent<Collider>().enabled = false;
-                            }
-                        }
                         return;
                     }
+                    else
+                    {
+                        Debug.Log("selected zone");
+                        selectedZone = ControlledZoneColliders[hit.collider];
+                        PurchasedZoneBuilding.GetComponent<ZoneBuilding>().ParentZone = selectedZone;
+                        // Put it in the coord space of the earthzone
+                        PurchasedZoneBuilding.transform.SetParent(selectedZone.transform, true);
+                    }
+                }
+                else if (selectedZone != null && hit.transform.tag == "Earth" && selectedZone.GetComponent<Collider>().bounds.Contains(hit.point))
+                {
+                    Debug.Log("selecting spot");
+                    // assign the up vector for the city so it the top of it faces away from earth and the bottom sits on the planet
+                    PurchasedZoneBuilding.transform.up = hit.point * 2;
+                    // set the position of this newly purchased building to the place where the mouse is
+                    PurchasedZoneBuilding.transform.position = hit.point;
+                    // If the user clicks while the newly purchased zone building is being displayed
+                    if (Input.GetMouseButton(0))
+                    {
+                        SetZoneCollidersEnabled(false);
+                        isPickingLocation = false;
+                        selectedZone = null;
+                    }
+                    return;
                 }
             }
         }
     }
 
-    //opens build menu
+    //-----Open Build Menu-------
     public void OpenMenu()
     {
         if (Panel != null)
@@ -84,41 +86,39 @@ public class BuildMenu : MonoBehaviour
     //-----New Weapon ZoneBuildings-----
     public void BuyLaserTurret()
     {
-        isPickingLocation = true;
-        PurchasedZoneBuilding = BuildNewLaserWeapon();
+        GameObject NewWeapon = Instantiate(LaserTurretRef) as GameObject;
+        HandleNewObject(NewWeapon, Vector3.one);
     }
 
 
     public void BuyMissileSiloButton()
     {
-        ActivateZoneColliders();
-        isPickingLocation = true;
-        PurchasedZoneBuilding = BuildNewMissileSilo();
+        GameObject NewWeapon = Instantiate(MissileSiloRef) as GameObject;
+        HandleNewObject(NewWeapon, Vector3.one);
     }
-    //----------------------
+    //--------End Weapons--------------
 
     //-----New Defensive ZoneBuildings-----
     public void BuyMinorCity()
     {
-        isPickingLocation = true;
-        PurchasedZoneBuilding = BuildNewCity();
+        GameObject newCity = Instantiate(CityRef) as GameObject;
+        HandleNewObject(newCity, Vector3.one * 0.25f);
     }
 
 
     public void BuyShieldGenerator()
     {
-        ActivateZoneColliders();
-        isPickingLocation = true;
-        PurchasedZoneBuilding = BuildNewShieldGenerator();
+        GameObject NewShieldGenerator = Instantiate(GeneratorRef) as GameObject;
+        HandleNewObject(NewShieldGenerator, Vector3.one);
     }
-    //----------------------
+    //--------End Defenses--------------
 
     //turn colliders on for zones
-    public void ActivateZoneColliders()
+    public void SetZoneCollidersEnabled(bool isEnabled)
     {
-        foreach (EarthZone zone in Earth.ControlledZones)
+        foreach (Collider zoneCollider in ControlledZoneColliders.Keys)
         {
-            zone.GetComponent<Collider>().enabled = true;
+            zoneCollider.enabled = isEnabled;
         }
     }
 
@@ -130,37 +130,24 @@ public class BuildMenu : MonoBehaviour
 
 
     //-----Build Objects------
-
-    GameObject BuildNewCity()
+    void HandleNewObject(GameObject newObj, Vector3 scale)
     {
-        GameObject newCity = Instantiate(CityRef) as GameObject;
-        return HandleNewObject(newCity, new Vector3(0.0025f, 0.0025f, 0.0025f));
-    }
-
-    GameObject BuildNewLaserWeapon()
-    {
-        GameObject NewWeapon = Instantiate(LaserTurretRef) as GameObject;
-        return HandleNewObject(NewWeapon, new Vector3(0.01f, 0.01f, 0.01f));
-    }
-
-    GameObject BuildNewMissileSilo()
-    {
-        GameObject NewWeapon = Instantiate(MissileSiloRef) as GameObject;
-        return HandleNewObject(NewWeapon, new Vector3(0.01f, 0.01f, 0.01f));
-    }
-
-    GameObject BuildNewShieldGenerator()
-    {
-        GameObject NewShieldGenerator = Instantiate(GeneratorRef) as GameObject;
-        return HandleNewObject(NewShieldGenerator, new Vector3(0.01f, 0.01f, 0.01f));
-    }
-
-    GameObject HandleNewObject(GameObject newObj, Vector3 scale)
-    {
+        // Let the user select a spot for the new zone building
+        isPickingLocation = true;
+        // Set the object to this variable so we can display it in the Update method while the user picks a location
         PurchasedZoneBuilding = newObj;
         // Make the new city a child object so it lives inside the earth's coordinate space
         PurchasedZoneBuilding.transform.SetParent(transform, true);
+        // Set the scale passed in by the Instantiating function
         PurchasedZoneBuilding.transform.localScale = scale;
-        return PurchasedZoneBuilding;
+        // Reset the cached list of colliders just in case they changed
+        ControlledZoneColliders = new Dictionary<Collider, EarthZone>();
+        // Fetch the user's controlled earth zone colliders
+        foreach (EarthZone controlledZone in Earth.ControlledZones)
+        {
+            ControlledZoneColliders.Add(controlledZone.GetComponent<Collider>(), controlledZone);
+        }
+        // Enabled them so we can place the object
+        SetZoneCollidersEnabled(true);
     }
 }
