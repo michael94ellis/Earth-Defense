@@ -4,11 +4,6 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public interface Damageable
-{
-    bool TakeDamage(int amount);
-}
-
 public class Earth : MonoBehaviour
 {
     // This holds an item that was just purchased so it can be placed on the earth

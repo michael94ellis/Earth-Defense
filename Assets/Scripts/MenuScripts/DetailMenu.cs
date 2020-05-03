@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OnClickMenu : MonoBehaviour
+public class DetailMenu : MonoBehaviour
 {
     public GameObject Panel;
     public Text header;
@@ -16,8 +16,6 @@ public class OnClickMenu : MonoBehaviour
         {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        //possible third param for max distance
         if(Physics.Raycast(ray, out hit))
         {
             if (hit.transform != null)

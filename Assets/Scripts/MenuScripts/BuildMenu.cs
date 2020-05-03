@@ -3,6 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public interface Weapon
+{
+    void FireAt(Vector3 target);
+    IEnumerator Fire();
+    IEnumerator Recharge();
+}
+public interface Damageable
+{
+    bool TakeDamage(int amount);
+}
+
+interface ZoneBuilding
+{
+    bool isActive { get; set; }
+    EarthZone ParentZone { get; set; }
+}
+
 public class BuildMenu : MonoBehaviour
 {
     public GameObject Panel;
@@ -51,7 +68,9 @@ public class BuildMenu : MonoBehaviour
                     {
                         //Debug.Log("selected zone");
                         selectedZone = ControlledZoneColliders[hit.collider];
-                        PurchasedZoneBuilding.GetComponent<ZoneBuilding>().ParentZone = selectedZone;
+                        ZoneBuilding newZoneBuilding = PurchasedZoneBuilding.GetComponent<ZoneBuilding>();
+                        newZoneBuilding.ParentZone = selectedZone;
+                        newZoneBuilding.isActive = true;
                         // Put it in the coord space of the earthzone
                         PurchasedZoneBuilding.transform.SetParent(selectedZone.transform, true);
                     }

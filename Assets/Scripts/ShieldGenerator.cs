@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ShieldGenerator : MonoBehaviour, ZoneBuilding
 {
-    private EarthZone _ParentZone;
-    public EarthZone ParentZone { get { return _ParentZone; } set { _ParentZone = value; } }
+    public bool isActive { get; set; } = false;
+    public EarthZone ParentZone { get; set; }
     public int rechargeTime = 5;
     public bool shieldIsCharged = true;
     public float shieldRegenRate = 1f;
