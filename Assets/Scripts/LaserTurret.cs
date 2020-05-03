@@ -2,15 +2,10 @@
 using System.Linq;
 using UnityEngine;
 
-public interface Weapon
+public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
 {
-    void FireAt(Vector3 target); 
-    IEnumerator Fire(); 
-    IEnumerator Recharge(); 
-}
-
-public class LaserTurret : MonoBehaviour, Weapon
-{
+    public bool isActive { get; set; } = false;
+    public EarthZone ParentZone { get; set; }
     private float fireDuration = 0.5f;
     private int rechargeTime = 1;
     private bool isCharged = true;

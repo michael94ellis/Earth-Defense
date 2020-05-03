@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding
 {
-    private EarthZone _ParentZone;
-    public EarthZone ParentZone { get { return _ParentZone; } set { _ParentZone = value; } }
+    public bool isActive { get; set; } = false;
+    public EarthZone ParentZone { get; set; }
     public GameObject LeftDoor;
     public GameObject RightDoor;
     public Vector3 MissileSpawnPoint;

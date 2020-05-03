@@ -2,23 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-interface ZoneBuilding
-{
-    EarthZone ParentZone { get; set; }
-}
-
 public class EarthZone : MonoBehaviour, Damageable
 {
     public MeshRenderer Shield;
     public City Capitol;
     public ShieldGenerator ShieldGenerator;
     public List<GameObject> ZoneBuildings = new List<GameObject>();
-    // Active targets so weapons in city work together better
+    // Keep track of targets so weapons in city work together better
     public List<GameObject> ActiveTargets = new List<GameObject>();
 
     public GameObject HealthBar;
     public GameObject ShieldBar;
-    private float PopulationRegenRate = 1.000001f;
     private float MaxPopulation = 5000;
     private float _Population = 5000;
     public float Population

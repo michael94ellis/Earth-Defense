@@ -4,20 +4,26 @@ using UnityEngine;
 
 public class ShieldGenerator : MonoBehaviour, ZoneBuilding
 {
-    private EarthZone _ParentZone;
-    public EarthZone ParentZone { get { return _ParentZone; } set { _ParentZone = value; } }
+    public bool isActive { get; set; } = false;
+    public EarthZone ParentZone { get; set; }
     public int rechargeTime = 5;
+    public bool shieldIsCharged = true;
     public float shieldRegenRate = 1f;
     public float ShieldBoost = 3000;
 
-    void Start()
-    {
-        ResetShield();
-    }
     void Update()
     {
-        if (ParentZone != null && ParentZone.Shield.enabled)
-            ParentZone.ShieldHealth += shieldRegenRate * Time.deltaTime;
+        if (ParentZone != null)
+        {
+            if (ParentZone.Shield.enabled)
+            {
+                ParentZone.ShieldHealth += shieldRegenRate * Time.deltaTime;
+            }
+            else if (shieldIsCharged)
+            {
+                ParentZone.Shield.enabled = true;
+            }
+        }
     }
     public void ResetShield()
     {
@@ -42,7 +48,7 @@ public class ShieldGenerator : MonoBehaviour, ZoneBuilding
     {
         yield return new WaitForSeconds(rechargeTime);
         Debug.Log("Restore shield");
-        ParentZone.Shield.enabled = true;
+        shieldIsCharged = true;
         ParentZone.ShieldHealth += ShieldBoost;
     }
 }

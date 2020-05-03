@@ -5,7 +5,6 @@ using Random = UnityEngine.Random;
 
 public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declared in LaserTurret right now
 {
-    private float moveSpeed = 80f;
     public int AttackDamage = 100;
     private float fireDuration = 0.5f;
     private int rechargeTime = 4;
