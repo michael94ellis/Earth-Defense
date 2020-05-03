@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,21 +12,12 @@ public class DetailMenu : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if(Physics.Raycast(ray, out hit))
-        {
-            if (hit.transform != null)
+            RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
+            foreach (RaycastHit hit in hitsInOrder)
             {
-                if(hit.transform.name != "Earth" && hit.transform.name != "EarthZone")
-                    {
-                    Debug.Log("HIT");
-                    header.text = hit.transform.name;
-                    DisplayPanel();
-                    }
+                Debug.Log(hit.transform.GetComponent<ZoneBuilding>() == null);
             }
         }
-    }
     }
     //TODO Fix display
     public void DisplayPanel()
