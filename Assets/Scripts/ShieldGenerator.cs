@@ -5,8 +5,9 @@ using UnityEngine;
 public class ShieldGenerator : MonoBehaviour, ZoneBuilding
 {
     public bool isActive { get; set; } = false;
-    private EarthZone _ParentZone;
-    public EarthZone ParentZone { get { return _ParentZone; } set { _ParentZone = value; } }
+    public Transform buildingTransform { get { return transform; } }
+    public EarthZone ParentZone { get; set; }
+    public ZoneBuildingType buildingType { get; set; }
     public int rechargeTime = 5;
     public bool shieldIsCharged = true;
     public float shieldRegenRate = 1f;

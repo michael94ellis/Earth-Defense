@@ -7,7 +7,9 @@ using UnityEngine;
 public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding
 {
     public bool isActive { get; set; } = false;
+    public Transform buildingTransform { get { return transform; } }
     public EarthZone ParentZone { get; set; }
+    public ZoneBuildingType buildingType { get; set; }
     public GameObject LeftDoor;
     public GameObject RightDoor;
     public Vector3 MissileSpawnPoint;

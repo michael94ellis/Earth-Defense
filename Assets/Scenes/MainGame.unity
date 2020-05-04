@@ -825,11 +825,6 @@ PrefabInstance:
       propertyPath: m_Size.z
       value: 11
       objectReference: {fileID: 0}
-    - target: {fileID: 7573250458052271846, guid: 295c474ce683d46019aca6261b194f39,
-        type: 3}
-      propertyPath: MaxPopulation
-      value: 5000
-      objectReference: {fileID: 0}
     - target: {fileID: 7573250458286824252, guid: 295c474ce683d46019aca6261b194f39,
         type: 3}
       propertyPath: m_Enabled
@@ -1685,20 +1680,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 702195908562371009}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1381371419
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1381371411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38754addb9ade2e4991893183a4f72e8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxPopulation: 500000
-  PopulationRegenRate: 1.000001
 --- !u!1 &1396209294
 GameObject:
   m_ObjectHideFlags: 0
