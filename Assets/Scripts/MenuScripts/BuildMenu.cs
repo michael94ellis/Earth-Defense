@@ -159,8 +159,6 @@ public class BuildMenu : MonoBehaviour
         isPickingLocation = true;
         // Set the object to this variable so we can display it in the Update method while the user picks a location
         PurchasedZoneBuilding = newObj;
-        // Make the new city a child object so it lives inside the earth's coordinate space
-        PurchasedZoneBuilding.transform.SetParent(transform, true);
         // Set the scale passed in by the Instantiating function
         PurchasedZoneBuilding.transform.localScale = scale;
         // Reset the cached list of colliders just in case they changed

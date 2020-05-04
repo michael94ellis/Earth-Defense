@@ -11,7 +11,7 @@ public class OnClickMenu : MonoBehaviour
     public Text population;
     public Text shield;
     public Transform target = null;
-    bool isActive;
+    bool isActive = false;
     // Start is called before the first frame update
     // Update is called once per frame
     void Update()
@@ -27,14 +27,14 @@ public class OnClickMenu : MonoBehaviour
                     if (hit.transform.name != "Earth")
                     {
                         target = hit.transform;
-                        //TODO LOOK INTO RETURNING THIS FOR UPDATING LIFE TOTAL
+                        Debug.Log(target);
                         header.text = target.name;
                         DisplayPanel();
                     }
                 }
             }
         }
-        if (isActive && target)
+        if (!isActive && target)
         {
             populationText(target);
             Debug.Log("updating hp");
@@ -46,13 +46,16 @@ public class OnClickMenu : MonoBehaviour
         if (Panel != null)
         {
             isActive = Panel.activeSelf;
+            Debug.Log(isActive);
             Panel.SetActive(!isActive);
         }
     }
 
     public void populationText(Transform target)
     {
-        population.text = target.parent.gameObject.GetComponent<EarthZone>().Population.ToString() + "/"
-                         + target.parent.gameObject.GetComponent<EarthZone>().MaxPopulation + "\npopulation";
+        
+        population.text = (target.parent.gameObject.GetComponent<EarthZone>().Population + "/"
+                         + target.parent.gameObject.GetComponent<EarthZone>().MaxPopulation + "\npopulation").ToString();
+        
     }
 }
