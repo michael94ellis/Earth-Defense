@@ -125,7 +125,7 @@ public class BuildMenu : MonoBehaviour
     public void BuyMinorCity()
     {
         GameObject newCity = Instantiate(CityRef) as GameObject;
-        HandleNewObject(newCity, Vector3.one * 0.25f);
+        HandleNewObject(newCity, Vector3.one);
     }
 
 
