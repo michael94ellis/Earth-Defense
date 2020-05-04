@@ -13,7 +13,7 @@ public class EarthZone : MonoBehaviour, Damageable
 
     public GameObject HealthBar;
     public GameObject ShieldBar;
-    private float MaxPopulation = 5000;
+    public float MaxPopulation = 5000;
     private float _Population = 5000;
     public float Population
     {
