@@ -10,12 +10,12 @@ public class DetailMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
+        foreach (RaycastHit hit in hitsInOrder)
         {
-            RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
-            foreach (RaycastHit hit in hitsInOrder)
+            if (Input.GetMouseButtonDown(0) && hit.transform.TryGetComponent(out ZoneBuilding zoneBuilding))
             {
-                Debug.Log(hit.transform.GetComponent<ZoneBuilding>() == null);
+                Debug.Log(zoneBuilding.buildingType);
             }
         }
     }

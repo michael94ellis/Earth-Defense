@@ -14,10 +14,20 @@ public interface Damageable
     bool TakeDamage(int amount);
 }
 
+public enum ZoneBuildingType
+{
+    LaserTurret,
+    MissileSilo,
+    City,
+    ShieldGenerator
+}
+
 interface ZoneBuilding
 {
     bool isActive { get; set; }
+    Transform buildingTransform { get; }
     EarthZone ParentZone { get; set; }
+    ZoneBuildingType buildingType { get; set; }
 }
 
 public class BuildMenu : MonoBehaviour
@@ -30,7 +40,7 @@ public class BuildMenu : MonoBehaviour
     Object MissileSiloRef;
     Object LaserTurretRef;
     //Object SatelliteRef;
-    GameObject PurchasedZoneBuilding;
+    ZoneBuilding PurchasedZoneBuilding;
     EarthZone selectedZone;
     // Cached list of colliders fetched/reset every time a ZoneBuilding is bought
     Dictionary<Collider, EarthZone> ControlledZoneColliders = new Dictionary<Collider, EarthZone>();
@@ -58,7 +68,7 @@ public class BuildMenu : MonoBehaviour
                 if (selectedZone == null && ControlledZoneColliders.Keys.Contains(hit.collider))
                 {
                     // This should only be reached once each time the user hovers over a zone
-                    if (PurchasedZoneBuilding.GetComponent<ShieldGenerator>() != null && ControlledZoneColliders[hit.collider].ShieldGenerator != null)
+                    if (PurchasedZoneBuilding.buildingType == ZoneBuildingType.ShieldGenerator && ControlledZoneColliders[hit.collider].ShieldGenerator != null)
                     {
                         // Only 1 shield generator per zone
                         selectedZone = null;
@@ -68,11 +78,10 @@ public class BuildMenu : MonoBehaviour
                     {
                         //Debug.Log("selected zone");
                         selectedZone = ControlledZoneColliders[hit.collider];
-                        ZoneBuilding newZoneBuilding = PurchasedZoneBuilding.GetComponent<ZoneBuilding>();
-                        newZoneBuilding.ParentZone = selectedZone;
-                        newZoneBuilding.isActive = true;
+                        PurchasedZoneBuilding.ParentZone = selectedZone;
+                        PurchasedZoneBuilding.isActive = true;
                         // Put it in the coord space of the earthzone
-                        PurchasedZoneBuilding.transform.SetParent(selectedZone.transform, true);
+                        PurchasedZoneBuilding.buildingTransform.SetParent(selectedZone.transform, true);
                     }
                 }
                 else if (selectedZone != null && hit.transform.tag == "Earth" // user is hovering over controlled zone on earth
@@ -80,9 +89,9 @@ public class BuildMenu : MonoBehaviour
                 {
                     //Debug.Log("selecting spot");
                     // assign the up vector for the city so it the top of it faces away from earth and the bottom sits on the planet
-                    PurchasedZoneBuilding.transform.up = hit.point * 2;
+                    PurchasedZoneBuilding.buildingTransform.up = hit.point * 2;
                     // set the position of this newly purchased building to the place where the mouse is
-                    PurchasedZoneBuilding.transform.position = hit.point;
+                    PurchasedZoneBuilding.buildingTransform.position = hit.point;
                     // If the user clicks while the newly purchased zone building is being displayed
                     if (Input.GetMouseButton(0))
                     {
@@ -109,30 +118,34 @@ public class BuildMenu : MonoBehaviour
     //-----New Weapon ZoneBuildings-----
     public void BuyLaserTurret()
     {
-        GameObject NewWeapon = Instantiate(LaserTurretRef) as GameObject;
-        HandleNewObject(NewWeapon, Vector3.one);
+        ZoneBuilding newZoneBuilding = (Instantiate(LaserTurretRef) as GameObject).GetComponent<ZoneBuilding>();
+        newZoneBuilding.buildingType = ZoneBuildingType.LaserTurret;
+        HandleNewObject(newZoneBuilding);
     }
 
 
     public void BuyMissileSiloButton()
     {
-        GameObject NewWeapon = Instantiate(MissileSiloRef) as GameObject;
-        HandleNewObject(NewWeapon, Vector3.one);
+        ZoneBuilding newZoneBuilding = (Instantiate(MissileSiloRef) as GameObject).GetComponent<ZoneBuilding>();
+        newZoneBuilding.buildingType = ZoneBuildingType.MissileSilo;
+        HandleNewObject(newZoneBuilding);
     }
     //--------End Weapons--------------
 
     //-----New Defensive ZoneBuildings-----
     public void BuyMinorCity()
     {
-        GameObject newCity = Instantiate(CityRef) as GameObject;
-        HandleNewObject(newCity, Vector3.one);
+        ZoneBuilding newZoneBuilding = (Instantiate(CityRef) as GameObject).GetComponent<ZoneBuilding>();
+        newZoneBuilding.buildingType = ZoneBuildingType.City;
+        HandleNewObject(newZoneBuilding);
     }
 
 
     public void BuyShieldGenerator()
     {
-        GameObject NewShieldGenerator = Instantiate(GeneratorRef) as GameObject;
-        HandleNewObject(NewShieldGenerator, Vector3.one);
+        ZoneBuilding newZoneBuilding = (Instantiate(GeneratorRef) as GameObject).GetComponent<ZoneBuilding>();
+        newZoneBuilding.buildingType = ZoneBuildingType.ShieldGenerator;
+        HandleNewObject(newZoneBuilding);
     }
     //--------End Defenses--------------
 
@@ -153,16 +166,16 @@ public class BuildMenu : MonoBehaviour
 
 
     //-----Build Objects------
-    void HandleNewObject(GameObject newObj, Vector3 scale)
+    void HandleNewObject(ZoneBuilding newObj)
     {
         // Let the user select a spot for the new zone building
         isPickingLocation = true;
         // Set the object to this variable so we can display it in the Update method while the user picks a location
         PurchasedZoneBuilding = newObj;
         // Make the new city a child object so it lives inside the earth's coordinate space
-        PurchasedZoneBuilding.transform.SetParent(transform, true);
+        PurchasedZoneBuilding.buildingTransform.SetParent(transform, true);
         // Set the scale passed in by the Instantiating function
-        PurchasedZoneBuilding.transform.localScale = scale;
+        PurchasedZoneBuilding.buildingTransform.localScale = Vector3.one;
         // Reset the cached list of colliders just in case they changed
         ControlledZoneColliders = new Dictionary<Collider, EarthZone>();
         // Fetch the user's controlled earth zone colliders

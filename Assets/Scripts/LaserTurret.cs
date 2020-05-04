@@ -5,7 +5,9 @@ using UnityEngine;
 public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
 {
     public bool isActive { get; set; } = false;
+    public Transform buildingTransform { get { return transform; } }
     public EarthZone ParentZone { get; set; }
+    public ZoneBuildingType buildingType { get; set; }
     private float fireDuration = 0.5f;
     private int rechargeTime = 1;
     private bool isCharged = true;
@@ -13,7 +15,6 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
     private GameObject currentTarget;
     // Draws the laser
     private LineRenderer Laser;
-    public AudioSource LaserSound;
     public Transform BarrelPivot;
     public Transform BarrelTip; 
 
@@ -23,8 +24,6 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
         int explosionNumber = Random.Range(1, 10);
         // Laser and Explosion Sounds
         Laser = gameObject.GetComponent<LineRenderer>();
-        AudioSource soundSource = gameObject.GetComponent<AudioSource>();
-        LaserSound = soundSource;
     }
 
     // Update is called once per frame
@@ -87,7 +86,6 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
         if (!isFiring)
         {
             //Debug.Log("Firing Laser");
-            LaserSound.Play();
             isFiring = true;
             isCharged = false;
             Laser.enabled = true;
@@ -101,8 +99,6 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
     public IEnumerator Fire()
     {
         yield return new WaitForSeconds(fireDuration);
-        if (LaserSound.isPlaying)
-            LaserSound.Stop();
         currentTarget = null;
         Laser.enabled = false;
         isFiring = false;
