@@ -5,7 +5,6 @@ using UnityEngine;
 public class EarthZone : MonoBehaviour, Damageable
 {
     public MeshRenderer Shield;
-    public City Capitol;
     public ShieldGenerator ShieldGenerator;
     public List<GameObject> ZoneBuildings = new List<GameObject>();
     // Keep track of targets so weapons in city work together better

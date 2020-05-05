@@ -92,7 +92,9 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon // LaserGun is declar
             }
             else if (zone.Population > 0)
             {
-                currentTarget = zone.Capitol.gameObject;
+                // TODO: pick 
+                //int randomZoneBuildingIndex = Random.Range(0, zone.ZoneBuildings.Count - 1);
+                currentTarget = zone.gameObject;
                 return;
             }
         }
