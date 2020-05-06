@@ -88,16 +88,12 @@ public class MenuManager : MonoBehaviour
             DetailPanel.SetActive(false);
             ShopPanel.SetActive(false);
             UpgradePanel.SetActive(false);
+            _LastScreen = _CurrentScreen;
             _CurrentScreen = value;
             if (_CurrentScreen != MenuScreen.None)
                 _CurrentScreenPanel.SetActive(true);
         }
     }
-
-    //void Start()
-    //{
-    //    _DetailMenu = DetailPanel.GetComponent<DetailMenu>();
-    //}
 
     void Update()
     {
@@ -146,10 +142,7 @@ public class MenuManager : MonoBehaviour
         if (_CurrentScreen == MenuScreen.None)
             CurrentlyDisplayedMenu = _LastScreen;
         else
-        {
-            _LastScreen = _CurrentScreen;
             CurrentlyDisplayedMenu = MenuScreen.None;
-        }
     }
 
     public void SendAlienWave()

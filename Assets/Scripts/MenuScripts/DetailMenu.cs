@@ -14,12 +14,6 @@ public class DetailMenu : MonoBehaviour
     public Button MiddleTab;
     public Button BottomTab;
 
-    void Start()
-    {
-        TopTab.onClick.AddListener(() => ViewParent());
-
-    }
-
     public void Display(DisplayItemType itemType, GameObject itemToDisplay)
     {
         // Cache the item reference
@@ -39,26 +33,19 @@ public class DetailMenu : MonoBehaviour
         DisplayItem = itemToDisplay.GetComponent<MenuDisplayItem>();
         Title.text = DisplayItem.Title;
         Info.text = DisplayItem.InfoText;
+        if (itemToDisplay.GetComponent<ZoneBuilding>() != null)
+        {
+
+        }
     }
 
-    void ViewParent()
-    {
+    //void ViewParent()
+    //{
+    //}
 
-    }
-
-    private void CreateNewButton(Vector3 position)
-    {
-        MenuButton = Instantiate(Resources.Load("OptionButton") as GameObject, position, Quaternion.identity);
-        MenuButton.transform.SetParent(transform, false);
-    }
-
-    void OnEnable()
-    {
-
-    }
-
-    void OnDisable()
-    {
-
-    }
+    //private void CreateNewButton(Vector3 position)
+    //{
+    //    MenuButton = Instantiate(Resources.Load("OptionButton") as GameObject, position, Quaternion.identity);
+    //    MenuButton.transform.SetParent(transform, false);
+    //}
 }

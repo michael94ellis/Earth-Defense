@@ -15,7 +15,8 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
     }
     public MeshRenderer Shield;
     public ShieldGenerator ShieldGenerator;
-    public List<GameObject> ZoneBuildings = new List<GameObject>();
+    public City Capitol;
+    public List<ZoneBuilding> ZoneBuildings = new List<ZoneBuilding>();
     // Keep track of targets so weapons in city work together better
     public List<GameObject> ActiveTargets = new List<GameObject>();
 

@@ -272,6 +272,8 @@ GameObject:
   - component: {fileID: 6002019453963625495}
   - component: {fileID: 5735961895824936166}
   - component: {fileID: 7573250458286824252}
+  - component: {fileID: 2611133245058127718}
+  - component: {fileID: 491635349725825422}
   m_Layer: 0
   m_Name: EarthZone
   m_TagString: Player
@@ -316,12 +318,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Shield: {fileID: 5735961895824936166}
-  Capitol: {fileID: 0}
   ShieldGenerator: {fileID: 0}
   ZoneBuildings: []
   ActiveTargets: []
   HealthBar: {fileID: 353261538370133269}
   ShieldBar: {fileID: 3865974974929233327}
+  MaxPopulation: 5000
   MaxShieldHealth: 10000
 --- !u!23 &5735961895824936166
 MeshRenderer:
@@ -375,6 +377,36 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &2611133245058127718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5735961895824936167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38754addb9ade2e4991893183a4f72e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxPopulation: 500000
+  PopulationRegenRate: 1.000001
+--- !u!114 &491635349725825422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5735961895824936167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33d07dceca327f34e8a070eb21bbffc1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rechargeTime: 5
+  shieldIsCharged: 1
+  shieldRegenRate: 1
+  ShieldBoost: 3000
 --- !u!1 &6287723768613971850
 GameObject:
   m_ObjectHideFlags: 0

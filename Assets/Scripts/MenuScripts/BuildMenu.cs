@@ -124,6 +124,7 @@ public class BuildMenu : MonoBehaviour
                     // If the user clicks while the newly purchased zone building is being displayed
                     if (Input.GetMouseButton(0))
                     {
+                        selectedZone.ZoneBuildings.Add(PurchasedZoneBuilding);
                         SetZoneCollidersEnabled(false);
                         PurchasedZoneBuilding = null;
                         selectedZone = null;
