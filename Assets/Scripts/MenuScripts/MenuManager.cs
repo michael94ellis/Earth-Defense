@@ -40,12 +40,12 @@ public class MenuManager : MonoBehaviour
     // Menu Panel enum to control which panels can be displayed
     public enum MenuScreen
     {
+        None,
         Upgrade,
         Detail,
         Shop
     }
     // Private variables for displaying a screen to the user
-    private bool isDisplayingMenu = false;
     private GameObject _CurrentScreenPanel
     {
         get
@@ -63,26 +63,24 @@ public class MenuManager : MonoBehaviour
         }
     }
     // Set this from other scripts to control which menu is showing
-    private MenuScreen _CurrentScreen = MenuScreen.Shop;
+    private MenuScreen _LastScreen = MenuScreen.Shop;
+    private MenuScreen _CurrentScreen = MenuScreen.None;
     public MenuScreen CurrentlyDisplayedMenu
     {
         get { return _CurrentScreen; }
         set
         {
-            _CurrentScreen = value;
-            // Disable all screens
-            ShopPanel.SetActive(false);
             DetailPanel.SetActive(false);
+            ShopPanel.SetActive(false);
             UpgradePanel.SetActive(false);
-            // Show Correct Screen, null means dont show a screen
-            if (_CurrentScreenPanel != null)
+            _CurrentScreen = value;
+            if (_CurrentScreen != MenuScreen.None)
                 _CurrentScreenPanel.SetActive(true);
         }
     }
 
     void Update()
     {
-
         if (BuildMenu.PurchasedZoneBuilding == null)
         {
 
@@ -115,8 +113,13 @@ public class MenuManager : MonoBehaviour
 
     public void MenuButtonPress()
     {
-        isDisplayingMenu = !isDisplayingMenu;
-        _CurrentScreenPanel.SetActive(isDisplayingMenu);
+        if (_CurrentScreen == MenuScreen.None)
+            CurrentlyDisplayedMenu = _LastScreen;
+        else
+        {
+            _LastScreen = _CurrentScreen;
+            CurrentlyDisplayedMenu = MenuScreen.None;
+        }
     }
 
     public void SendAlienWave()
