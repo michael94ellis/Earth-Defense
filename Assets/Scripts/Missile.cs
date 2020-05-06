@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class Missile : MonoBehaviour
+public class Missile : MonoBehaviour, MissileSpec
 {
     public GameObject target;
-    public float launchSpeed = 1;
+    float _launchSpeed = 1;
+    public float launchSpeed { get { return _launchSpeed; } set { _launchSpeed = value; } }
     public float launchAcceleration = 10;
-    public float moveSpeed = 10;
+    float _moveSpeed = 10;
+    public float moveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
+    float _damage = 200;
+    public float damage { get { return _damage; } set { _damage = value; } }
 
     private Vector3 origin;
     void Start()
@@ -37,7 +41,7 @@ public class Missile : MonoBehaviour
         if (alienScript != null)
         {
             Debug.Log("Boom");
-            alienScript.TakeDamage(200);
+            alienScript.TakeDamage((int)damage);
             Destroy(gameObject);
         }
     }

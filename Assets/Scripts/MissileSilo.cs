@@ -4,6 +4,14 @@ using System.Linq;
 using System.Security.Cryptography;
 using UnityEngine;
 
+public interface MissileSpec
+{
+    string name { get; }
+    float launchSpeed { get; set; }
+    float moveSpeed { get; set; }
+    float damage { get; set; }
+}
+
 public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
 {
     public bool isActive { get; set; } = false;
