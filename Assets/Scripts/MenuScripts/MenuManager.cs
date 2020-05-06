@@ -28,6 +28,7 @@ public interface ZoneBuilding
     Transform buildingTransform { get; }
     EarthZone ParentZone { get; set; }
     ZoneBuildingType buildingType { get; set; }
+    string InfoText { get; }
 }
 
 public class MenuManager : MonoBehaviour

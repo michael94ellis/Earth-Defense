@@ -16,7 +16,9 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
     // Draws the laser
     private LineRenderer Laser;
     public Transform BarrelPivot;
-    public Transform BarrelTip; 
+    public Transform BarrelTip;
+
+    public string InfoText { get { return "Recharge Time: " + rechargeTime + "\nFire Time: " + fireDuration; } }
 
     // Start is called before the first frame update
     void Start()

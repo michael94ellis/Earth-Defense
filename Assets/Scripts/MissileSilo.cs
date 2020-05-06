@@ -20,6 +20,8 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding
     public GameObject Missile;
     public GameObject earth;
 
+    public string InfoText { get { return "Reload Time: " + reloadTime + "\nFire Time: " + fireDuration; } }
+
     // Start is called before the first frame update
     void Start()
     {

@@ -13,6 +13,8 @@ public class ShieldGenerator : MonoBehaviour, ZoneBuilding
     public float shieldRegenRate = 1f;
     public float ShieldBoost = 3000;
 
+    public string InfoText { get { return "Shield Level: " + ShieldBoost + "\nRegen Rate: " + shieldRegenRate; } }
+
     void Update()
     {
         if (ParentZone != null)
