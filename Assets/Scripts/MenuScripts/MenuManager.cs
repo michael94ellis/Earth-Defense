@@ -30,12 +30,27 @@ public interface ZoneBuilding
     ZoneBuildingType buildingType { get; set; }
 }
 
+public enum DisplayItemType
+{
+    Alien,
+    Earth,
+    EarthZone,
+    ZoneBuilding
+}
+
+public interface MenuDisplayItem
+{
+    string Title { get; }
+    string InfoText { get; }
+}
+
 public class MenuManager : MonoBehaviour
 {
     public Earth earth;
     // Menu Panel Refs
     public GameObject UpgradePanel;
     public GameObject DetailPanel;
+    public DetailMenu _DetailMenu;
     public GameObject ShopPanel;
     // Menu Panel enum to control which panels can be displayed
     public enum MenuScreen
@@ -79,11 +94,15 @@ public class MenuManager : MonoBehaviour
         }
     }
 
+    //void Start()
+    //{
+    //    _DetailMenu = DetailPanel.GetComponent<DetailMenu>();
+    //}
+
     void Update()
     {
         if (BuildMenu.PurchasedZoneBuilding == null)
         {
-
             if (Input.GetMouseButtonDown(0))
             {
                 RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
@@ -93,6 +112,7 @@ public class MenuManager : MonoBehaviour
                     ZoneBuilding zoneBuildingHit = hit.collider.GetComponent<ZoneBuilding>();
                     if (zoneBuildingHit != null)
                     {
+                        _DetailMenu.Display(DisplayItemType.ZoneBuilding, hit.collider.gameObject);
                         CurrentlyDisplayedMenu = MenuScreen.Detail;
                         return;
                     }
@@ -110,6 +130,16 @@ public class MenuManager : MonoBehaviour
     {
         CurrentlyDisplayedMenu = MenuScreen.Shop;
     }
+
+    public void OpenDetailMenu()
+    {
+        CurrentlyDisplayedMenu = MenuScreen.Detail;
+    }
+
+    //public void OpenUpgradeMenu()
+    //{
+    //    CurrentlyDisplayedMenu = MenuScreen.Upgrade;
+    //}
 
     public void MenuButtonPress()
     {

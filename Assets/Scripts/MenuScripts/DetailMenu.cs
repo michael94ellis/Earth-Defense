@@ -3,20 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum DisplayItemType
-{
-    Alien,
-    Earth,
-    EarthZone,
-    ZoneBuilding
-}
-
-public interface MenuDisplayItem
-{
-    string Title { get; }
-    string InfoText { get; }
-}
-
 public class DetailMenu : MonoBehaviour
 {
     GameObject MenuButton;
@@ -51,7 +37,7 @@ public class DetailMenu : MonoBehaviour
         }
         // Set title of button
         DisplayItem = itemToDisplay.GetComponent<MenuDisplayItem>();
-        Title.text = itemType.ToString();
+        Title.text = DisplayItem.Title;
         Info.text = DisplayItem.InfoText;
     }
 
