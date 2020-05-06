@@ -324,7 +324,7 @@ RectTransform:
   m_Children:
   - {fileID: 1267972580}
   m_Father: {fileID: 1739847371}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -1162,11 +1162,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90b4d311571d9a140986582fd381ec4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ZoneBuildingDetailPanel: {fileID: 0}
-  ZoneDetailPanel: {fileID: 0}
-  EarthDetailPanel: {fileID: 0}
-  BuildZoneBuildingPanel: {fileID: 0}
   earth: {fileID: 0}
+  EarthPanel: {fileID: 0}
+  EarthZonePanel: {fileID: 0}
+  ZoneBuildingPanel: {fileID: 0}
+  ShopPanel: {fileID: 0}
 --- !u!1 &936149870
 GameObject:
   m_ObjectHideFlags: 0
@@ -2143,12 +2143,12 @@ GameObject:
   - component: {fileID: 1739847372}
   - component: {fileID: 1739847374}
   m_Layer: 5
-  m_Name: Other Menu
+  m_Name: Detail Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1739847371
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2162,10 +2162,10 @@ RectTransform:
   m_Children:
   - {fileID: 1827105571}
   - {fileID: 438331817}
+  - {fileID: 325421496}
   - {fileID: 6231724121037710253}
   - {fileID: 954934919}
   - {fileID: 979875326}
-  - {fileID: 325421496}
   m_Father: {fileID: 497021798}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 25, z: 0}
@@ -2239,7 +2239,7 @@ GameObject:
   - component: {fileID: 1774620933}
   - component: {fileID: 1774620932}
   m_Layer: 5
-  m_Name: Build Menu
+  m_Name: Shop Menu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2373,7 +2373,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Title
+  m_Text: Zone Building
 --- !u!222 &1827105573
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2509,7 +2509,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1849620583}
-        m_MethodName: OpenMenu
+        m_MethodName: MenuButtonPress
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2567,11 +2567,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90b4d311571d9a140986582fd381ec4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ZoneBuildingDetailPanel: {fileID: 1739847370}
-  ZoneDetailPanel: {fileID: 1739847370}
-  EarthDetailPanel: {fileID: 1849620578}
-  BuildZoneBuildingPanel: {fileID: 1774620930}
   earth: {fileID: 1381371417}
+  EarthPanel: {fileID: 0}
+  EarthZonePanel: {fileID: 0}
+  ZoneBuildingPanel: {fileID: 1739847370}
+  ShopPanel: {fileID: 1774620930}
 --- !u!1 &1898772158
 GameObject:
   m_ObjectHideFlags: 0

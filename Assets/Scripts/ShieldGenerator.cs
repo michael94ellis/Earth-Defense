@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShieldGenerator : MonoBehaviour, ZoneBuilding
+public class ShieldGenerator : MonoBehaviour, ZoneBuilding, MenuDisplayItem
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -13,7 +13,16 @@ public class ShieldGenerator : MonoBehaviour, ZoneBuilding
     public float shieldRegenRate = 1f;
     public float ShieldBoost = 3000;
 
-    public string InfoText { get { return "Shield Level: " + ShieldBoost + "\nRegen Rate: " + shieldRegenRate; } }
+    public string Title { get { return "Shield Generator"; } }
+    public string InfoText
+    {
+        get
+        {
+            return "Shield Level: " + ShieldBoost + "\n" +
+                "Regen Rate: " + shieldRegenRate + "\n" +
+                "Charged: " + shieldIsCharged;
+        }
+    }
 
     void Update()
     {

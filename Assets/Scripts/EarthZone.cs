@@ -2,8 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EarthZone : MonoBehaviour, Damageable
+public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
 {
+    public string Title { get { return "EarthZone"; } }
+    public string InfoText
+    {
+        get
+        {
+            return "Shield Level: " + ShieldHealth + " / " + MaxShieldHealth + "\n" +
+                "Population: " + Population + " / " + MaxPopulation;
+        }
+    }
     public MeshRenderer Shield;
     public ShieldGenerator ShieldGenerator;
     public List<GameObject> ZoneBuildings = new List<GameObject>();

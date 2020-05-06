@@ -3,37 +3,61 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum DisplayItemType
+{
+    Alien,
+    Earth,
+    EarthZone,
+    ZoneBuilding
+}
+
+public interface MenuDisplayItem
+{
+    string Title { get; }
+    string InfoText { get; }
+}
+
 public class DetailMenu : MonoBehaviour
 {
     GameObject MenuButton;
-    public ZoneBuilding DisplayItem;
+    public DisplayItemType _DisplayItemType;
+    public MenuDisplayItem DisplayItem;
     public Text Title;
     public Text Info;
     public Button TopTab;
     public Button MiddleTab;
     public Button BottomTab;
 
-    public void Open(ZoneBuilding item)
+    void Start()
+    {
+        TopTab.onClick.AddListener(() => ViewParent());
+
+    }
+
+    public void Display(DisplayItemType itemType, GameObject itemToDisplay)
     {
         // Cache the item reference
-        DisplayItem = item;
+        _DisplayItemType = itemType;
+        switch (itemType)
+        {
+            case DisplayItemType.Alien:
+                break;
+            case DisplayItemType.Earth:
+                break;
+            case DisplayItemType.EarthZone:
+                break;
+            case DisplayItemType.ZoneBuilding:
+                break;
+        }
         // Set title of button
-        Title.text = item.buildingType.ToString();
-        Info.text = item.InfoText;
+        DisplayItem = itemToDisplay.GetComponent<MenuDisplayItem>();
+        Title.text = itemType.ToString();
+        Info.text = DisplayItem.InfoText;
+    }
 
-        //
-        // We could create different buttons that invoke different funcs on the ZoneBuilding object here, like upgrades and GetStat methods/vars
-        //
-        // e.g.
-        // ZoneBuilding.OpenParentMenu
+    void ViewParent()
+    {
 
-        // Zonebuilding.GetTitle
-        // Zonebuilding.GetStats
-
-        // Zonebuilding.UpgradeStat1
-        // Zonebuilding.UpgradeStat2
-        // Zonebuilding.UpgradeStat3
-        //
     }
 
     private void CreateNewButton(Vector3 position)

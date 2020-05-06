@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using UnityEngine;
 
-public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding
+public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -20,7 +20,16 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding
     public GameObject Missile;
     public GameObject earth;
 
-    public string InfoText { get { return "Reload Time: " + reloadTime + "\nFire Time: " + fireDuration; } }
+    public string Title { get { return "Missile Silo"; } }
+    public string InfoText
+    {
+        get
+        {
+            return "Reload Time: " + reloadTime + "\n" +
+                "Fire Time: " + fireDuration + "\n" +
+                "Missile Type: " +  "n/a";
+        }
+    }
 
     // Start is called before the first frame update
     void Start()

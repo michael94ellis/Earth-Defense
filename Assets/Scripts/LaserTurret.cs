@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
+public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -18,7 +18,17 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
     public Transform BarrelPivot;
     public Transform BarrelTip;
 
-    public string InfoText { get { return "Recharge Time: " + rechargeTime + "\nFire Time: " + fireDuration; } }
+
+    public string Title { get { return "Laser Turret"; } }
+    public string InfoText
+    {
+        get
+        {
+            return "Recharge Time: " + rechargeTime + "\n" +
+                "Fire Time: " + fireDuration + "\n" +
+                "Bonus Effect: " + "n/a";
+        }
+    }
 
     // Start is called before the first frame update
     void Start()

@@ -28,46 +28,97 @@ public interface ZoneBuilding
     Transform buildingTransform { get; }
     EarthZone ParentZone { get; set; }
     ZoneBuildingType buildingType { get; set; }
-    string InfoText { get; }
 }
 
 public class MenuManager : MonoBehaviour
 {
-    // Menu Panel Refs
-    public GameObject ZoneBuildingDetailPanel;
-    public GameObject ZoneDetailPanel;
-    public GameObject EarthDetailPanel;
-    public GameObject BuildZoneBuildingPanel;
     public Earth earth;
+    // Menu Panel Refs
+    public GameObject UpgradePanel;
+    public GameObject DetailPanel;
+    public GameObject ShopPanel;
+    // Menu Panel enum to control which panels can be displayed
+    public enum MenuScreen
+    {
+        Upgrade,
+        Detail,
+        Shop
+    }
+    // Private variables for displaying a screen to the user
+    private bool isDisplayingMenu = false;
+    private GameObject _CurrentScreenPanel
+    {
+        get
+        {
+            switch (_CurrentScreen)
+            {
+                case MenuScreen.Shop:
+                    return ShopPanel;
+                case MenuScreen.Detail:
+                    return DetailPanel;
+                case MenuScreen.Upgrade:
+                    return UpgradePanel;
+            }
+            return null;
+        }
+    }
+    // Set this from other scripts to control which menu is showing
+    private MenuScreen _CurrentScreen = MenuScreen.Shop;
+    public MenuScreen CurrentlyDisplayedMenu
+    {
+        get { return _CurrentScreen; }
+        set
+        {
+            _CurrentScreen = value;
+            // Disable all screens
+            ShopPanel.SetActive(false);
+            DetailPanel.SetActive(false);
+            UpgradePanel.SetActive(false);
+            // Show Correct Screen, null means dont show a screen
+            if (_CurrentScreenPanel != null)
+                _CurrentScreenPanel.SetActive(true);
+        }
+    }
 
     void Update()
     {
+
         if (BuildMenu.PurchasedZoneBuilding == null)
         {
-            RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
-            foreach (RaycastHit hit in hitsInOrder)
+
+            if (Input.GetMouseButtonDown(0))
             {
-                ZoneBuilding zoneBuilding = hit.collider.GetComponent<ZoneBuilding>();
-                if (zoneBuilding != null)
+                RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
+                foreach (RaycastHit hit in hitsInOrder)
                 {
-                    if (Input.GetMouseButtonDown(0))
+                    EarthZone earthZoneHit = hit.collider.GetComponent<EarthZone>();
+                    ZoneBuilding zoneBuildingHit = hit.collider.GetComponent<ZoneBuilding>();
+                    if (zoneBuildingHit != null)
                     {
-                        Debug.Log(zoneBuilding.buildingType);
-                        ZoneDetailPanel.SetActive(!ZoneDetailPanel.activeInHierarchy);
-                        ZoneDetailPanel.GetComponent<DetailMenu>().Open(zoneBuilding);
+                        CurrentlyDisplayedMenu = MenuScreen.Detail;
+                        return;
+                    }
+                    else if (earthZoneHit != null)
+                    {
+                        CurrentlyDisplayedMenu = MenuScreen.Detail;
+                        return;
                     }
                 }
             }
         }
     }
 
-    //-----Open Build Menu-------
-    public void OpenMenu()
+    public void OpenShopMenu()
     {
-        BuildZoneBuildingPanel.SetActive(!BuildZoneBuildingPanel.activeInHierarchy);
+        CurrentlyDisplayedMenu = MenuScreen.Shop;
     }
 
-    //sends new aliens
+    public void MenuButtonPress()
+    {
+        isDisplayingMenu = !isDisplayingMenu;
+        _CurrentScreenPanel.SetActive(isDisplayingMenu);
+    }
+
     public void SendAlienWave()
     {
         AlienSpawner.BeginInvasion();
