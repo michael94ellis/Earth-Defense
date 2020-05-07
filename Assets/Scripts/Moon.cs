@@ -5,13 +5,17 @@ using UnityEngine;
 public class Moon : OrbitingObject
 {
 
-    private void Update()
+    private void Awake()
     {
         var earth = FindObjectOfType<Earth>() as Earth;
         SetOrbitObject(earth.gameObject);
         SetOrbitAngle(Vector3.up);
-        SetOrbitSpeed(10);
+        SetOrbitSpeed(2);
         ResumeOrbit();
+    }
+    private void Update()
+    {
+        
         Orbit();
     }
 }
