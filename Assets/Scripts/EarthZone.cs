@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
+public class EarthZone : MonoBehaviour, IDamageable, IMenuDisplayable
 {
     public string Title { get { return "EarthZone"; } }
     public string InfoText
@@ -16,7 +16,7 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
     public MeshRenderer Shield;
     public ShieldGenerator ShieldGenerator;
     public City Capitol;
-    public List<ZoneBuilding> ZoneBuildings = new List<ZoneBuilding>();
+    public List<IZoneable> ZoneBuildings = new List<IZoneable>();
     // Keep track of targets so weapons in city work together better
     public List<GameObject> ActiveTargets = new List<GameObject>();
 

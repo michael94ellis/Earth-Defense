@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class Missile : MonoBehaviour, MissileSpec
+public class Missile : MonoBehaviour, IMissileSpecifiable
 {
     public GameObject target;
     float _launchSpeed = 1;

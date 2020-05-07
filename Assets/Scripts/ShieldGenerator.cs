@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShieldGenerator : MonoBehaviour, ZoneBuilding, MenuDisplayItem
+public class ShieldGenerator : MonoBehaviour, IZoneable, IMenuDisplayable
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }

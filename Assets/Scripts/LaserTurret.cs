@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
+public class LaserTurret : MonoBehaviour, IArmable, IZoneable, IMenuDisplayable
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }

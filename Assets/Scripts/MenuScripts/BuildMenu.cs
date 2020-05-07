@@ -12,7 +12,7 @@ public class BuildMenu : MonoBehaviour
     Object LaserTurretRef;
     //Object SatelliteRef;
     // For handling the time when user places purchased zone buildings
-    public static ZoneBuilding PurchasedZoneBuilding = null;
+    public static IZoneable PurchasedZoneBuilding = null;
     EarthZone selectedZone;
     // Cached list of colliders fetched/reset every time a ZoneBuilding is bought
     Dictionary<Collider, EarthZone> ControlledZoneColliders = new Dictionary<Collider, EarthZone>();
@@ -28,7 +28,7 @@ public class BuildMenu : MonoBehaviour
     //-----New Weapon ZoneBuildings-----
     public void BuyLaserTurret()
     {
-        ZoneBuilding newZoneBuilding = (Instantiate(LaserTurretRef) as GameObject).GetComponent<ZoneBuilding>();
+        IZoneable newZoneBuilding = (Instantiate(LaserTurretRef) as GameObject).GetComponent<IZoneable>();
         newZoneBuilding.buildingType = ZoneBuildingType.LaserTurret;
         HandleNewObject(newZoneBuilding);
     }
@@ -36,7 +36,7 @@ public class BuildMenu : MonoBehaviour
 
     public void BuyMissileSiloButton()
     {
-        ZoneBuilding newZoneBuilding = (Instantiate(MissileSiloRef) as GameObject).GetComponent<ZoneBuilding>();
+        IZoneable newZoneBuilding = (Instantiate(MissileSiloRef) as GameObject).GetComponent<IZoneable>();
         newZoneBuilding.buildingType = ZoneBuildingType.MissileSilo;
         HandleNewObject(newZoneBuilding);
     }
@@ -45,7 +45,7 @@ public class BuildMenu : MonoBehaviour
     //-----New Defensive ZoneBuildings-----
     public void BuyMinorCity()
     {
-        ZoneBuilding newZoneBuilding = (Instantiate(CityRef) as GameObject).GetComponent<ZoneBuilding>();
+        IZoneable newZoneBuilding = (Instantiate(CityRef) as GameObject).GetComponent<IZoneable>();
         newZoneBuilding.buildingType = ZoneBuildingType.City;
         HandleNewObject(newZoneBuilding);
     }
@@ -53,13 +53,13 @@ public class BuildMenu : MonoBehaviour
 
     public void BuyShieldGenerator()
     {
-        ZoneBuilding newZoneBuilding = (Instantiate(GeneratorRef) as GameObject).GetComponent<ZoneBuilding>();
+        IZoneable newZoneBuilding = (Instantiate(GeneratorRef) as GameObject).GetComponent<IZoneable>();
         newZoneBuilding.buildingType = ZoneBuildingType.ShieldGenerator;
         HandleNewObject(newZoneBuilding);
     }
     //--------End Defenses--------------
     //-----Build Objects------
-    void HandleNewObject(ZoneBuilding newObj)
+    void HandleNewObject(IZoneable newObj)
     {
         // Set the object to this variable so we can display it in the Update method while the user picks a location
         PurchasedZoneBuilding = newObj;

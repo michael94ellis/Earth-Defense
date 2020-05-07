@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class AlienShip : MonoBehaviour, Damageable, Weapon 
+public class AlienShip : MonoBehaviour, IDamageable, IArmable
 {
     public int AttackDamage = 100;
     private float fireDuration = 0.5f;
@@ -70,7 +70,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon
         {
             PerformAttackManuevers();
         }
-        else if (currentTarget == null )
+        else if (currentTarget == null)
         {
             SelectNewTarget();
         }
@@ -144,7 +144,7 @@ public class AlienShip : MonoBehaviour, Damageable, Weapon
                 return false;
             if (hit.collider.gameObject == currentTarget)
             {
-                Damageable attackTarget = currentTarget.gameObject.GetComponent<Damageable>();
+                IDamageable attackTarget = currentTarget.gameObject.GetComponent<IDamageable>();
                 if (attackTarget == null)
                     return false;
                 bool attackSuccess = attackTarget.TakeDamage(AttackDamage);

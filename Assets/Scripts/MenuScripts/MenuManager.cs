@@ -3,58 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public interface Weapon
-{
-    void FireAt(Vector3 target);
-    IEnumerator Fire();
-    IEnumerator Recharge();
-
-    //float ReloadTime { get; set; }
-    //float Range { get; set; }
-    //float Damage { get; set; }
-}
-public interface Damageable
-{
-    bool TakeDamage(int amount);
-}
-
-public enum ZoneBuildingType
-{
-    LaserTurret,
-    MissileSilo,
-    City,
-    ShieldGenerator
-}
-
-public class BuildingUpgrade
-{
-    public string name;
-    public delegate void UpgradeDelegate();
-    public UpgradeDelegate performUpgrade;
-}
-
-public interface ZoneBuilding
-{
-    bool isActive { get; set; }
-    Transform buildingTransform { get; }
-    EarthZone ParentZone { get; set; }
-    ZoneBuildingType buildingType { get; set; }
-    List<BuildingUpgrade> upgrades { get; }
-}
-
-public enum DisplayItemType
-{
-    Alien,
-    Earth,
-    EarthZone,
-    ZoneBuilding
-}
-
-public interface MenuDisplayItem
-{
-    string Title { get; }
-    string InfoText { get; }
-}
 
 public class MenuManager : MonoBehaviour
 {
@@ -114,7 +62,7 @@ public class MenuManager : MonoBehaviour
             RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
             foreach (RaycastHit hit in hitsInOrder)
             {
-                ZoneBuilding zoneBuildingHit = hit.collider.GetComponent<ZoneBuilding>();
+                IZoneable zoneBuildingHit = hit.collider.GetComponent<IZoneable>();
                 if (zoneBuildingHit != null)
                 {
                     _DetailMenu.Display(DisplayItemType.ZoneBuilding, hit.collider.gameObject);

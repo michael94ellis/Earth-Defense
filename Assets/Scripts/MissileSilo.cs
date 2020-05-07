@@ -1,18 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using UnityEngine;
 
-public interface MissileSpec
-{
-    string name { get; }
-    float launchSpeed { get; set; }
-    float moveSpeed { get; set; }
-    float damage { get; set; }
-}
 
-public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
+
+public class MissileSilo : MonoBehaviour, IArmable, IZoneable, IMenuDisplayable
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }

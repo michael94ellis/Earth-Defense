@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class City : MonoBehaviour, ZoneBuilding, MenuDisplayItem
+public class City : MonoBehaviour, IZoneable, IMenuDisplayable
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }

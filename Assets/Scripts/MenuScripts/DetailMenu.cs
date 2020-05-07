@@ -7,7 +7,7 @@ public class DetailMenu : MonoBehaviour
 {
     GameObject MenuButton;
     public DisplayItemType _DisplayItemType;
-    public MenuDisplayItem DisplayItem;
+    public IMenuDisplayable DisplayItem;
     public Text Title;
     public Text Info;
     public Button TopTab;
@@ -31,10 +31,10 @@ public class DetailMenu : MonoBehaviour
                 break;
         }
         // Set title of button
-        DisplayItem = itemToDisplay.GetComponent<MenuDisplayItem>();
+        DisplayItem = itemToDisplay.GetComponent<IMenuDisplayable>();
         Title.text = DisplayItem.Title;
         Info.text = DisplayItem.InfoText;
-        ZoneBuilding zoneBuilding = itemToDisplay.GetComponent<ZoneBuilding>();
+        IZoneable zoneBuilding = itemToDisplay.GetComponent<IZoneable>();
         if (zoneBuilding != null)
         {
             int y = -250;

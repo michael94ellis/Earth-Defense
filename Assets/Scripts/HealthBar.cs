@@ -9,6 +9,10 @@ public class HealthBar : MonoBehaviour, ICameraFacing
 
     public void FaceCamera()
     {
+        if (_MainCamera == null)
+            _MainCamera = Camera.main;
+
+
         transform.LookAt(_MainCamera.transform.position);
     }
 
