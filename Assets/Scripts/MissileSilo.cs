@@ -48,10 +48,7 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
 
     void Start()
     {
-        BuildingUpgrade ReloadUpgrade = new BuildingUpgrade();
-        ReloadUpgrade.name = "Decrease Reload Time";
-        ReloadUpgrade.performUpgrade = DecreaseReloadTime;
-        upgrades.Add(ReloadUpgrade);
+        upgrades.Add(new BuildingUpgrade("Decrease Reload Time", DecreaseReloadTime));
         earth = GameObject.Find("Earth");
     }
 

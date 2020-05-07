@@ -31,6 +31,11 @@ public class BuildingUpgrade
     public string name;
     public delegate void UpgradeDelegate();
     public UpgradeDelegate performUpgrade;
+    public BuildingUpgrade(string newName, UpgradeDelegate method)
+    {
+        name = newName;
+        performUpgrade = method;
+    }
 }
 
 public interface ZoneBuilding

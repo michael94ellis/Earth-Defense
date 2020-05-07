@@ -54,24 +54,16 @@ public class CapitolCity : MonoBehaviour, ZoneBuilding, MenuDisplayItem
 
     void HandleUpgrades()
     {
-        AddUpgrade("Increase Max Pop.", IncreaseMaxPop);
-        AddUpgrade("Increase Pop. Regen", IncreasePopRegen);
+        upgrades.Add(new BuildingUpgrade("Increase Max Pop.", IncreaseMaxPop));
+        upgrades.Add(new BuildingUpgrade("Increase Pop. Regen", IncreasePopRegen));
         if (!shieldIsPurchased)
         {
-            AddUpgrade("Buy Shield", BuyShield);
+            upgrades.Add(new BuildingUpgrade("Buy Shield", BuyShield));
         }
         else
         {
-            AddUpgrade("Decrease Shield Recharge Time", DecreaseShieldRechargeTime);
+            upgrades.Add(new BuildingUpgrade("Decrease Shield Recharge Time", DecreaseShieldRechargeTime));
         }
-    }
-
-    void AddUpgrade(string UpgradeName, BuildingUpgrade.UpgradeDelegate UpgradeFunc)
-    {
-        BuildingUpgrade someUpgrade = new BuildingUpgrade();
-        someUpgrade.name = UpgradeName;
-        someUpgrade.performUpgrade = UpgradeFunc;
-        upgrades.Add(someUpgrade);
     }
 
     /// Must be called like so: StartCoroutine(Recharge());

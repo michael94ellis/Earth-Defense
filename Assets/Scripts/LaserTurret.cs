@@ -19,7 +19,6 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     public Transform BarrelPivot;
     public Transform BarrelTip;
 
-
     public string Title { get { return "Laser Turret"; } }
     public string InfoText
     {
@@ -40,10 +39,7 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
 
     void Start()
     {
-        BuildingUpgrade RechargeUpgrade = new BuildingUpgrade();
-        RechargeUpgrade.name = "Decrease Recharge Time";
-        RechargeUpgrade.performUpgrade = DecreaseRechargeTime;
-        upgrades.Add(RechargeUpgrade);
+        upgrades.Add(new BuildingUpgrade("Decrease Recharge Time", DecreaseRechargeTime));
         Laser = gameObject.GetComponent<LineRenderer>();
     }
 
