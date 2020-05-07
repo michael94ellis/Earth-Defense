@@ -42,6 +42,7 @@ public class CapitolCity : MonoBehaviour, ZoneBuilding, MenuDisplayItem
     {
         ParentZone.MaxPopulation += 1000;
     }
+
     void IncreasePopRegen()
     {
         ParentZone.PopulationRegenRate *= 1.01f;

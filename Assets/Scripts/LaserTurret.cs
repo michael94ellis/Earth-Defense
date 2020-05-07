@@ -45,6 +45,8 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
 
     void Update()
     {
+        if (!isActive)
+            return;
         if (currentTarget != null)
             BarrelPivot.up = currentTarget.transform.position - BarrelPivot.transform.position;
         // Animation for the laser while its bein fired

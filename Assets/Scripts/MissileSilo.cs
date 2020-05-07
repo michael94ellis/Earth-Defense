@@ -55,6 +55,8 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     // Update is called once per frame
     void Update()
     {
+        if (!isActive)
+            return;
         // If the missile launcher is done firing we have to wait for it to reload to fire again
         if (!isLoaded)
             return;
@@ -64,15 +66,12 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         {
             //Debug.Log("Laser Turret Beginning Fire Sequence");
             // Check for any sight obstructions to the alien ship
-            if (alienShip.activeInHierarchy && CheckLineOfSight(alienShip))
+            if (alienShip != null && CheckLineOfSight(alienShip) && !ParentZone.ActiveTargets.Contains(alienShip))
             {
-                if (!ParentZone.ActiveTargets.Contains(alienShip))
-                {
-                    currentTarget = alienShip;
-                    ParentZone.ActiveTargets.Add(alienShip);
-                }
-                return;
+                currentTarget = alienShip;
+                ParentZone.ActiveTargets.Add(alienShip);
             }
+            return;
         }
     }
 

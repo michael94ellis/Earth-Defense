@@ -63,6 +63,7 @@ public class BuildMenu : MonoBehaviour
     {
         // Set the object to this variable so we can display it in the Update method while the user picks a location
         PurchasedZoneBuilding = newObj;
+        PurchasedZoneBuilding.isActive = false;
         // Set the scale passed in by the Instantiating function
         PurchasedZoneBuilding.buildingTransform.localScale = Vector3.one;
         // Reset the cached list of colliders just in case they changed
