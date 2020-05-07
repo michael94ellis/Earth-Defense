@@ -20,8 +20,8 @@ public class BuildMenu : MonoBehaviour
     void Start()
     {
         // idk why but its not working when i set these in the inspector of unity
-        CityRef = Resources.Load("City");
-        GeneratorRef = Resources.Load("Generator");
+        //CityRef = Resources.Load("City");
+        //GeneratorRef = Resources.Load("Generator");
         MissileSiloRef = Resources.Load("MissileSilo");
         LaserTurretRef = Resources.Load("Turret");
     }
@@ -43,20 +43,20 @@ public class BuildMenu : MonoBehaviour
     //--------End Weapons--------------
 
     //-----New Defensive ZoneBuildings-----
-    public void BuyMinorCity()
-    {
-        ZoneBuilding newZoneBuilding = (Instantiate(CityRef) as GameObject).GetComponent<ZoneBuilding>();
-        newZoneBuilding.buildingType = ZoneBuildingType.City;
-        HandleNewObject(newZoneBuilding);
-    }
+    //public void BuyMinorCity()
+    //{
+    //    ZoneBuilding newZoneBuilding = (Instantiate(CityRef) as GameObject).GetComponent<ZoneBuilding>();
+    //    newZoneBuilding.buildingType = ZoneBuildingType.City;
+    //    HandleNewObject(newZoneBuilding);
+    //}
 
 
-    public void BuyShieldGenerator()
-    {
-        ZoneBuilding newZoneBuilding = (Instantiate(GeneratorRef) as GameObject).GetComponent<ZoneBuilding>();
-        newZoneBuilding.buildingType = ZoneBuildingType.ShieldGenerator;
-        HandleNewObject(newZoneBuilding);
-    }
+    //public void BuyShieldGenerator()
+    //{
+    //    ZoneBuilding newZoneBuilding = (Instantiate(GeneratorRef) as GameObject).GetComponent<ZoneBuilding>();
+    //    newZoneBuilding.buildingType = ZoneBuildingType.ShieldGenerator;
+    //    HandleNewObject(newZoneBuilding);
+    //}
     //--------End Defenses--------------
     //-----Build Objects------
     void HandleNewObject(ZoneBuilding newObj)
@@ -97,21 +97,12 @@ public class BuildMenu : MonoBehaviour
                 if (selectedZone == null && ControlledZoneColliders.Keys.Contains(hit.collider))
                 {
                     // This should only be reached once each time the user hovers over a zone
-                    if (PurchasedZoneBuilding.buildingType == ZoneBuildingType.ShieldGenerator && ControlledZoneColliders[hit.collider].ShieldGenerator != null)
-                    {
-                        // Only 1 shield generator per zone
-                        selectedZone = null;
-                        return;
-                    }
-                    else
-                    {
-                        //Debug.Log("selected zone");
-                        selectedZone = ControlledZoneColliders[hit.collider];
-                        PurchasedZoneBuilding.ParentZone = selectedZone;
-                        PurchasedZoneBuilding.isActive = true;
-                        // Put it in the coord space of the earthzone
-                        PurchasedZoneBuilding.buildingTransform.SetParent(selectedZone.transform, true);
-                    }
+                    //Debug.Log("selected zone");
+                    selectedZone = ControlledZoneColliders[hit.collider];
+                    PurchasedZoneBuilding.ParentZone = selectedZone;
+                    PurchasedZoneBuilding.isActive = true;
+                    // Put it in the coord space of the earthzone
+                    PurchasedZoneBuilding.buildingTransform.SetParent(selectedZone.transform, true);
                 }
                 else if (selectedZone != null && hit.transform.tag == "Earth" // user is hovering over controlled zone on earth
                     && ControlledZoneColliders.FirstOrDefault(key => key.Value == selectedZone).Key.bounds.Contains(hit.point)) // get the collider(key) based on the value(earthzone)
@@ -125,7 +116,7 @@ public class BuildMenu : MonoBehaviour
                     if (Input.GetMouseButton(0))
                     {
                         selectedZone.ZoneBuildings.Add(PurchasedZoneBuilding);
-                        SetZoneCollidersEnabled(false);
+                        //SetZoneCollidersEnabled(false);
                         PurchasedZoneBuilding = null;
                         selectedZone = null;
                     }

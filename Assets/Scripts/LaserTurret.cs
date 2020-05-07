@@ -31,8 +31,7 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         }
     }
 
-    private List<BuildingUpgrade> LaserUpgrades = new List<BuildingUpgrade>();
-    public List<BuildingUpgrade> upgrades { get { return LaserUpgrades; } }
+    public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
 
     void DecreaseRechargeTime()
     {
@@ -44,7 +43,7 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         BuildingUpgrade RechargeUpgrade = new BuildingUpgrade();
         RechargeUpgrade.name = "Decrease Recharge Time";
         RechargeUpgrade.performUpgrade = DecreaseRechargeTime;
-        LaserUpgrades.Add(RechargeUpgrade);
+        upgrades.Add(RechargeUpgrade);
         Laser = gameObject.GetComponent<LineRenderer>();
     }
 

@@ -39,8 +39,7 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         }
     }
 
-    private List<BuildingUpgrade> MissileSiloUpgrades = new List<BuildingUpgrade>();
-    public List<BuildingUpgrade> upgrades { get { return MissileSiloUpgrades; } }
+    public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
 
     void DecreaseReloadTime()
     {
@@ -52,7 +51,7 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         BuildingUpgrade ReloadUpgrade = new BuildingUpgrade();
         ReloadUpgrade.name = "Decrease Reload Time";
         ReloadUpgrade.performUpgrade = DecreaseReloadTime;
-        MissileSiloUpgrades.Add(ReloadUpgrade);
+        upgrades.Add(ReloadUpgrade);
         earth = GameObject.Find("Earth");
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
 {
-    public string Title { get { return "EarthZone"; } }
+    public string Title { get { return "Earth Zone"; } }
     public string InfoText
     {
         get
@@ -14,8 +14,7 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
         }
     }
     public MeshRenderer Shield;
-    public ShieldGenerator ShieldGenerator;
-    public City Capitol;
+    public CapitolCity Capitol;
     public List<ZoneBuilding> ZoneBuildings = new List<ZoneBuilding>();
     // Keep track of targets so weapons in city work together better
     public List<GameObject> ActiveTargets = new List<GameObject>();
@@ -24,13 +23,14 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
     public GameObject ShieldBar;
     public float MaxPopulation = 5000;
     private float _Population = 5000;
+    public float PopulationRegenRate = 1.000001f;
     public float Population
     {
         get
         {
             return _Population;
         }
-        private set
+        set
         {
             if (value <= 0)
                 _Population = 0;
@@ -38,9 +38,10 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
                 _Population = MaxPopulation;
             else
                 _Population = value;
+            UpdateHealthbar();
         }
     }
-    public float MaxShieldHealth = 100000;
+    public float MaxShieldHealth = 10000;
     private float _ShieldHealth = 0;
     public float ShieldHealth
     {
@@ -56,6 +57,7 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
                 _ShieldHealth = MaxShieldHealth;
             else
                 _ShieldHealth = value;
+            UpdateHealthbar();
         }
     }
 
@@ -76,11 +78,10 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
             {
                 //Debug.Log("Disable shield");
                 Shield.enabled = false;
-                if (ShieldGenerator != null)
-                    StartCoroutine(ShieldGenerator.Recharge());
+                //if (ShieldGenerator != null)
+                StartCoroutine(Capitol.RechargeShield());
             }
         }
-        UpdateHealthbar();
         return true;
     }
 

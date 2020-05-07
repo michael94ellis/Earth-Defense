@@ -42,14 +42,6 @@ public interface ZoneBuilding
     List<BuildingUpgrade> upgrades { get; }
 }
 
-public enum DisplayItemType
-{
-    Alien,
-    Earth,
-    EarthZone,
-    ZoneBuilding
-}
-
 public interface MenuDisplayItem
 {
     string Title { get; }
@@ -117,7 +109,7 @@ public class MenuManager : MonoBehaviour
                 ZoneBuilding zoneBuildingHit = hit.collider.GetComponent<ZoneBuilding>();
                 if (zoneBuildingHit != null)
                 {
-                    _DetailMenu.Display(DisplayItemType.ZoneBuilding, hit.collider.gameObject);
+                    _DetailMenu.Display(hit.collider.gameObject);
                     CurrentlyDisplayedMenu = MenuScreen.Detail;
                     return;
                 }
