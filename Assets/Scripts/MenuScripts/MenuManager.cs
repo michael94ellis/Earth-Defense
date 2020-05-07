@@ -8,6 +8,10 @@ public interface Weapon
     void FireAt(Vector3 target);
     IEnumerator Fire();
     IEnumerator Recharge();
+
+    //float ReloadTime { get; set; }
+    //float Range { get; set; }
+    //float Damage { get; set; }
 }
 public interface Damageable
 {
@@ -22,12 +26,20 @@ public enum ZoneBuildingType
     ShieldGenerator
 }
 
+public class BuildingUpgrade
+{
+    public string name;
+    public delegate void UpgradeDelegate();
+    public UpgradeDelegate performUpgrade;
+}
+
 public interface ZoneBuilding
 {
     bool isActive { get; set; }
     Transform buildingTransform { get; }
     EarthZone ParentZone { get; set; }
     ZoneBuildingType buildingType { get; set; }
+    List<BuildingUpgrade> upgrades { get; }
 }
 
 public enum DisplayItemType
@@ -97,26 +109,17 @@ public class MenuManager : MonoBehaviour
 
     void Update()
     {
-        if (BuildMenu.PurchasedZoneBuilding == null)
+        if (BuildMenu.PurchasedZoneBuilding == null && Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
+            RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
+            foreach (RaycastHit hit in hitsInOrder)
             {
-                RaycastHit[] hitsInOrder = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition)).OrderBy(h => h.distance).ToArray();
-                foreach (RaycastHit hit in hitsInOrder)
+                ZoneBuilding zoneBuildingHit = hit.collider.GetComponent<ZoneBuilding>();
+                if (zoneBuildingHit != null)
                 {
-                    EarthZone earthZoneHit = hit.collider.GetComponent<EarthZone>();
-                    ZoneBuilding zoneBuildingHit = hit.collider.GetComponent<ZoneBuilding>();
-                    if (zoneBuildingHit != null)
-                    {
-                        _DetailMenu.Display(DisplayItemType.ZoneBuilding, hit.collider.gameObject);
-                        CurrentlyDisplayedMenu = MenuScreen.Detail;
-                        return;
-                    }
-                    else if (earthZoneHit != null)
-                    {
-                        CurrentlyDisplayedMenu = MenuScreen.Detail;
-                        return;
-                    }
+                    _DetailMenu.Display(DisplayItemType.ZoneBuilding, hit.collider.gameObject);
+                    CurrentlyDisplayedMenu = MenuScreen.Detail;
+                    return;
                 }
             }
         }
@@ -124,6 +127,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenShopMenu()
     {
+        _LastScreen = MenuScreen.Shop;
         CurrentlyDisplayedMenu = MenuScreen.Shop;
     }
 
@@ -140,9 +144,13 @@ public class MenuManager : MonoBehaviour
     public void MenuButtonPress()
     {
         if (_CurrentScreen == MenuScreen.None)
+        {
             CurrentlyDisplayedMenu = _LastScreen;
+        }
         else
+        {
             CurrentlyDisplayedMenu = MenuScreen.None;
+        }
     }
 
     public void SendAlienWave()

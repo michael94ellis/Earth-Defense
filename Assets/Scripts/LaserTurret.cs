@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     public EarthZone ParentZone { get; set; }
     public ZoneBuildingType buildingType { get; set; }
     private float fireDuration = 0.5f;
-    private int rechargeTime = 1;
+    private float rechargeTime = 1;
     private bool isCharged = true;
     private bool isFiring = false;
     private GameObject currentTarget;
@@ -30,15 +31,23 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         }
     }
 
-    // Start is called before the first frame update
+    private List<BuildingUpgrade> LaserUpgrades = new List<BuildingUpgrade>();
+    public List<BuildingUpgrade> upgrades { get { return LaserUpgrades; } }
+
+    void DecreaseRechargeTime()
+    {
+        rechargeTime *= 0.9f;
+    }
+
     void Start()
     {
-        int explosionNumber = Random.Range(1, 10);
-        // Laser and Explosion Sounds
+        BuildingUpgrade RechargeUpgrade = new BuildingUpgrade();
+        RechargeUpgrade.name = "Decrease Recharge Time";
+        RechargeUpgrade.performUpgrade = DecreaseRechargeTime;
+        LaserUpgrades.Add(RechargeUpgrade);
         Laser = gameObject.GetComponent<LineRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (currentTarget != null)

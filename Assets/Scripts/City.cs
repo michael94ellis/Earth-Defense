@@ -22,4 +22,19 @@ public class City : MonoBehaviour, ZoneBuilding, MenuDisplayItem
                 "Regen Rate: " + PopulationRegenRate;
         }
     }
+    private List<BuildingUpgrade> CityUpgrades = new List<BuildingUpgrade>();
+    public List<BuildingUpgrade> upgrades { get { return CityUpgrades; } }
+
+    void IncreaseMaxPop()
+    {
+        MaxPopulation += 1000;
+    }
+
+    void Start()
+    {
+        BuildingUpgrade MaxPopUpgrade = new BuildingUpgrade();
+        MaxPopUpgrade.name = "Increase Max Pop.";
+        MaxPopUpgrade.performUpgrade = IncreaseMaxPop;
+        CityUpgrades.Add(MaxPopUpgrade);
+    }
 }

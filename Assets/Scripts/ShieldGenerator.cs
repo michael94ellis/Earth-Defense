@@ -6,9 +6,10 @@ public class ShieldGenerator : MonoBehaviour, ZoneBuilding, MenuDisplayItem
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
+    public EarthZone _ParentZone;
     public EarthZone ParentZone { get; set; }
     public ZoneBuildingType buildingType { get; set; }
-    public int rechargeTime = 5;
+    public float rechargeTime = 5;
     public bool shieldIsCharged = true;
     public float shieldRegenRate = 1f;
     public float ShieldBoost = 3000;
@@ -22,6 +23,21 @@ public class ShieldGenerator : MonoBehaviour, ZoneBuilding, MenuDisplayItem
                 "Regen Rate: " + shieldRegenRate + "\n" +
                 "Charged: " + shieldIsCharged;
         }
+    }
+    private List<BuildingUpgrade> ShieldUpgrades = new List<BuildingUpgrade>();
+    public List<BuildingUpgrade> upgrades { get { return ShieldUpgrades; } }
+
+    void DecreaseShieldRecharge()
+    {
+        rechargeTime *= 0.9f;
+    }
+
+    void Start()
+    {
+        BuildingUpgrade ShieldRechargeUpgrade = new BuildingUpgrade();
+        ShieldRechargeUpgrade.name = "Decrease Shield Recharge Time";
+        ShieldRechargeUpgrade.performUpgrade = DecreaseShieldRecharge;
+        ShieldUpgrades.Add(ShieldRechargeUpgrade);
     }
 
     void Update()

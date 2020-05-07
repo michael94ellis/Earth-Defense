@@ -27,15 +27,26 @@ public class DetailMenu : MonoBehaviour
             case DisplayItemType.EarthZone:
                 break;
             case DisplayItemType.ZoneBuilding:
+                TopTab.GetComponentInChildren<Text>().text = "Zone";
                 break;
         }
         // Set title of button
         DisplayItem = itemToDisplay.GetComponent<MenuDisplayItem>();
         Title.text = DisplayItem.Title;
         Info.text = DisplayItem.InfoText;
-        if (itemToDisplay.GetComponent<ZoneBuilding>() != null)
+        ZoneBuilding zoneBuilding = itemToDisplay.GetComponent<ZoneBuilding>();
+        if (zoneBuilding != null)
         {
-
+            int y = -250;
+            foreach (BuildingUpgrade upgrade in zoneBuilding.upgrades)
+            {
+                CreateNewButton(new Vector3(0, y, 0));
+                MenuButton.GetComponentInChildren<Text>().text = upgrade.name;
+                MenuButton.GetComponent<Button>().onClick.AddListener(() => upgrade.performUpgrade());
+                MenuButton.GetComponent<Button>().onClick.AddListener(() => {
+                    Info.text = DisplayItem.InfoText;
+                } );
+            }
         }
     }
 
@@ -43,9 +54,13 @@ public class DetailMenu : MonoBehaviour
     //{
     //}
 
-    //private void CreateNewButton(Vector3 position)
-    //{
-    //    MenuButton = Instantiate(Resources.Load("OptionButton") as GameObject, position, Quaternion.identity);
-    //    MenuButton.transform.SetParent(transform, false);
-    //}
+    private void CreateNewButton(Vector3 position)
+    {
+        if (MenuButton == null)
+        {
+            MenuButton = Instantiate(Resources.Load("OptionButton") as GameObject, position, Quaternion.identity);
+            MenuButton.transform.SetParent(transform, false);
+        }
+
+    }
 }

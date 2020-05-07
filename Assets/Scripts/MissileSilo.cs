@@ -21,8 +21,8 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     public GameObject LeftDoor;
     public GameObject RightDoor;
     public Vector3 MissileSpawnPoint;
-    private int fireDuration = 2;
-    private int reloadTime = 2;
+    private float fireDuration = 2;
+    private float reloadTime = 2;
     private bool isLoaded = true;
     private GameObject currentTarget;
     public GameObject Missile;
@@ -39,9 +39,20 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         }
     }
 
-    // Start is called before the first frame update
+    private List<BuildingUpgrade> MissileSiloUpgrades = new List<BuildingUpgrade>();
+    public List<BuildingUpgrade> upgrades { get { return MissileSiloUpgrades; } }
+
+    void DecreaseReloadTime()
+    {
+        reloadTime *= 0.9f;
+    }
+
     void Start()
     {
+        BuildingUpgrade ReloadUpgrade = new BuildingUpgrade();
+        ReloadUpgrade.name = "Decrease Reload Time";
+        ReloadUpgrade.performUpgrade = DecreaseReloadTime;
+        MissileSiloUpgrades.Add(ReloadUpgrade);
         earth = GameObject.Find("Earth");
     }
 
