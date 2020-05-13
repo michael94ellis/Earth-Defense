@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 public class Earth : MonoBehaviour
 {
+    public float TimeUnit;
     // This holds an item that was just purchased so it can be placed on the earth
     public GameObject NewObject;
     public static List<EarthZone> AllZones = new List<EarthZone>();
@@ -29,5 +30,16 @@ public class Earth : MonoBehaviour
             if (zone != null)
                 ControlledZones.Add(zone);
         }
+        StartCoroutine(GameTimer());
+    }
+
+
+    public IEnumerator GameTimer()
+    {
+        yield return new WaitForSeconds(TimeUnit);
+        // Population Increase
+        // Player Money += Taxes from Earth Zones
+
+        StartCoroutine(GameTimer());
     }
 }

@@ -46,6 +46,8 @@ public interface ZoneBuilding
     EarthZone ParentZone { get; set; }
     ZoneBuildingType buildingType { get; set; }
     List<BuildingUpgrade> upgrades { get; }
+    int PowerCost { get; set; }
+    int PopulationCost { get; set; }
 }
 
 public interface MenuDisplayItem

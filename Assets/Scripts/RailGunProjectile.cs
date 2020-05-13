@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
 using UnityEngine;
 
-public class Missile : MonoBehaviour, MissileSpec
+public class RailGunProjectile : MonoBehaviour, MissileSpec
 {
     public GameObject target;
     float _launchSpeed = 1;
@@ -31,7 +30,6 @@ public class Missile : MonoBehaviour, MissileSpec
         }
         else
         {
-            // TODO: Replace with Object Pooling
             Destroy(gameObject);
         }
     }
@@ -43,7 +41,6 @@ public class Missile : MonoBehaviour, MissileSpec
         {
             Debug.Log("Boom");
             alienScript.TakeDamage((int)damage);
-            // TODO: Replace with Object Pooling
             Destroy(gameObject);
         }
     }

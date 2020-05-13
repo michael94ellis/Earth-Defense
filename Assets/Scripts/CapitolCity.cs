@@ -10,10 +10,10 @@ public class CapitolCity : MonoBehaviour, ZoneBuilding, MenuDisplayItem
     public EarthZone Zone;
     public EarthZone ParentZone { get => Zone; set => Zone = value; }
     public ZoneBuildingType buildingType { get; set; }
-
-    public float shieldRechargeTime = 5;
-    public float shieldRegenRate = 1f;
-    public bool shieldIsPurchased = false;
+    public int _PowerCost;
+    public int PowerCost { get => _PowerCost; set => _PowerCost = value; }
+    public int _PopulationCost;
+    public int PopulationCost { get => _PopulationCost; set => _PopulationCost = value; }
 
     public string Title { get { return "Capitol City"; } }
     public string InfoText
@@ -27,17 +27,8 @@ public class CapitolCity : MonoBehaviour, ZoneBuilding, MenuDisplayItem
     }
     public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
 
-    void BuyShield()
-    {
-        ParentZone.Shield.enabled = true;
-        ParentZone.ShieldHealth = ParentZone.MaxShieldHealth / 2;
-        shieldIsPurchased = true;
-    }
-    void DecreaseShieldRechargeTime()
-    {
-        ParentZone.Shield.enabled = true;
-        shieldIsPurchased = true;
-    }
+
+
     void IncreaseMaxPop()
     {
         ParentZone.MaxPopulation += 1000;
@@ -57,24 +48,5 @@ public class CapitolCity : MonoBehaviour, ZoneBuilding, MenuDisplayItem
     {
         upgrades.Add(new BuildingUpgrade("Increase Max Pop.", IncreaseMaxPop));
         upgrades.Add(new BuildingUpgrade("Increase Pop. Regen", IncreasePopRegen));
-        if (!shieldIsPurchased)
-        {
-            upgrades.Add(new BuildingUpgrade("Buy Shield", BuyShield));
-        }
-        else
-        {
-            upgrades.Add(new BuildingUpgrade("Decrease Shield Recharge Time", DecreaseShieldRechargeTime));
-        }
-    }
-
-    /// Must be called like so: StartCoroutine(Recharge());
-    public IEnumerator RechargeShield()
-    {
-        if (shieldIsPurchased)
-        {
-            yield return new WaitForSeconds(shieldRechargeTime);
-            Debug.Log("Restore shield");
-            ParentZone.ShieldHealth += 1000;
-        }
     }
 }

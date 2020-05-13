@@ -9,6 +9,11 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     public Transform buildingTransform { get { return transform; } }
     public EarthZone ParentZone { get; set; }
     public ZoneBuildingType buildingType { get; set; }
+    public int _PowerCost;
+    public int PowerCost { get => _PowerCost; set => _PowerCost = value; }
+    public int _PopulationCost;
+    public int PopulationCost { get => _PopulationCost; set => _PopulationCost = value; }
+
     private float fireDuration = 0.5f;
     private float rechargeTime = 1;
     private bool isCharged = true;

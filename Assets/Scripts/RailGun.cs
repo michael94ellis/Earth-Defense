@@ -1,18 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using UnityEngine;
 
-public interface MissileSpec
-{
-    string name { get; }
-    float launchSpeed { get; set; }
-    float moveSpeed { get; set; }
-    float damage { get; set; }
-}
-
-public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
+public class RailGun : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -23,24 +14,22 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     public int _PopulationCost;
     public int PopulationCost { get => _PopulationCost; set => _PopulationCost = value; }
 
-    public GameObject LeftDoor;
-    public GameObject RightDoor;
-    public Vector3 MissileSpawnPoint;
+    public Vector3 ProjectileSpawnPoint;
     private float fireDuration = 2;
-    private float reloadTime = 2;
+    private float reloadTime = 3;
     private bool isLoaded = true;
     private GameObject currentTarget;
-    public GameObject Missile;
+    public GameObject Projectile;
     public GameObject earth;
 
-    public string Title { get { return "Missile Silo"; } }
+    public string Title { get { return "Rail Gun"; } }
     public string InfoText
     {
         get
         {
             return "Reload Time: " + reloadTime + "\n" +
                 "Fire Time: " + fireDuration + "\n" +
-                "Missile Type: " +  "n/a";
+                "Projectile Type: " + "n/a";
         }
     }
 
@@ -60,12 +49,16 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     // Update is called once per frame
     void Update()
     {
-        if (!isActive || !isLoaded)
+        if (!isActive)
+            return;
+        // If the missile launcher is done firing we have to wait for it to reload to fire again
+        if (!isLoaded)
             return;
         if (currentTarget != null && CheckLineOfSight(currentTarget) && currentTarget.activeInHierarchy)
             return;
         foreach (GameObject alienShip in AlienSpawner.ActiveAliens.OrderBy(a => Random.value).ToList())
         {
+            //Debug.Log("Laser Turret Beginning Fire Sequence");
             // Check for any sight obstructions to the alien ship
             if (alienShip != null && CheckLineOfSight(alienShip) && !ParentZone.ActiveTargets.Contains(alienShip))
             {
@@ -78,12 +71,13 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
 
     public bool CheckLineOfSight(GameObject alienShip)
     {
-        // Determine if there is line of sight to the target
+        // Debug.Log("checking for sight");
+        // Determine if there is line of sight to the alien ship
         if ((alienShip.transform.position - transform.position).magnitude < 1000f) // pop pop
         {
-            // Begin animating
+            //Debug.Log("Firing at: " + hit.transform.gameObject);
             FireAt(alienShip.transform.position);
-                return true;
+            return true;
         }
         return false;
     }
@@ -101,9 +95,6 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
 
     public void FireAt(Vector3 target)
     {
-        // Open Doors
-        StartCoroutine(RotateDoor(RightDoor.transform, new Vector3(-90, 0, 0), 1f));
-        StartCoroutine(RotateDoor(LeftDoor.transform, new Vector3(-90, 0, 0), 1f));
         StartCoroutine(Fire());
     }
 
@@ -111,14 +102,14 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     {
         isLoaded = false;
         yield return new WaitForSeconds(fireDuration);
-        // Fire Missile 
-        GameObject newMissile = Instantiate(Missile, earth.transform);
-        newMissile.transform.localScale = new Vector3(0.1f, 0.25f, 0.1f);
-        Missile missileScript = newMissile.GetComponent<Missile>();
-        if (missileScript != null)
+        // Fire Projectile 
+        GameObject newRailGunProjectile = Instantiate(Projectile, earth.transform);
+        newRailGunProjectile.transform.localScale = new Vector3(0.1f, 0.25f, 0.1f);
+        RailGunProjectile projectileScript = newRailGunProjectile.GetComponent<RailGunProjectile>();
+        if (projectileScript != null)
         {
-            missileScript.target = currentTarget;
-            newMissile.transform.position = transform.position;
+            projectileScript.target = currentTarget;
+            newRailGunProjectile.transform.position = transform.position;
         }
         ParentZone.ActiveTargets.Remove(currentTarget);
         currentTarget = null;
@@ -127,12 +118,8 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
 
     public IEnumerator Recharge()
     {
-        // Close doors
-        StartCoroutine(RotateDoor(RightDoor.transform, new Vector3(90, 0, 0), 1f));
-        StartCoroutine(RotateDoor(LeftDoor.transform, new Vector3(-90, 0, 0), 1f));
         yield return new WaitForSeconds(reloadTime);
         isLoaded = true;
-        // Load new missile
-        // TODO: Reuse missiles from an object pool
+        // Load new Projectile(or reuse from pool)
     }
 }

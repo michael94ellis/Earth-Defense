@@ -2968,7 +2968,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 407ab85a093c94d5c979692087369645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _DisplayItemType: 0
   Title: {fileID: 102649380}
   Info: {fileID: 702754170}
   TopTab: {fileID: 831660651}
@@ -3269,7 +3268,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 407ab85a093c94d5c979692087369645, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _DisplayItemType: 0
   Title: {fileID: 1827105572}
   Info: {fileID: 438331818}
   TopTab: {fileID: 6231724121037710251}

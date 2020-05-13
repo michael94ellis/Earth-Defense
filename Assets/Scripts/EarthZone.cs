@@ -13,17 +13,20 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
                 "Population: " + Population + " / " + MaxPopulation;
         }
     }
+    // This is the reference to the object that represents the shield, enable/disable to show and hide shield
     public MeshRenderer Shield;
+    // Each earthzone has a capitol in the center of the prefab, this is a reference to its script
     public CapitolCity Capitol;
+    // When the player adds things they ought to be in this list
     public List<ZoneBuilding> ZoneBuildings = new List<ZoneBuilding>();
     // Keep track of targets so weapons in city work together better
     public List<GameObject> ActiveTargets = new List<GameObject>();
 
     public GameObject HealthBar;
     public GameObject ShieldBar;
-    public float MaxPopulation = 5000;
-    private float _Population = 5000;
-    public float PopulationRegenRate = 1.000001f;
+    public float MaxPopulation = 500000;
+    private float _Population = 100000;
+    public float PopulationRegenRate = 0.03f;
     public float Population
     {
         get
@@ -63,7 +66,6 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
 
     public bool TakeDamage(int amount = 1)
     {
-        //Debug.Log("Damage Taken");
         if (ShieldHealth <= 0)
         {
             if (Population > 0)
@@ -76,13 +78,29 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
             ShieldHealth -= amount;
             if (ShieldHealth <= 0)
             {
-                //Debug.Log("Disable shield");
                 Shield.enabled = false;
-                //if (ShieldGenerator != null)
-                StartCoroutine(Capitol.RechargeShield());
             }
         }
         return true;
+    }
+
+    public float MaxPowerUnits = 1000f;
+    private float _PowerUnits = 100f;
+    public float PowerUnits
+    {
+        get
+        {
+            return _PowerUnits;
+        }
+        set
+        {
+            if (value <= 0)
+                _PowerUnits = 0;
+            else if (value > MaxPowerUnits)
+                _PowerUnits = MaxPowerUnits;
+            else
+                _PowerUnits = value;
+        }
     }
 
     void UpdateHealthbar()
