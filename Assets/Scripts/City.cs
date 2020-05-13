@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Factory : MonoBehaviour, ZoneBuilding, MenuDisplayItem
+public class City : MonoBehaviour, ZoneBuilding, MenuDisplayItem
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -34,7 +34,7 @@ public class Factory : MonoBehaviour, ZoneBuilding, MenuDisplayItem
         }
     }
 
-    public string Title { get { return "Factory"; } }
+    public string Title { get { return "City"; } }
     public string InfoText
     {
         get
@@ -43,4 +43,9 @@ public class Factory : MonoBehaviour, ZoneBuilding, MenuDisplayItem
         }
     }
     public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
+
+    void Start()
+    {
+        //HandleUpgrades();
+    }
 }

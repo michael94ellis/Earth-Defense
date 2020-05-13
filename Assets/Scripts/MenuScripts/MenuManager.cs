@@ -60,7 +60,6 @@ public class MenuManager : MonoBehaviour
 {
     public Earth earth;
     // Menu Panel Refs
-    public GameObject UpgradePanel;
     public GameObject DetailPanel;
     public DetailMenu _DetailMenu;
     public GameObject ShopPanel;
@@ -68,7 +67,6 @@ public class MenuManager : MonoBehaviour
     public enum MenuScreen
     {
         None,
-        Upgrade,
         Detail,
         Shop
     }
@@ -83,8 +81,6 @@ public class MenuManager : MonoBehaviour
                     return ShopPanel;
                 case MenuScreen.Detail:
                     return DetailPanel;
-                case MenuScreen.Upgrade:
-                    return UpgradePanel;
             }
             return null;
         }
@@ -99,7 +95,6 @@ public class MenuManager : MonoBehaviour
         {
             DetailPanel.SetActive(false);
             ShopPanel.SetActive(false);
-            UpgradePanel.SetActive(false);
             _LastScreen = _CurrentScreen;
             _CurrentScreen = value;
             if (_CurrentScreen != MenuScreen.None)

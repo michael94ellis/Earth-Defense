@@ -8,6 +8,8 @@ public class BuildMenu : MonoBehaviour
     // Object Refs to Instantiate new stuff
     Object CityRef;
     Object GeneratorRef;
+    Object FactoryRef;
+    Object PowerPlantRef;
     Object MissileSiloRef;
     Object LaserTurretRef;
     //Object SatelliteRef;
@@ -20,8 +22,10 @@ public class BuildMenu : MonoBehaviour
     void Start()
     {
         // idk why but its not working when i set these in the inspector of unity
-        //CityRef = Resources.Load("City");
-        //GeneratorRef = Resources.Load("Generator");
+        CityRef = Resources.Load("City");
+        GeneratorRef = Resources.Load("Generator");
+        FactoryRef = Resources.Load("Factory");
+        PowerPlantRef = Resources.Load("PowerPlant");
         MissileSiloRef = Resources.Load("MissileSilo");
         LaserTurretRef = Resources.Load("Turret");
     }
@@ -43,20 +47,35 @@ public class BuildMenu : MonoBehaviour
     //--------End Weapons--------------
 
     //-----New Defensive ZoneBuildings-----
-    //public void BuyMinorCity()
-    //{
-    //    ZoneBuilding newZoneBuilding = (Instantiate(CityRef) as GameObject).GetComponent<ZoneBuilding>();
-    //    newZoneBuilding.buildingType = ZoneBuildingType.City;
-    //    HandleNewObject(newZoneBuilding);
-    //}
+    public void BuyCity()
+    {
+        ZoneBuilding newZoneBuilding = (Instantiate(CityRef) as GameObject).GetComponent<ZoneBuilding>();
+        newZoneBuilding.buildingType = ZoneBuildingType.City;
+        HandleNewObject(newZoneBuilding);
+    }
 
+    public void BuyShieldGenerator()
+    {
+        ZoneBuilding newZoneBuilding = (Instantiate(GeneratorRef) as GameObject).GetComponent<ZoneBuilding>();
+        newZoneBuilding.buildingType = ZoneBuildingType.ShieldGenerator;
+        HandleNewObject(newZoneBuilding);
+    }
 
-    //public void BuyShieldGenerator()
-    //{
-    //    ZoneBuilding newZoneBuilding = (Instantiate(GeneratorRef) as GameObject).GetComponent<ZoneBuilding>();
-    //    newZoneBuilding.buildingType = ZoneBuildingType.ShieldGenerator;
-    //    HandleNewObject(newZoneBuilding);
-    //}
+    public void BuyPowerPlant()
+    {
+        GameObject NewObject = (Instantiate(PowerPlantRef) as GameObject);
+        ZoneBuilding newZoneBuilding = NewObject.GetComponent<ZoneBuilding>();
+        newZoneBuilding.buildingType = ZoneBuildingType.City;
+        HandleNewObject(newZoneBuilding);
+    }
+
+    public void BuyFactory()
+    {
+        GameObject NewObject = (Instantiate(FactoryRef) as GameObject);
+        ZoneBuilding newZoneBuilding = NewObject.GetComponent<ZoneBuilding>();
+        newZoneBuilding.buildingType = ZoneBuildingType.City;
+        HandleNewObject(newZoneBuilding);
+    }
     //--------End Defenses--------------
     //-----Build Objects------
     void HandleNewObject(ZoneBuilding newObj)
@@ -64,8 +83,6 @@ public class BuildMenu : MonoBehaviour
         // Set the object to this variable so we can display it in the Update method while the user picks a location
         PurchasedZoneBuilding = newObj;
         PurchasedZoneBuilding.isActive = false;
-        // Set the scale passed in by the Instantiating function
-        PurchasedZoneBuilding.buildingTransform.localScale = Vector3.one;
         // Reset the cached list of colliders just in case they changed
         ControlledZoneColliders = new Dictionary<Collider, EarthZone>();
         // Fetch the user's controlled earth zone colliders

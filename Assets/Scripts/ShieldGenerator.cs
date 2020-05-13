@@ -15,9 +15,8 @@ public class ShieldGenerator : MonoBehaviour, ZoneBuilding, MenuDisplayItem
     public int _PopulationCost;
     public int PopulationCost { get => _PopulationCost; set => _PopulationCost = value; }
 
-    public float shieldRechargeTime = 5;
-    public float shieldRegenRate = 1f;
-    public bool shieldIsPurchased = false;
+    public float shieldRechargeTime;
+    public float shieldRegenRate;
 
     public string Title { get { return "Shield Generator"; } }
     public string InfoText
@@ -36,21 +35,13 @@ public class ShieldGenerator : MonoBehaviour, ZoneBuilding, MenuDisplayItem
 
     void HandleUpgrades()
     {
-        if (!shieldIsPurchased)
-        {
-            upgrades.Add(new BuildingUpgrade("Buy Shield", BuyShield));
-        }
-        else
-        {
-            upgrades.Add(new BuildingUpgrade("Decrease Shield Recharge Time", DecreaseShieldRechargeTime));
-        }
+        upgrades.Add(new BuildingUpgrade("Decrease Shield Recharge Time", DecreaseShieldRechargeTime));
     }
 
     void BuyShield()
     {
         ParentZone.Shield.enabled = true;
         ParentZone.ShieldHealth = ParentZone.MaxShieldHealth / 2;
-        shieldIsPurchased = true;
     }
 
     void DecreaseShieldRechargeTime()
