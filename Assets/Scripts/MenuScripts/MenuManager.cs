@@ -38,6 +38,19 @@ public class BuildingUpgrade
         performUpgrade = method;
     }
 }
+public class BuildingStat
+{
+    public string name;
+    public float value;
+    public float maxValue;
+
+    public BuildingStat(string newName, float newValue, float newMaxValue)
+    {
+        name = newName;
+        value = newValue;
+        maxValue = newMaxValue;
+    }
+}
 
 public interface ZoneBuilding
 {
@@ -46,6 +59,7 @@ public interface ZoneBuilding
     EarthZone ParentZone { get; set; }
     ZoneBuildingType buildingType { get; set; }
     List<BuildingUpgrade> upgrades { get; }
+    List<BuildingStat> Stats { get; }
     int PowerCost { get; set; }
     int PopulationCost { get; set; }
 }
@@ -53,7 +67,6 @@ public interface ZoneBuilding
 public interface MenuDisplayItem
 {
     string Title { get; }
-    string InfoText { get; }
 }
 
 public class MenuManager : MonoBehaviour
@@ -61,13 +74,17 @@ public class MenuManager : MonoBehaviour
     public Earth earth;
     // Menu Panel Refs
     public GameObject DetailPanel;
-    public DetailMenu _DetailMenu;
+    public DetailMenu DetailMenu;
+    public GameObject UpgradePanel;
+    public UpgradeMenu UpgradeMenu;
     public GameObject ShopPanel;
+
     // Menu Panel enum to control which panels can be displayed
     public enum MenuScreen
     {
         None,
         Detail,
+        Upgrade,
         Shop
     }
     // Private variables for displaying a screen to the user
@@ -77,10 +94,12 @@ public class MenuManager : MonoBehaviour
         {
             switch (_CurrentScreen)
             {
-                case MenuScreen.Shop:
-                    return ShopPanel;
                 case MenuScreen.Detail:
                     return DetailPanel;
+                case MenuScreen.Upgrade:
+                    return UpgradePanel;
+                case MenuScreen.Shop:
+                    return ShopPanel;
             }
             return null;
         }
@@ -94,6 +113,7 @@ public class MenuManager : MonoBehaviour
         set
         {
             DetailPanel.SetActive(false);
+            UpgradePanel.SetActive(false);
             ShopPanel.SetActive(false);
             _LastScreen = _CurrentScreen;
             _CurrentScreen = value;
@@ -112,7 +132,7 @@ public class MenuManager : MonoBehaviour
                 ZoneBuilding zoneBuildingHit = hit.collider.GetComponent<ZoneBuilding>();
                 if (zoneBuildingHit != null)
                 {
-                    _DetailMenu.Display(hit.collider.gameObject);
+                    DetailMenu.Display(hit.collider.gameObject);
                     CurrentlyDisplayedMenu = MenuScreen.Detail;
                     return;
                 }
@@ -122,13 +142,18 @@ public class MenuManager : MonoBehaviour
 
     public void OpenShopMenu()
     {
-        _LastScreen = MenuScreen.Shop;
         CurrentlyDisplayedMenu = MenuScreen.Shop;
     }
 
     public void OpenDetailMenu()
     {
         CurrentlyDisplayedMenu = MenuScreen.Detail;
+    }
+
+    public void OpenUpgradeMenu()
+    {
+        UpgradePanel.SetActive(true);
+        UpgradeMenu.Display(DetailMenu.DisplayItem);
     }
 
     //public void OpenUpgradeMenu()

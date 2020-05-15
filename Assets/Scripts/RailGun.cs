@@ -14,6 +14,24 @@ public class RailGun : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     public int _PopulationCost;
     public int PopulationCost { get => _PopulationCost; set => _PopulationCost = value; }
 
+    public List<BuildingStat> Stats
+    {
+        get
+        {
+            List<BuildingStat> stats = new List<BuildingStat>();
+            BuildingStat PowerStat = new BuildingStat("Power Req.: ", PowerCost, 1f);
+            BuildingStat PeopleStat = new BuildingStat("People Req.: ", PowerCost, 1f);
+            RailGunProjectile projectile = Projectile.GetComponent<RailGunProjectile>();
+            BuildingStat ProjectileSpeed = new BuildingStat("Projectile Speed: ", projectile.moveSpeed, 1f);
+            BuildingStat ProjectileDamage = new BuildingStat("Projectile Damage: ", projectile.damage, 1f);
+            stats.Add(PowerStat);
+            stats.Add(PeopleStat);
+            stats.Add(ProjectileSpeed);
+            stats.Add(ProjectileDamage);
+            return stats;
+        }
+    }
+
     public Vector3 ProjectileSpawnPoint;
     private float fireDuration = 2;
     private float reloadTime = 3;

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class BuildMenu : MonoBehaviour
 {
+    public MenuManager menuManager;
     // Object Refs to Instantiate new stuff
     Object CityRef;
     Object GeneratorRef;
@@ -92,6 +93,7 @@ public class BuildMenu : MonoBehaviour
         }
         // Enabled them so we can place the object
         SetZoneCollidersEnabled(true);
+        menuManager.ShopPanel.SetActive(false);
     }
 
     //turn colliders on for zones
@@ -137,6 +139,7 @@ public class BuildMenu : MonoBehaviour
                         //SetZoneCollidersEnabled(false);
                         PurchasedZoneBuilding = null;
                         selectedZone = null;
+                        menuManager.ShopPanel.SetActive(true);
                     }
                     return;
                 }

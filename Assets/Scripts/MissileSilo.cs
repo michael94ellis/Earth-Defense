@@ -23,6 +23,24 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     public int _PopulationCost;
     public int PopulationCost { get => _PopulationCost; set => _PopulationCost = value; }
 
+    public List<BuildingStat> Stats
+    {
+        get
+        {
+            List<BuildingStat> stats = new List<BuildingStat>();
+            BuildingStat PowerStat = new BuildingStat("Power Req.: ", PowerCost, 1f);
+            BuildingStat PeopleStat = new BuildingStat("People Req.: " , PowerCost, 1f);
+            Missile missile = Missile.GetComponent<Missile>();
+            BuildingStat MissileSpeed = new BuildingStat("Missile Speed: ", missile.moveSpeed, 1f);
+            BuildingStat MissileDamage = new BuildingStat("Missile Damage: ", missile.damage, 1f);
+            stats.Add(PowerStat);
+            stats.Add(PeopleStat);
+            stats.Add(MissileSpeed);
+            stats.Add(MissileDamage);
+            return stats;
+        }
+    }
+
     public GameObject LeftDoor;
     public GameObject RightDoor;
     public Vector3 MissileSpawnPoint;
@@ -34,17 +52,9 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     public GameObject earth;
 
     public string Title { get { return "Missile Silo"; } }
-    public string InfoText
-    {
-        get
-        {
-            return "Reload Time: " + reloadTime + "\n" +
-                "Fire Time: " + fireDuration + "\n" +
-                "Missile Type: " +  "n/a";
-        }
-    }
 
     public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
+    public List<GameObject> Missiles { get; } = new List<GameObject>();
 
     void DecreaseReloadTime()
     {
@@ -123,6 +133,16 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         ParentZone.ActiveTargets.Remove(currentTarget);
         currentTarget = null;
         StartCoroutine(Recharge());
+    }
+
+    void GetMissileToLaunch()
+    {
+
+    }
+
+    void CreateNewMissile()
+    {
+
     }
 
     public IEnumerator Recharge()

@@ -10,44 +10,81 @@ public struct MenuButton
     public Text title;
 }
 
+public struct MenuText
+{
+    public GameObject gameObject;
+    public Text title;
+}
+
 public class DetailMenu : MonoBehaviour
 {
     List<MenuButton> Buttons = new List<MenuButton>();
-    public MenuDisplayItem DisplayItem;
+    List<MenuText> Texts = new List<MenuText>();
+    public GameObject DisplayItem;
     public Text Title;
     public Text Info;
     public Button TopTab;
     public Button MiddleTab;
     public Button BottomTab;
     // Starting point for placing buttons
-    int buttonPlacementY = -250;
+    int UIPlacementY = -250;
 
     public void Display(GameObject itemToDisplay)
     {
+        UIPlacementY = -250;
         // Set title of button
-        DisplayItem = itemToDisplay.GetComponent<MenuDisplayItem>();
-        Title.text = DisplayItem.Title;
-        Info.text = DisplayItem.InfoText;
+        DisplayItem = itemToDisplay;
+        Title.text = DisplayItem.GetComponent<MenuDisplayItem>().Title;
         ZoneBuilding zoneBuilding = itemToDisplay.GetComponent<ZoneBuilding>();
         EarthZone earthZone = itemToDisplay.GetComponent<EarthZone>();
         if (earthZone != null)
         {
             // + 1 for Capitol
-            UpdateButtonCount(earthZone.ZoneBuildings.Count + 1);
+            UpdateTextsCount(2);
+            UpdateButtonsCount(earthZone.ZoneBuildings.Count + 1);
             SetZoneBuildingButtons(earthZone);
         }
         if (zoneBuilding != null)
         {
+            //UpdateTextsCount(zoneBuilding.Stats.Count);
+            //SetItemStatRows(zoneBuilding);
             // Handle the amount of upgrade buttons shown
-            UpdateButtonCount(zoneBuilding.upgrades.Count);
-            // Show the upgrade buttons
-            SetUpgradeButtons(zoneBuilding);
+            //UpdateButtonsCount(zoneBuilding.upgrades.Count);
+            //// Show the upgrade buttons
+            //SetUpgradeButtons(zoneBuilding);
+            string info = "";
+            foreach (BuildingStat stat in zoneBuilding.Stats)
+            {
+                info += stat.name + ": " + stat.value + " / " + stat.maxValue + "/n";
+            }
+            Info.text = info;
             TopTab.onClick.AddListener(() => { Display(zoneBuilding.ParentZone.gameObject); });
             TopTab.GetComponentInChildren<Text>().text = "Zone";
         }
     }
 
-    void UpdateButtonCount(int countNeeded)
+    void UpdateTextsCount(int countNeeded)
+    {
+        if (countNeeded > Texts.Count)
+        {
+            int missingTexts = countNeeded - Texts.Count;
+            // Create as many buttons as needed
+            for (int i = 0; i < missingTexts; i++)
+            {
+                CreateNewText();
+            }
+        }
+        else if (countNeeded < Texts.Count)
+        {
+            // deactivate extra buttons
+            for (int i = Texts.Count - 1; i >= countNeeded; i--)
+            {
+                Texts[i].gameObject.SetActive(false);
+            }
+        }
+    }
+
+    void UpdateButtonsCount(int countNeeded)
     {
         if (countNeeded > Buttons.Count)
         {
@@ -60,7 +97,6 @@ public class DetailMenu : MonoBehaviour
         }
         else if (countNeeded < Buttons.Count)
         {
-            int extraButtons = Buttons.Count - countNeeded;
             // deactivate extra buttons
             for (int i = Buttons.Count - 1; i >= countNeeded; i--)
             {
@@ -115,26 +151,45 @@ public class DetailMenu : MonoBehaviour
             {
                 upgrade.performUpgrade();
             });
-            // If the button is clicked the stats get updated here
-            Buttons[buttonIndex].button.onClick.AddListener(() =>
-            {
-                Info.text = DisplayItem.InfoText;
-            });
             // Doing a for(int i =0;..) loop is not easier than this 
             buttonIndex++;
+        }
+    }
+    void SetItemStatRows(ZoneBuilding zoneBuilding)
+    {
+        int textIndex = 0;
+        foreach (BuildingStat stat in zoneBuilding.Stats)
+        {
+            Texts[textIndex].gameObject.SetActive(true);
+            // Replace the text of button
+            Texts[textIndex].title.text = stat.name + stat.value;
+            // Doing a for(int i =0;..) loop is not easier than this 
+            textIndex++;
         }
     }
 
     void CreateNewButton()
     {
         GameObject newButton = Instantiate(Resources.Load("OptionButton") as GameObject);
-        newButton.transform.position = new Vector3(0, buttonPlacementY, 0);
+        newButton.transform.position = new Vector3(0, UIPlacementY, 0);
         newButton.transform.SetParent(transform, false);
-        buttonPlacementY -= 130;
+        UIPlacementY -= 130;
         MenuButton newMenuButton = new MenuButton();
         newMenuButton.gameObject = newButton;
         newMenuButton.button = newButton.GetComponent<Button>();
         newMenuButton.title = newButton.GetComponentInChildren<Text>();
         Buttons.Add(newMenuButton);
+    }
+    void CreateNewText()
+    {
+        GameObject NewText = new GameObject("MenuText");
+        Text TextComponent = NewText.AddComponent<Text>();
+        TextComponent.transform.SetParent(transform, false);
+        TextComponent.transform.position = new Vector3(0, UIPlacementY, 0);
+        UIPlacementY -= 60;
+        MenuText newMenuText = new MenuText();
+        newMenuText.gameObject = NewText;
+        newMenuText.title = TextComponent;
+        Texts.Add(newMenuText);
     }
 }

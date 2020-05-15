@@ -6,13 +6,10 @@ using UnityEngine;
 public class Missile : MonoBehaviour, MissileSpec
 {
     public GameObject target;
-    float _launchSpeed = 1;
-    public float launchSpeed { get { return _launchSpeed; } set { _launchSpeed = value; } }
+    public float launchSpeed { get; set; } = 1;
     public float launchAcceleration = 10;
-    float _moveSpeed = 10;
-    public float moveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
-    float _damage = 200;
-    public float damage { get { return _damage; } set { _damage = value; } }
+    public float moveSpeed { get; set; } = 10;
+    public float damage { get; set; } = 200;
 
     private Vector3 origin;
     void Start()

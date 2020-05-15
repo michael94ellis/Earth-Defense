@@ -14,6 +14,20 @@ public class ShieldGenerator : MonoBehaviour, ZoneBuilding, MenuDisplayItem
     public int PowerCost { get => _PowerCost; set => _PowerCost = value; }
     public int _PopulationCost;
     public int PopulationCost { get => _PopulationCost; set => _PopulationCost = value; }
+    public List<BuildingStat> Stats
+    {
+        get
+        {
+            List<BuildingStat> stats = new List<BuildingStat>();
+            BuildingStat MaxPopulationStat = new BuildingStat("Max Population", ParentZone.Population, ParentZone.MaxPopulation);
+            BuildingStat PopulationRegenStat = new BuildingStat("Population Regen", ParentZone.PopulationRegenRate, 10f);
+            BuildingStat IncomeStat = new BuildingStat("Income Generated", 2000, 10000f);
+            stats.Add(MaxPopulationStat);
+            stats.Add(PopulationRegenStat);
+            stats.Add(IncomeStat);
+            return stats;
+        }
+    }
 
     public float shieldRechargeTime;
     public float shieldRegenRate;
