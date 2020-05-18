@@ -18,16 +18,13 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         get
         {
             List<BuildingStat> stats = new List<BuildingStat>();
-            BuildingStat MaxPopulationStat = new BuildingStat("Max Population", ParentZone.Population, ParentZone.MaxPopulation);
-            BuildingStat PopulationRegenStat = new BuildingStat("Population Regen", ParentZone.PopulationRegenRate, 10f);
-            BuildingStat IncomeStat = new BuildingStat("Income Generated", 2000, 10000f);
-            stats.Add(MaxPopulationStat);
-            stats.Add(PopulationRegenStat);
-            stats.Add(IncomeStat);
+            stats.Add(new BuildingStat("Fire Duration", fireDuration));
+            stats.Add(new BuildingStat("Recharge Time", rechargeTime));
+            stats.Add(new BuildingStat("Damage", Damage));
             return stats;
         }
     }
-
+    private int Damage = 1;
     private float fireDuration = 0.5f;
     private float rechargeTime = 1;
     private bool isCharged = true;
@@ -109,7 +106,7 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         if (!hitEarth)
         {
             currentTarget = alienShip;
-            if (alienScript != null && alienScript.TakeDamage())
+            if (alienScript != null && alienScript.TakeDamage(Damage))
                 FireAt(alienShip.transform.position);
         }
         return false;

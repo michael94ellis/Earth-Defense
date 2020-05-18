@@ -19,12 +19,8 @@ public class PowerPlant : MonoBehaviour, ZoneBuilding, MenuDisplayItem
         get
         {
             List<BuildingStat> stats = new List<BuildingStat>();
-            BuildingStat MaxPopulationStat = new BuildingStat("Max Population", ParentZone.Population, ParentZone.MaxPopulation);
-            BuildingStat PopulationRegenStat = new BuildingStat("Population Regen", ParentZone.PopulationRegenRate, 10f);
-            BuildingStat IncomeStat = new BuildingStat("Income Generated", 2000, 10000f);
-            stats.Add(MaxPopulationStat);
-            stats.Add(PopulationRegenStat);
-            stats.Add(IncomeStat);
+            stats.Add(new BuildingStat("Used Power", ParentZone.PopulationRegenRate));
+            stats.Add(new BuildingStat("Max Output", PowerCost * -1));
             return stats;
         }
     }

@@ -105,7 +105,7 @@ public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
 
     void UpdateHealthbar()
     {
-        float populationPercentage = Population / (ShieldHealth + MaxPopulation) / 2;
+        float populationPercentage = (Population / (ShieldHealth + MaxPopulation)) / 2;
         float shieldHealthPercentage = ShieldHealth / (ShieldHealth + MaxPopulation) / 2;
         RectTransform healthBarRect = HealthBar.GetComponent<RectTransform>();
         healthBarRect.sizeDelta = new Vector2(populationPercentage, healthBarRect.rect.height);

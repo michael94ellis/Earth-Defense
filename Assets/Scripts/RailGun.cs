@@ -19,15 +19,11 @@ public class RailGun : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         get
         {
             List<BuildingStat> stats = new List<BuildingStat>();
-            BuildingStat PowerStat = new BuildingStat("Power Req.: ", PowerCost, 1f);
-            BuildingStat PeopleStat = new BuildingStat("People Req.: ", PowerCost, 1f);
             RailGunProjectile projectile = Projectile.GetComponent<RailGunProjectile>();
-            BuildingStat ProjectileSpeed = new BuildingStat("Projectile Speed: ", projectile.moveSpeed, 1f);
-            BuildingStat ProjectileDamage = new BuildingStat("Projectile Damage: ", projectile.damage, 1f);
-            stats.Add(PowerStat);
-            stats.Add(PeopleStat);
-            stats.Add(ProjectileSpeed);
-            stats.Add(ProjectileDamage);
+            stats.Add(new BuildingStat("Power Req.: ", PowerCost));
+            stats.Add(new BuildingStat("People Req.: ", PowerCost));
+            stats.Add(new BuildingStat("Projectile Speed: ", projectile.moveSpeed));
+            stats.Add(new BuildingStat("Projectile Damage: ", projectile.damage));
             return stats;
         }
     }

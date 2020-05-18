@@ -20,12 +20,7 @@ public class Bunker : MonoBehaviour, ZoneBuilding, MenuDisplayItem
         get
         {
             List<BuildingStat> stats = new List<BuildingStat>();
-            BuildingStat MaxPopulationStat = new BuildingStat("Max Population", ParentZone.Population, ParentZone.MaxPopulation);
-            BuildingStat PopulationRegenStat = new BuildingStat("Population Regen", ParentZone.PopulationRegenRate, 120f);
-            BuildingStat IncomeStat = new BuildingStat("Income Generated", 99f, 17f);
-            stats.Add(MaxPopulationStat);
-            stats.Add(PopulationRegenStat);
-            stats.Add(IncomeStat);
+            stats.Add(new BuildingStat("Bunker Health", 100));
             return stats;
         }
     }

@@ -19,9 +19,9 @@ public class City : MonoBehaviour, ZoneBuilding, MenuDisplayItem
         get
         {
             List<BuildingStat> stats = new List<BuildingStat>();
-            BuildingStat MaxPopulationStat = new BuildingStat("Max Population", ParentZone.Population, ParentZone.MaxPopulation);
-            BuildingStat PopulationRegenStat = new BuildingStat("Population Regen", ParentZone.PopulationRegenRate, 10f);
-            BuildingStat IncomeStat = new BuildingStat("Income Generated", 2000, 10000f);
+            BuildingStat MaxPopulationStat = new BuildingStat("Max Population", ParentZone.Population);
+            BuildingStat PopulationRegenStat = new BuildingStat("Population Regen", ParentZone.PopulationRegenRate);
+            BuildingStat IncomeStat = new BuildingStat("Income Generated", 2000);
             stats.Add(MaxPopulationStat);
             stats.Add(PopulationRegenStat);
             stats.Add(IncomeStat);

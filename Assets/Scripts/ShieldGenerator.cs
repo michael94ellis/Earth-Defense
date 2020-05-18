@@ -19,12 +19,9 @@ public class ShieldGenerator : MonoBehaviour, ZoneBuilding, MenuDisplayItem
         get
         {
             List<BuildingStat> stats = new List<BuildingStat>();
-            BuildingStat MaxPopulationStat = new BuildingStat("Max Population", ParentZone.Population, ParentZone.MaxPopulation);
-            BuildingStat PopulationRegenStat = new BuildingStat("Population Regen", ParentZone.PopulationRegenRate, 10f);
-            BuildingStat IncomeStat = new BuildingStat("Income Generated", 2000, 10000f);
-            stats.Add(MaxPopulationStat);
-            stats.Add(PopulationRegenStat);
-            stats.Add(IncomeStat);
+            stats.Add(new BuildingStat("Shield Health", ParentZone.ShieldHealth));
+            stats.Add(new BuildingStat("Regen Rate", shieldRegenRate));
+            stats.Add(new BuildingStat("Recharge Time", shieldRechargeTime));
             return stats;
         }
     }

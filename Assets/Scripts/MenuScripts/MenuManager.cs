@@ -20,10 +20,15 @@ public interface Damageable
 
 public enum ZoneBuildingType
 {
-    LaserTurret,
-    MissileSilo,
     City,
-    ShieldGenerator
+    Capitol,
+    Factory,
+    PowerPlant,
+    Bunker,
+    ShieldGenerator,
+    MissileSilo,
+    RailGun,
+    LaserTurret,
 }
 
 public class BuildingUpgrade
@@ -42,13 +47,11 @@ public class BuildingStat
 {
     public string name;
     public float value;
-    public float maxValue;
 
-    public BuildingStat(string newName, float newValue, float newMaxValue)
+    public BuildingStat(string newName, float newValue)
     {
         name = newName;
         value = newValue;
-        maxValue = newMaxValue;
     }
 }
 
@@ -75,8 +78,6 @@ public class MenuManager : MonoBehaviour
     // Menu Panel Refs
     public GameObject DetailPanel;
     public DetailMenu DetailMenu;
-    public GameObject UpgradePanel;
-    public UpgradeMenu UpgradeMenu;
     public GameObject ShopPanel;
 
     // Menu Panel enum to control which panels can be displayed
@@ -84,7 +85,6 @@ public class MenuManager : MonoBehaviour
     {
         None,
         Detail,
-        Upgrade,
         Shop
     }
     // Private variables for displaying a screen to the user
@@ -96,8 +96,6 @@ public class MenuManager : MonoBehaviour
             {
                 case MenuScreen.Detail:
                     return DetailPanel;
-                case MenuScreen.Upgrade:
-                    return UpgradePanel;
                 case MenuScreen.Shop:
                     return ShopPanel;
             }
@@ -113,7 +111,6 @@ public class MenuManager : MonoBehaviour
         set
         {
             DetailPanel.SetActive(false);
-            UpgradePanel.SetActive(false);
             ShopPanel.SetActive(false);
             _LastScreen = _CurrentScreen;
             _CurrentScreen = value;
@@ -145,21 +142,15 @@ public class MenuManager : MonoBehaviour
         CurrentlyDisplayedMenu = MenuScreen.Shop;
     }
 
+    public void DismissShopMenu()
+    {
+        CurrentlyDisplayedMenu = MenuScreen.None;
+    }
+
     public void OpenDetailMenu()
     {
         CurrentlyDisplayedMenu = MenuScreen.Detail;
     }
-
-    public void OpenUpgradeMenu()
-    {
-        UpgradePanel.SetActive(true);
-        UpgradeMenu.Display(DetailMenu.DisplayItem);
-    }
-
-    //public void OpenUpgradeMenu()
-    //{
-    //    CurrentlyDisplayedMenu = MenuScreen.Upgrade;
-    //}
 
     public void MenuButtonPress()
     {

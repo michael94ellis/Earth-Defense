@@ -28,15 +28,11 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
         get
         {
             List<BuildingStat> stats = new List<BuildingStat>();
-            BuildingStat PowerStat = new BuildingStat("Power Req.: ", PowerCost, 1f);
-            BuildingStat PeopleStat = new BuildingStat("People Req.: " , PowerCost, 1f);
             Missile missile = Missile.GetComponent<Missile>();
-            BuildingStat MissileSpeed = new BuildingStat("Missile Speed: ", missile.moveSpeed, 1f);
-            BuildingStat MissileDamage = new BuildingStat("Missile Damage: ", missile.damage, 1f);
-            stats.Add(PowerStat);
-            stats.Add(PeopleStat);
-            stats.Add(MissileSpeed);
-            stats.Add(MissileDamage);
+            stats.Add(new BuildingStat("Power Req.: ", PowerCost));
+            stats.Add(new BuildingStat("People Req.: ", PowerCost));
+            stats.Add(new BuildingStat("Missile Speed: ", missile.moveSpeed));
+            stats.Add(new BuildingStat("Missile Damage: ", missile.damage));
             return stats;
         }
     }
