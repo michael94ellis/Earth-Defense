@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DetailMenu : MonoBehaviour
+public class UpgradeMenu : MonoBehaviour
 {
     public MenuManager mainMenuManager;
     public Text Title;
-    public Text[] DetailLabels;
-    public Text[] DetailValues;
+    public Text[] UpgradeLabels;
+    public Button[] UpgradeButtons;
+    public Text[] StatValues;
     public Button TopTab;
     public Button MiddleTab;
     public Button BottomTab;
@@ -22,16 +23,18 @@ public class DetailMenu : MonoBehaviour
         }
         Title.text = mainMenuManager.DisplayItem.buildingType.ToString();
         int i = 0;
-        foreach (BuildingStat stat in mainMenuManager.DisplayItem.Stats)
+        foreach (BuildingUpgrade upgrade in mainMenuManager.DisplayItem.upgrades)
         {
-            DetailLabels[i].text = stat.name;
-            DetailValues[i].text = stat.value.ToString();
+            UpgradeLabels[i].text = upgrade.name;
+            UpgradeButtons[i].onClick.RemoveAllListeners();
+            UpgradeButtons[i].onClick.AddListener(() => { upgrade.performUpgrade(); });
             i++;
         }
-        for (; i < 4; i++)
+        for (; i < 3; i++)
         {
-            DetailLabels[i].gameObject.SetActive(false);
-            DetailValues[i].gameObject.SetActive(false);
+            UpgradeLabels[i].gameObject.SetActive(false);
+            UpgradeButtons[i].gameObject.SetActive(false);
+            StatValues[i].gameObject.SetActive(false);
         }
     }
 }

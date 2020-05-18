@@ -21,7 +21,7 @@ public class PowerPlant : MonoBehaviour, ZoneBuilding
         {
             List<BuildingStat> stats = new List<BuildingStat>();
             stats.Add(new BuildingStat("Used Power", ParentZone.PopulationRegenRate));
-            stats.Add(new BuildingStat("Max Output", PowerCost * -1));
+            stats.Add(new BuildingStat("Max Output", MaxPowerGeneration));
             return stats;
         }
     }

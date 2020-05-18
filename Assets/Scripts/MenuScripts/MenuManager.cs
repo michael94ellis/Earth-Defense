@@ -73,13 +73,18 @@ public class MenuManager : MonoBehaviour
     // Menu Panel Refs
     public GameObject DetailPanel;
     public DetailMenu DetailMenu;
+    public GameObject UpgradePanel;
+    public UpgradeMenu UpgradeMenu;
     public GameObject ShopPanel;
+
+    public ZoneBuilding DisplayItem;
 
     // Menu Panel enum to control which panels can be displayed
     public enum MenuScreen
     {
         None,
         Detail,
+        Upgrade,
         Shop
     }
     // Private variables for displaying a screen to the user
@@ -93,6 +98,8 @@ public class MenuManager : MonoBehaviour
                     return DetailPanel;
                 case MenuScreen.Shop:
                     return ShopPanel;
+                case MenuScreen.Upgrade:
+                    return UpgradePanel;
             }
             return null;
         }
@@ -107,6 +114,7 @@ public class MenuManager : MonoBehaviour
         {
             DetailPanel.SetActive(false);
             ShopPanel.SetActive(false);
+            UpgradePanel.SetActive(false);
             _LastScreen = _CurrentScreen;
             _CurrentScreen = value;
             if (_CurrentScreen != MenuScreen.None)
@@ -124,7 +132,8 @@ public class MenuManager : MonoBehaviour
                 ZoneBuilding zoneBuildingHit = hit.collider.GetComponent<ZoneBuilding>();
                 if (zoneBuildingHit != null)
                 {
-                    DetailMenu.Display(hit.collider.gameObject);
+                    DisplayItem = zoneBuildingHit;
+                    DetailMenu.Display();
                     CurrentlyDisplayedMenu = MenuScreen.Detail;
                     return;
                 }
@@ -145,6 +154,12 @@ public class MenuManager : MonoBehaviour
     public void OpenDetailMenu()
     {
         CurrentlyDisplayedMenu = MenuScreen.Detail;
+    }
+
+    public void OpenUpgradeMenu()
+    {
+        UpgradeMenu.Display();
+        CurrentlyDisplayedMenu = MenuScreen.Upgrade;
     }
 
     public void MenuButtonPress()
