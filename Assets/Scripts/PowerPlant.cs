@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerPlant : MonoBehaviour, ZoneBuilding, MenuDisplayItem
+public class PowerPlant : MonoBehaviour, ZoneBuilding
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -14,6 +14,7 @@ public class PowerPlant : MonoBehaviour, ZoneBuilding, MenuDisplayItem
     public int PowerCost { get => _PowerCost; set => _PowerCost = value; }
     public int _PopulationCost;
     public int PopulationCost { get => _PopulationCost; set => _PopulationCost = value; }
+    public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
     public List<BuildingStat> Stats
     {
         get
@@ -42,14 +43,4 @@ public class PowerPlant : MonoBehaviour, ZoneBuilding, MenuDisplayItem
                 _PowerGeneration = value;
         }
     }
-
-    public string Title { get { return "Power Plant"; } }
-    public string InfoText
-    {
-        get
-        {
-            return "TBD";
-        }
-    }
-    public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
 }

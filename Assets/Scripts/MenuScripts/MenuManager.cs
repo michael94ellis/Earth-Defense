@@ -67,11 +67,6 @@ public interface ZoneBuilding
     int PopulationCost { get; set; }
 }
 
-public interface MenuDisplayItem
-{
-    string Title { get; }
-}
-
 public class MenuManager : MonoBehaviour
 {
     public Earth earth;

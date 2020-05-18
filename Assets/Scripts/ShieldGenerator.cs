@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShieldGenerator : MonoBehaviour, ZoneBuilding, MenuDisplayItem
+public class ShieldGenerator : MonoBehaviour, ZoneBuilding
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -28,15 +28,6 @@ public class ShieldGenerator : MonoBehaviour, ZoneBuilding, MenuDisplayItem
 
     public float shieldRechargeTime;
     public float shieldRegenRate;
-
-    public string Title { get { return "Shield Generator"; } }
-    public string InfoText
-    {
-        get
-        {
-            return "TBD";
-        }
-    }
     public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
 
     void Start()

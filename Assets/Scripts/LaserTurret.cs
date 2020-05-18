@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
+public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -34,17 +34,6 @@ public class LaserTurret : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     private LineRenderer Laser;
     public Transform BarrelPivot;
     public Transform BarrelTip;
-
-    public string Title { get { return "Laser Turret"; } }
-    public string InfoText
-    {
-        get
-        {
-            return "Recharge Time: " + rechargeTime + "\n" +
-                "Fire Time: " + fireDuration + "\n" +
-                "Bonus Effect: " + "n/a";
-        }
-    }
 
     public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
 

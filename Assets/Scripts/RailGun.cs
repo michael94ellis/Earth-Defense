@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class RailGun : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
+public class RailGun : MonoBehaviour, Weapon, ZoneBuilding
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -35,17 +35,6 @@ public class RailGun : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     private GameObject currentTarget;
     public GameObject Projectile;
     public GameObject earth;
-
-    public string Title { get { return "Rail Gun"; } }
-    public string InfoText
-    {
-        get
-        {
-            return "Reload Time: " + reloadTime + "\n" +
-                "Fire Time: " + fireDuration + "\n" +
-                "Projectile Type: " + "n/a";
-        }
-    }
 
     public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
 

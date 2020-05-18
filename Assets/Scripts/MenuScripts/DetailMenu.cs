@@ -23,17 +23,6 @@ public class DetailMenu : MonoBehaviour
             TopTab.GetComponentInChildren<Text>().text = "Zone";
         }
         Title.text = DisplayItem.name;
-        //switch (zoneBuilding.buildingType)
-        //{
-        //    case ZoneBuildingType.City:
-        //        break;
-        //    case ZoneBuildingType.LaserTurret:
-        //        break;
-        //    case ZoneBuildingType.MissileSilo:
-        //        break;
-        //    case ZoneBuildingType.ShieldGenerator:
-        //        break;
-        //}
         int i = 0;
         foreach (BuildingStat stat in zoneBuilding.Stats)
         {

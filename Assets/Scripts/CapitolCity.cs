@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CapitolCity : MonoBehaviour, ZoneBuilding, MenuDisplayItem
+public class CapitolCity : MonoBehaviour, ZoneBuilding
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -15,7 +15,6 @@ public class CapitolCity : MonoBehaviour, ZoneBuilding, MenuDisplayItem
     public int _PopulationCost;
     public int PopulationCost { get => _PopulationCost; set => _PopulationCost = value; }
 
-    public string Title { get { return "Capitol City"; } }
     public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
 
     public List<BuildingStat> Stats

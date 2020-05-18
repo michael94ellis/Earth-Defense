@@ -2,17 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EarthZone : MonoBehaviour, Damageable, MenuDisplayItem
+public class EarthZone : MonoBehaviour, Damageable
 {
-    public string Title { get { return "Earth Zone"; } }
-    public string InfoText
-    {
-        get
-        {
-            return "Shield Level: " + ShieldHealth + " / " + MaxShieldHealth + "\n" +
-                "Population: " + Population + " / " + MaxPopulation;
-        }
-    }
     // This is the reference to the object that represents the shield, enable/disable to show and hide shield
     public MeshRenderer Shield;
     // Each earthzone has a capitol in the center of the prefab, this is a reference to its script

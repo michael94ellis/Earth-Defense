@@ -12,7 +12,7 @@ public interface MissileSpec
     float damage { get; set; }
 }
 
-public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
+public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -46,8 +46,6 @@ public class MissileSilo : MonoBehaviour, Weapon, ZoneBuilding, MenuDisplayItem
     private GameObject currentTarget;
     public GameObject Missile;
     public GameObject earth;
-
-    public string Title { get { return "Missile Silo"; } }
 
     public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
     public List<GameObject> Missiles { get; } = new List<GameObject>();

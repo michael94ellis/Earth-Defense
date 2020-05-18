@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bunker : MonoBehaviour, ZoneBuilding, MenuDisplayItem
+public class Bunker : MonoBehaviour, ZoneBuilding
 {
     public bool isActive { get; set; } = false;
     public Transform buildingTransform { get { return transform; } }
@@ -41,15 +41,6 @@ public class Bunker : MonoBehaviour, ZoneBuilding, MenuDisplayItem
                 _ProtectedPopulation = MaxProtectedPopulation;
             else
                 _ProtectedPopulation = value;
-        }
-    }
-
-    public string Title { get { return "Bunker"; } }
-    public string InfoText
-    {
-        get
-        {
-            return "TBD";
         }
     }
     public List<BuildingUpgrade> upgrades { get; } = new List<BuildingUpgrade>();
