@@ -15,9 +15,13 @@ public class DetailMenu : MonoBehaviour
 
     public void Display()
     {
+        mainMenuManager.CurrentlyDisplayedMenu = MenuManager.MenuScreen.Detail;
         if (mainMenuManager.DisplayItem != null)
         {
-            //TopTab.onClick.AddListener(() => { Display(zoneBuilding.ParentZone.gameObject); });
+            TopTab.onClick.AddListener(() =>
+            {
+                mainMenuManager.ZoneMenu.Display();
+            });
             TopTab.GetComponentInChildren<Text>().text = "Zone";
         }
         Title.text = mainMenuManager.DisplayItem.buildingType.ToString();

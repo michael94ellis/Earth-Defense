@@ -76,6 +76,9 @@ public class MenuManager : MonoBehaviour
     public GameObject UpgradePanel;
     public UpgradeMenu UpgradeMenu;
     public GameObject ShopPanel;
+    public BuildMenu ShopMenu;
+    public GameObject ZonePanel;
+    public ZoneMenu ZoneMenu;
 
     public ZoneBuilding DisplayItem;
 
@@ -83,6 +86,7 @@ public class MenuManager : MonoBehaviour
     public enum MenuScreen
     {
         None,
+        Zone,
         Detail,
         Upgrade,
         Shop
@@ -96,6 +100,8 @@ public class MenuManager : MonoBehaviour
             {
                 case MenuScreen.Detail:
                     return DetailPanel;
+                case MenuScreen.Zone:
+                    return ZonePanel;
                 case MenuScreen.Shop:
                     return ShopPanel;
                 case MenuScreen.Upgrade:
@@ -115,6 +121,7 @@ public class MenuManager : MonoBehaviour
             DetailPanel.SetActive(false);
             ShopPanel.SetActive(false);
             UpgradePanel.SetActive(false);
+            ZonePanel.SetActive(false);
             _LastScreen = _CurrentScreen;
             _CurrentScreen = value;
             if (_CurrentScreen != MenuScreen.None)
@@ -143,7 +150,12 @@ public class MenuManager : MonoBehaviour
 
     public void OpenShopMenu()
     {
-        CurrentlyDisplayedMenu = MenuScreen.Shop;
+        ShopMenu.Display();
+    }
+
+    public void OpenZoneMenu()
+    {
+        ZoneMenu.Display();
     }
 
     public void DismissShopMenu()
@@ -153,13 +165,12 @@ public class MenuManager : MonoBehaviour
 
     public void OpenDetailMenu()
     {
-        CurrentlyDisplayedMenu = MenuScreen.Detail;
+        DetailMenu.Display();
     }
 
     public void OpenUpgradeMenu()
     {
         UpgradeMenu.Display();
-        CurrentlyDisplayedMenu = MenuScreen.Upgrade;
     }
 
     public void MenuButtonPress()

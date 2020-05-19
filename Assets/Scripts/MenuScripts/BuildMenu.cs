@@ -105,6 +105,11 @@ public class BuildMenu : MonoBehaviour
         }
     }
 
+    public void Display()
+    {
+        menuManager.CurrentlyDisplayedMenu = MenuManager.MenuScreen.Shop;
+    }
+
     void Update()
     {
         //previews placement of new building until clicked
